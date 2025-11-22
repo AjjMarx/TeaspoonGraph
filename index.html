@@ -36,7 +36,7 @@ if (!ext) {
     console.warn("EXT_frag_depth not supported on this device!");
 }
 
-window.resolution = 600*4;
+window.resolution = 600*2;
 window.scalingFactor = window.resolution / canvas.getBoundingClientRect().width;
 console.log(window.scalingFactor);
 
@@ -90,9 +90,12 @@ let startOffAxis = 0;
 let endOnAxis = 0;
 let endOffAxis = 0;
 let centerAxis = 0;
-let cameraDistance = 2;
+let cameraDistance = 1.5;
 let divisions = 32;
 let timeDelta = 0;
+
+let minimumDistance = 1.25;
+let maximumDistance = 5;
 
 window.addEventListener("mousemove", (event) => {
 	if (mouseDown) {
@@ -149,8 +152,8 @@ FPSticker.textContent = timeDelta;
 sliders = [];
 sliders["dist"] = document.createElement("input");
 sliders["dist"].type = "range";
-sliders["dist"].min = "1";
-sliders["dist"].max = "10";
+sliders["dist"].min = minimumDistance;
+sliders["dist"].max = maximumDistance;
 sliders["dist"].value = cameraDistance;
 sliders["dist"].step = "0.001";
 
@@ -195,7 +198,9 @@ sidebar.appendChild(divLabel);
 sidebar.appendChild(sliders["divide"]);
 
 window.addEventListener('wheel', (event) => {
-	cameraDistance += event.deltaY/10;
+	if (cameraDistance > minimumDistance && cameraDistance < maximumDistance) {
+		cameraDistance += event.deltaY/10;
+	}
 	sliders["dist"].value = cameraDistance;
 });
 
@@ -244,23 +249,25 @@ void main() {
 		float innerLatitude = asin(-f2P*sin(-c) - f1P*sin(ang)*cos(-c));
   		//gl_FragColor = vec4(mod(longitude * 3.14159, 1.0), mod(latitude * 3.14159, 1.0), 0.0, 1.0); 
 		gl_FragDepthEXT = (f2) / 10.0 + 0.5; 
-		if ( mod(division * latitude/3.141592, 1.0) < 0.01 || 
-		     ( mod(division * longitude/3.141592, 1.0) < 0.01) && 
+		if ( mod(division * latitude/3.141592, 1.0) < 0.005 || 
+		     ( mod(division * longitude/3.141592, 1.0) < 0.005/cos(latitude)) && 
 		     division * latitude/3.141592 < (division / 2.0 - 1.0) &&
  		     division * latitude/3.141592 > (1.0 - division / 2.0))
 		{
-			gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+			gl_FragColor = vec4(0.25, 0.25, 0.25, 1.0);
 		} else {
-			//gl_FragColor = 
-			if (d > 1.0 && texture2D(uTexture, vec2(mod(-0.5 * longitude/3.14159, 1.0), latitude/3.14159 + 0.5)).x < 0.5) {
-				gl_FragColor = vec4(0.75, 0.75, 0.75, 1.0);
-			} else {
-				gl_FragColor = texture2D(uTexture, vec2(mod(-0.5 * innerLongitude/3.14159, 1.0), innerLatitude/3.14159 + 0.5)) /8.0;
-			}
+			//float dot = max(0.0,min(1.0,1.5 * atan(20.0 * (-0.707 * cos(longitude - onAxisRotation)*cos(latitude) - 0.707 * sin(longitude - onAxisRotation)*cos(latitude))) / 3.15159 + 1.0)); 
+			//gl_FragColor = vec4(dot,dot,dot,1.0);
+			gl_FragColor = texture2D(uTexture, vec2(mod(-0.5 * longitude/3.14159, 1.0), latitude/3.14159 + 0.5)); 
+			//if (d > 1.0 && texture2D(uTexture, vec2(mod(-0.5 * longitude/3.14159, 1.0), latitude/3.14159 + 0.5)).x < 0.5) {
+			//	gl_FragColor = vec4(0.75, 0.75, 0.75, 1.0);
+			//} else {
+			//	gl_FragColor = texture2D(uTexture, vec2(mod(-0.5 * innerLongitude/3.14159, 1.0), innerLatitude/3.14159 + 0.5)) /8.0;
+			//}
 		}
 			//gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-	} else if (sqrt(m) <= sqrt((1.0 / (d*d - 1.0))) + 0.0025) {
-		gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0);
+	} else if (sqrt(m) <= sqrt((1.0 / (d*d - 1.0))) + 0.005) {
+		gl_FragColor = vec4(0.25, 0.25, 0.25, 1.0);
 		gl_FragDepthEXT = 0.002; 
 	} else {
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
@@ -296,7 +303,7 @@ void main() {
 	//float zt = sin(th) * inpX + cos(th) * inpZ;
 	//float z1 = cos(ph) * zt - sin(ph) * inpY;
 	//float y1 = sin(ph) * zt + cos(ph) * inpY;
-	float r = 0.0125;
+	float r = 0.008;
 	float g = atan(x, y) + centerRotation;
 	float a = sqrt(x*x + y*y);
 	float d = dist - z1;
@@ -431,14 +438,43 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 gl.depthFunc(gl.GREATER);
 
 const points = [];
-for (let i = 0; i < 200; i++) {
-	let th = Math.random()*6.283;
-	let ph = (Math.random()-0.5)*6.283;
-	points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), Math.random(), Math.random(), Math.random()]);
-}
+//for (let i = 0; i < 200; i++) {
+	//let th = Math.random()*6.283;
+	//let ph = (Math.random()-0.5)*6.283;
+	//points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), Math.random(), Math.random(), Math.random()]);
+//}
+const edges = [];
 
 overlayContext.fillStyle = "red";
 overlayContext.font = "48px sans-serif";
+
+
+
+async function LoadLesson() {
+	console.log("Lesson Loading");
+	const filePath = "Sahara.json";
+	try {
+		const res = await fetch(filePath);
+		const lessonData = await res.json();
+		console.log(lessonData["Vertices"]);
+
+		for (vert of lessonData["Vertices"]) {
+			console.log(vert);
+			let ph = 3.14159* (vert.Latitude)/180;
+			let th = -3.14159*(vert.Longitude)/180 + 1.5707;
+			points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), 0, 0, 0]);
+		}
+		for (edge of lessonData["Edges"]) {
+			console.log(edge);
+			edges.push(edge);
+		}
+
+		requestAnimationFrame(render);
+	} catch(err) {
+		console.log("Lesson data could not be loaded.");
+	}
+}
+
 
 function proj(Ax, Ay, Az, onAxis, offAxis, cent, dist) {
 	let Lx = Ax*Math.cos(onAxis) + Ay*Math.sin(onAxis);
@@ -480,10 +516,10 @@ function renderArc(p1, p2, onAxis, offAxis, cent, dist) {
 	let coeff1 = (v1*d22 - v2*d12)/D;
 	let coeff2 = (v2*d11 - v1*d12)/D;
 
-	let miniraise = 1.01;
+	let miniraise = 1.0;
 	
-	let step = Math.atan2(coeff1, coeff2)/Math.floor(20 * Math.atan2(coeff1, coeff2));
-	overlayContext.lineWidth = 7;
+	let step = Math.atan2(coeff1, coeff2)/Math.max(1, Math.floor(20 * Math.atan2(coeff1, coeff2)));
+	overlayContext.lineWidth = 2*window.scalingFactor;
 		
 	overlayContext.beginPath();
 	for (let t = 0; t < Math.atan2(coeff1, coeff2) + step/2; t += step) {
@@ -494,7 +530,7 @@ function renderArc(p1, p2, onAxis, offAxis, cent, dist) {
 	
 		if (S[2] > 1/dist) {
 			overlayContext.strokeStyle = `rgb(${0}, ${0}, ${255})`;
-			overlayContext.lineTo(4*(S[0]), overlay.height - 4*(S[1]));
+			overlayContext.lineTo(window.scalingFactor*(S[0]), overlay.height - window.scalingFactor*(S[1]));
 			overlayContext.stroke();
 			overlayContext.beginPath();
 		}
@@ -527,8 +563,11 @@ function render(t) {
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
     	gl.clearColor(0, 0, 0, 1);
 
-	for (let i = 0; i < points.length - 1; i++) {
-		renderArc(points[i], points[i+1], onAxisDegree, offAxisDegree, centerAxis, cameraDistance); 	
+	for (const E of edges) {
+		if (E) {
+		//	console.log(E);
+			renderArc(points[E[0]], points[E[1]], onAxisDegree, offAxisDegree, centerAxis, cameraDistance); 
+		}
 	}
 
 	gl.useProgram(overlayShader);
@@ -576,9 +615,20 @@ function render(t) {
 		gl.scissor(window.scalingFactor*(Sx) - 80, window.scalingFactor*(Sy) - 80, 160, 160);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 	
-	//	overlayContext.fillText(i, 4*(Sx) - 40, overlay.height - 4*(Sy) - 10);
+		overlayContext.fillText(i, window.scalingFactor*(Sx) - 40, overlay.height - window.scalingFactor*(Sy) - 10);
 	}
 	gl.disable(gl.SCISSOR_TEST);
+
+	gl.useProgram(overlayShader);
+	gl.enable(gl.BLEND);
+	gl.activeTexture(gl.TEXTURE0);
+	gl.bindTexture(gl.TEXTURE_2D, overlayTexture);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, overlay);	
+	gl.uniform1i(overlayTextureUniformLocation, 0);
+	gl.disable(gl.DEPTH_TEST);
+//	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	gl.disable(gl.BLEND);
+	gl.enable(gl.DEPTH_TEST);
 
 	gl.useProgram(filterShader);
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -588,7 +638,9 @@ function render(t) {
 	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS";
 	requestAnimationFrame(render);
 }
-requestAnimationFrame(render);
+
+
+LoadLesson();
 </script>
 </body>
 </html>
