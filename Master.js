@@ -9,6 +9,7 @@ function coordinateTransform(x, y, onAxisRotation, offAxisRotation, dist, center
 	let latitude  = Math.asin(-f2*Math.sin(-c) - f1*Math.sin(ang)*Math.cos(-c));
 	return [latitude, longitude, f1];
 }
+
 let mouseX = 0;
 let mouseY = 0;
 let mouseDown = false;
@@ -70,8 +71,27 @@ FPSticker.style.top = "5px";
 FPSticker.style.width = "100px";
 FPSticker.style.height = "50px";
 FPSticker.textContent = timeDelta;
-const sidebar = document.createElement("div");
-document.body.appendChild(sidebar);
+//const sidebar = document.createElement("div");
+//document.body.appendChild(sidebar);
+
+const AttributionSection = document.createElement("div");
+document.body.appendChild(AttributionSection);
+
+AttributionSection.style.position = "abolute";
+AttributionSection.style.top = "0%";
+AttributionSection.style.height = "2em";
+AttributionSection.style.width = "100%";
+AttributionSection.innerHTML = "<center>Created by Alexandra Marx, ajjmarx@umich.edu</center>";
+
+const credit = document.createElement("div");
+document.body.appendChild(credit);
+
+credit.style.position = "absolute";
+credit.style.bottom = "0%";
+credit.style.width = "600px";
+credit.style. right = "72px";
+credit.style.height = "2em";
+credit.innerHTML = `<center><a href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
 
 /*
 sidebar.style.width = "300px";
