@@ -16,6 +16,20 @@ async function LoadLesson() {
 			edges.push(edge);
 		}
 
+
+
+		const playground = document.createElement("div");
+		document.body.appendChild(playground);
+
+		playground.style.left = "100px";
+		playground.style.top = "100px";
+		playground.style.width = "300px";
+		playground.style.height = "300px";
+
+		let testBlock = new Block();
+
+		playground.appendChild(testBlock.container);
+
 		requestAnimationFrame(renderGlobe);
 	} catch(err) {
 		console.log("Lesson data could not be loaded.");
