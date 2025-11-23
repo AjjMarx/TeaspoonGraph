@@ -81,7 +81,7 @@ AttributionSection.style.position = "abolute";
 AttributionSection.style.top = "0%";
 AttributionSection.style.height = "2em";
 AttributionSection.style.width = "100%";
-AttributionSection.innerHTML = "<center>Created by Alexandra Marx, ajjmarx@umich.edu</center>";
+AttributionSection.innerHTML = `<center>Created by Alexandra Marx, <a target="_blank" rel="noopener noreferrer" href="mailto:ajjmarx@umich.edu">ajjmarx@umich.edu</a>, <a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
 
 const credit = document.createElement("div");
 document.body.appendChild(credit);
@@ -91,7 +91,7 @@ credit.style.bottom = "0%";
 credit.style.width = "600px";
 credit.style. right = "72px";
 credit.style.height = "2em";
-credit.innerHTML = `<center><a href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
+credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
 
 /*
 sidebar.style.width = "300px";
