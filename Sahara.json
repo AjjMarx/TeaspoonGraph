@@ -1,0 +1,308 @@
+{
+ 	"LessonName": "The Medieval Saharan Trade Network",
+
+  "Vertices": [{
+    "Name": "Timbuktu",
+    "Latitude": 16.7713825,
+    "Longitude": -3.0286219,
+    "Gold Value": "Medium",
+    "Salt Value": "Medium",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Timbuktu"
+  },{
+    "Name": "Gao",
+    "Latitude": 16.2596772,
+    "Longitude": -0.052043,
+    "Gold Value": "Medium",
+    "Salt Value": "Medium",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Gao"
+  },{
+    "Name": "Agadez",
+    "Latitude": 16.9689583,
+    "Longitude": 7.9455689,
+    "Gold Value": "High",
+    "Salt Value": "Low",
+    "Ivory Value": "High",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Agadez"
+  },{
+    "Name": "Kano",
+    "Latitude": 11.9906321,
+    "Longitude": 8.2421203,
+    "Gold Value": "High",
+    "Salt Value": "High",
+    "Ivory Value": "Low",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Kano_(city)"
+  },{
+    "Name": "Benin",
+    "Latitude": 6.3320629,
+    "Longitude": 5.4471493,
+    "Gold Value": "Very Low",
+    "Salt Value": "Very High",
+    "Ivory Value": "Very Low",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Benin_City"
+  },{
+    "Name": "Ife",
+    "Latitude": 7.4811003,
+    "Longitude": 4.4682897,
+    "Gold Value": "Very Low",
+    "Salt Value": "Very High",
+    "Ivory Value": "Very Low",
+    "Ceramics Value": "High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/If%E1%BA%B9"
+  },{
+    "Name": "Begho",
+    "Latitude": 7.8411922,
+    "Longitude": -2.4753036,
+    "Gold Value": "Very Low",
+    "Salt Value": "Very High",
+    "Ivory Value": "Very Low",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Begho"
+  },{
+    "Name": "Kong",
+    "Latitude": 9.1500195,
+    "Longitude": -4.6161139,
+    "Gold Value": "Very Low",
+    "Salt Value": "High",
+    "Ivory Value": "Very Low",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Kong,_Ivory_Coast"
+  },{
+    "Name": "Djenne",
+    "Latitude": 13.9059109,
+    "Longitude": -4.5624752,
+    "Gold Value": "Medium",
+    "Salt Value": "Medium",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Djenn%C3%A9"
+  },{
+    "Name": "Ghana",
+    "Latitude": 15.819132,
+    "Longitude": -8.0003738,
+    "Gold Value": "Low",
+    "Salt Value": "Low",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Koumbi_Saleh"
+  },{
+    "Name": "Niani",
+    "Latitude": 11.3774921,
+    "Longitude": -8.3898078,
+    "Gold Value": "Low",
+    "Salt Value": "High",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Very High",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Niani,_Guinea"
+  },{
+    "Name": "Walata",
+    "Latitude": 17.2994279,
+    "Longitude": -7.0277363,
+    "Gold Value": "High",
+    "Salt Value": "Medium",
+    "Ivory Value": "Medium",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Oualata"
+  },{
+    "Name": "Taghaza",
+    "Latitude": 22.8704379,
+    "Longitude": -4.6236032,
+    "Gold Value": "High",
+    "Salt Value": "Very Low",
+    "Ivory Value": "High",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Taghaza"
+  },{
+    "Name": "Ouadane",
+    "Latitude": 20.9334593,
+    "Longitude": -11.6243773,
+    "Gold Value": "High",
+    "Salt Value": "Very Low",
+    "Ivory Value": "High",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Ouadane"
+  },{
+    "Name": "Fez",
+    "Latitude": 34.0239353,
+    "Longitude": -5.0843127,
+    "Gold Value": "Very High",
+    "Salt Value": "Very Low",
+    "Ivory Value": "Very High",
+    "Ceramics Value": "Very Low",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Fez,_Morocco"
+  },{
+    "Name": "Tunis",
+    "Latitude": 36.7948544,
+    "Longitude": 10.0607054,
+    "Gold Value": "Very High",
+    "Salt Value": "Very Low",
+    "Ivory Value": "Very High",
+    "Ceramics Value": "Very Low",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Tunis"
+  },{
+    "Name": "Tripoli",
+    "Latitude": 32.8829301,
+    "Longitude": 13.1470505,
+    "Gold Value": "Very High",
+    "Salt Value": "Very Low",
+    "Ivory Value": "Very High",
+    "Ceramics Value": "Very Low",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Tripoli,_Libya"
+  },{
+    "Name": "Ghadames",
+    "Latitude": 30.1307226,
+    "Longitude": 9.4750641,
+    "Gold Value": "High",
+    "Salt Value": "Low",
+    "Ivory Value": "High",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Ghadames"
+  },{
+    "Name": "Ghat",
+    "Latitude": 24.9619527,
+    "Longitude": 10.1587815,
+    "Gold Value": "High",
+    "Salt Value": "Low",
+    "Ivory Value": "High",
+    "Ceramics Value": "Medium",
+    "Wikipedia": "https://en.wikipedia.org/wiki/Ghat,_Libya"
+  }],
+
+  "Edges": [
+	[0,1], [0,8], [0,11], [0,12],
+	[1,2], [1,18], [1,3],
+	[2,3], [2,18], 
+	[3,4], [3,5], [3,6],
+	[6,7], [6,8],
+	[7,8],
+	[8,9],
+	[9,10], [9,11], 
+	[11,13],
+	[12,11], [12,17], 
+	[13,14],
+	[14,15], [14,12], 
+	[15,16],
+	[16,17]
+  ],
+
+  "Code": {
+	"Types" : [
+		{
+			"Name" : "Header",
+			"Color" : "Yellow",
+			"Size" : "Bracket",
+			"EdgeShapes" : ["Straight", "Cap", "Straight", "Puzzle"]
+		},
+		{
+			"Name" : "Flow",
+			"Color" : "Yellow",
+			"Size" : "Bracket",
+			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]
+		},
+		{
+			"Name" : "Code",
+			"Color" : "Blue",
+			"Size" : "Normal",
+			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]	
+		},
+		{
+			"Name" : "Integer",
+			"Color" : "Aqua",
+			"Size" : "Small",
+			"EdgeShapes" : ["Straight", "Straight", "Round", "Straight"]
+		},
+		{
+			"Name" : "Boolean",
+			"Color" : "Green",
+			"Size" : "Small",
+			"EdgeShapes" : ["Straight", "Straight", "Angle", "Straight"]
+		},
+		{
+			"Name" : "Good",
+			"Color" : "Pink",
+			"Size" : "Small",
+			"EdgeShapes" : ["Straight", "Straight", "Straight", "Straight"]
+		},
+		{
+			"Name" : "Direction",
+			"Color" : "Purple",
+			"Size" : "Small",
+			"EdgeShapes" : ["Angle", "Angle", "Angle", "Angle"]
+		},
+		{
+			"Name" : "Vertex",
+			"Color" : "Red",
+			"Size" : "Small",
+			"EdgeShapes" : ["Round", "Straight", "Round", "Straight"]
+		},
+		{
+			"Name" : "Edge",
+			"Color" : "Green",
+			"Size" : "Small",
+			"EdgeShapes" : ["Angle", "Straight", "Angle", "Straight"]
+		}
+	], 
+	
+	"Functions" :{
+	"On_Start" : {
+		"type" : "Header",
+		"text" : "On Start",
+		"inputs" : ["Code"],
+		"code" : null
+	},
+	"While" : {
+		"type" : "Flow",
+		"text" : "While $1",
+		"inputs" : ["Boolean","Code"],
+		"code" : null 
+	},
+	"If" : {
+		"type" : "Flow",
+		"text" : "If $1",
+		"inputs" : ["Boolean","Code"],
+		"code" : null
+	},
+	"For" : {
+		"type" : "Flow",
+		"text" : "For $1 in $2",
+		"inputs" : "#Small",
+		"code" : null
+	},
+	"Move_To" : {
+		"type" : "Code",
+		"text" : "Move to $1",
+		"inputs" : ["vertex"],
+		"code" : null
+	},
+	"Move_Along" : {
+		"type" : "Code",
+		"text" : "Move Along $1",
+		"inputs" : ["edge"],
+		"code" : null
+	},
+	"Move_To_The" : {
+		"type" : "Code",
+		"text" : "Move To The $1",
+		"inputs" : ["Direction"],
+		"code" : null
+	},
+	"Trade" : {
+		"type" : "Code",
+		"text" : "Trade $1 $2 For $3 $4",
+		"inputs" : ["Integer", "Good", "Integer", "Good"],
+		"code" : null
+	},
+	"Neighors" : {
+		"type" : "#Vertex",
+		"text" : "My Neighbors",
+		"inputs" : null,
+		"code" : null
+	}
+  }}
+}
