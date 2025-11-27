@@ -197,7 +197,7 @@
 			"Name" : "Header",
 			"Color" : "Yellow",
 			"Size" : "Bracket",
-			"EdgeShapes" : ["Straight", "Cap", "Straight", "Puzzle"]
+			"EdgeShapes" : ["Straight", "Cap", "Straight", "Straight"]
 		},
 		{
 			"Name" : "Flow",
@@ -233,7 +233,7 @@
 			"Name" : "Direction",
 			"Color" : "Purple",
 			"Size" : "Small",
-			"EdgeShapes" : ["Angle", "Angle", "Angle", "Angle"]
+			"EdgeShapes" : ["Arrow", "Straight", "Arrow", "Straight"]
 		},
 		{
 			"Name" : "Vertex",
