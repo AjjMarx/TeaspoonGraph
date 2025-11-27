@@ -93,7 +93,7 @@ class Block {
 			this.hitBox.style.left = "8px";
 			this.hitBox.style.top = "8px";
 			this.hitBox.style.width = String(this.style.width) + "px";
-			this.hitBox.style.height = String(this.style.height) + "px";
+			this.hitBox.style.height = String(this.style.height - this.style.innerHeight) + "px";
 		}
 		this.container.innerHTML = this.generateSVG();
 		this.container.appendChild(this.hitBox);
@@ -239,10 +239,10 @@ class Block {
 
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
-		temp += `<text fill="#ffffff" font-size="16" ` + `x="16" y="` + (14 +(this.style.height - this.style.innerHeight)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		temp += `<text fill="#ffffff" font-size="16" style="user-select: none;" x="16" y="` + (14 +(this.style.height - this.style.innerHeight)/2)+ `"` + `>` + this.style.text + ` </text>`;
 		temp += `</svg>`;
+		
 		return temp;
-
 	}
 }
 
