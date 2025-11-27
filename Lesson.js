@@ -39,11 +39,11 @@ async function LoadLesson() {
 
 			playground.appendChild(blocks[i].container);
 			blocks[i].style.left = 100;
-			blocks[i].style.top = blocks[i-1].getBottom();
-			console.log(lessonData["Code"]["Types"][i]["Color"]);
+			blocks[i].style.top = blocks[i-1].getBottom() + 15;
 			blocks[i].style.color = lessonData["Code"]["Types"][i]["Color"];
 			blocks[i].style.text = lessonData["Code"]["Types"][i]["Name"];
-			console.log(blocks[i].style.color);
+			blocks[i].style.size = lessonData["Code"]["Types"][i]["Size"];
+			blocks[i].style.edgeShapes = lessonData["Code"]["Types"][i]["EdgeShapes"];
 			blocks[i].update();
 		}
 
