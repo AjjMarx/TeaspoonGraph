@@ -28,9 +28,9 @@ async function LoadLesson() {
 		toolBox.style.width = "250px";
 		toolBox.style.bottom = "10px";
 
-		let mainTypes = new typeManager();
+		let mainManager = new typeManager();
 		for (i of lessonData["Code"]["Types"]) {
-			mainTypes.add(i["Name"], i["Color"], i["Size"], i["EdgeShapes"]);
+			mainManager.addType(i["Name"], i["Color"], i["Size"], i["EdgeShapes"]);
 		}
 
 		let blocks = [];
@@ -39,10 +39,11 @@ async function LoadLesson() {
 		let startTop = 10;
 		for (blockName in lessonData["Code"]["Functions"]) {
 			let blockData = lessonData["Code"]["Functions"][blockName];
+			mainManager.addFunction(blockName, blockData["type"], blockData["text"], blockData["inputs"], blockData["code"]);
 			if (it > 0) {
 				startTop = blocks[it-1].getBottom() + 10
 			} 
-			blocks[it] = new programBlock(blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainTypes, toolBox);
+			blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
 			it++;
 		}
 
@@ -55,7 +56,7 @@ async function LoadLesson() {
 		playground.style.bottom = "10px";
 
 		let headerData = lessonData["Code"]["Functions"]["On_Start"];
-		let headerBlock = new programBlock(headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainTypes, playground);
+		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainManager, playground);
 		headerBlock.generateDropSites();
 		
 		let programSequence = [headerBlock];

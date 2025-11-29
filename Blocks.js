@@ -247,32 +247,44 @@ class Block {
 
 class typeManager {
 	constructor() {
-		this.map = new Map();	
+		this.typeMap = new Map();
+		this.functionMap = new Map();
 	}
 
-	add(iName, iColor, iSize, iEdgeShapes) {
-		this.map.set(iName, {"Color": iColor, "Size": iSize, "EdgeShapes": iEdgeShapes});
+	addType(iName, iColor, iSize, iEdgeShapes) {
+		this.typeMap.set(iName, {"Color": iColor, "Size": iSize, "EdgeShapes": iEdgeShapes});
+	}
+	
+	addFunction(iDefault, iType, iText, iInput, iCode) {
+		this.functionMap.set(iDefault, {"Type" : iType, "Text" : iText, "Input" : iInput, "Code" : iCode});
+	}
+	
+	getFunctionData(iDefault) {
+		if (this.functionMap.get(iDefault)) {
+			return this.functionMap.get(iDefault);
+		} else { return "err"; }
 	}
 
 	contains(iType) {
-		return !(this.map.get(iType.replace(/^#/, "")) == null);
+		return !(this.typeMap.get(iType.replace(/^#/, "")) == null);
 	}
 
 	getColor(iType) {
-		return this.map.get(iType.replace(/^#/, ""))["Color"];
+		return this.typeMap.get(iType.replace(/^#/, ""))["Color"];
 	}
 	
 	getSize(iType) {
-		return this.map.get(iType.replace(/^#/, ""))["Size"];
+		return this.typeMap.get(iType.replace(/^#/, ""))["Size"];
 	}
 
 	getEdgeShapes(iType) {
-		return this.map.get(iType.replace(/^#/, ""))["EdgeShapes"];
+		return this.typeMap.get(iType.replace(/^#/, ""))["EdgeShapes"];
 	}
 }
 
 class programBlock {
-	constructor(iType, iText, iInputTypes, iLeft, iTop, iTypeManager, iContainer) {
+	constructor(iDefault, iType, iText, iInputTypes, iLeft, iTop, iTypeManager, iContainer) {
+		this.defaultName = iDefault
 		this.type = iType;
 		this.text = iText;
 		this.inputTypes = iInputTypes;
@@ -284,10 +296,11 @@ class programBlock {
 		this.inputs = [];
 		if (this.type == "Bracket") {
 			this.canHaveChildren = true;
+			this.children = [];
 		} else {
 			this.canHaveChildren = false;
 		}
-		this.children = [];
+		this.parent = null;
 		this.width = 0;
 		this.height = 0;
 		this.code = this.blankFunction;
@@ -337,6 +350,9 @@ class programBlock {
 	
 		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
 			console.log("Dragging");
+			e.dataTransfer.setData("application/Block", JSON.stringify({
+				Default : this.defaultName
+			}));
 		});	
 	}
 	
@@ -383,12 +399,17 @@ class programBlock {
 			console.log(this.dropSite);
 			this.container.appendChild(this.dropSite);
 			
-			this.dropSite.addEventListener("dragover", (ev) => {
-				ev.preventDefault();
+			this.dropSite.addEventListener("dragover", (e) => {
+				e.preventDefault();
 			});
-			this.dropSite.addEventListener("drop", (ev) => {
-				ev.preventDefault();
-				console.log("Dropped");
+			this.dropSite.addEventListener("drop", (e) => {
+				e.preventDefault();
+				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
+				console.log(defaultName);
+				let defaultData = this.typeManager.getFunctionData(defaultName);
+				console.log(defaultData);
+				let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], defaultData["Input"], 18, 60, this.typeManager, this.container);
+				//this.children.unshift(newBlock);
 			});			
 		} 
 	}
