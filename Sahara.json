@@ -282,19 +282,19 @@
 	},
 	"Move_To" : {
 		"type" : "Code",
-		"text" : "Move to $1",
-		"inputs" : ["vertex"],
+		"text" : "Move to $1 ",
+		"inputs" : ["Vertex"],
 		"code" : null
 	},
 	"Move_Along" : {
 		"type" : "Code",
-		"text" : "Move Along $1",
-		"inputs" : ["edge"],
+		"text" : "Move Along $1 ",
+		"inputs" : ["Edge"],
 		"code" : null
 	},
 	"Move_To_The" : {
 		"type" : "Code",
-		"text" : "Move To The $1",
+		"text" : "Move To The  $1 ",
 		"inputs" : ["Direction"],
 		"code" : null
 	},
@@ -324,7 +324,7 @@
 	},
 	"Length" : {
 		"type" : "Number",
-		"text" : "Length of $1",
+		"text" : "Length of $1 ",
 		"inputs" : ["Edge"],
 		"code" : null
 	},
