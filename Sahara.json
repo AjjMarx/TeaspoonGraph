@@ -213,7 +213,7 @@
 		},
 		{
 			"Name" : "Number",
-			"Color" : "Aqua",
+			"Color" : "Red",
 			"Size" : "Small",
 			"EdgeShapes" : ["Straight", "Straight", "Straight", "Straight"]
 		},
@@ -237,13 +237,13 @@
 		},
 		{
 			"Name" : "Vertex",
-			"Color" : "Red",
+			"Color" : "Green",
 			"Size" : "Small",
 			"EdgeShapes" : ["Round", "Straight", "Round", "Straight"]
 		},
 		{
 			"Name" : "Edge",
-			"Color" : "Green",
+			"Color" : "Aqua",
 			"Size" : "Small",
 			"EdgeShapes" : ["Angle", "Straight", "Angle", "Straight"]
 		}
@@ -253,19 +253,25 @@
 	"On_Start" : {
 		"type" : "Header",
 		"text" : "On Start",
-		"inputs" : ["Code"],
+		"inputs" : null,
 		"code" : null
+	},
+	"Forever" : {
+		"type" : "Flow",
+		"text" : "Forever Repeat...",
+		"inputs" : null,
+		"code" : null 
 	},
 	"While" : {
 		"type" : "Flow",
 		"text" : "While $1 Is True...",
-		"inputs" : ["Boolean","Code"],
+		"inputs" : ["Boolean"],
 		"code" : null 
 	},
 	"If" : {
 		"type" : "Flow",
 		"text" : "If $1 Is True...",
-		"inputs" : ["Boolean","Code"],
+		"inputs" : ["Boolean"],
 		"code" : null
 	},
 	"For" : {
@@ -396,7 +402,7 @@
 	},
 	"Not" : {
 		"type" : "Boolean",
-		"text" : "Not $2",
+		"text" : "Not $1",
 		"inputs" : ["Boolean"],
 		"code" : null
 	},
@@ -442,19 +448,5 @@
 		"inputs" : null,
 		"code" : null
 	}
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
   }}
 }
