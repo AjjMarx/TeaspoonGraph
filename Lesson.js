@@ -25,7 +25,7 @@ async function LoadLesson() {
 
 		toolBox.style.left = "10px";
 		toolBox.style.top = "30px";
-		toolBox.style.width = "300px";
+		toolBox.style.width = "250px";
 		toolBox.style.bottom = "10px";
 
 		let mainTypes = new typeManager();
@@ -42,9 +42,23 @@ async function LoadLesson() {
 			if (it > 0) {
 				startTop = blocks[it-1].getBottom() + 10
 			} 
-			blocks[it] = new programBlock(blockData["type"], blockData["text"], blockData["inputs"], 30, startTop, mainTypes, toolBox);
+			blocks[it] = new programBlock(blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainTypes, toolBox);
 			it++;
 		}
+
+		const playground = document.createElement("div");
+		document.body.appendChild(playground);
+		playground.style.position = "absolute";
+		playground.style.left = "320px";
+		playground.style.top = "30px";
+		playground.style.right = "640px";
+		playground.style.bottom = "10px";
+
+		let headerData = lessonData["Code"]["Functions"]["On_Start"];
+		let headerBlock = new programBlock(headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainTypes, playground);
+		headerBlock.generateDropSites();
+		
+		let programSequence = [headerBlock];
 
 		requestAnimationFrame(renderGlobe);
 	} catch(err) {

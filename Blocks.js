@@ -282,7 +282,11 @@ class programBlock {
 		this.container = iContainer;
 		
 		this.inputs = [];
-		this.canHaveChildren = false;
+		if (this.type == "Bracket") {
+			this.canHaveChildren = true;
+		} else {
+			this.canHaveChildren = false;
+		}
 		this.children = [];
 		this.width = 0;
 		this.height = 0;
@@ -300,23 +304,18 @@ class programBlock {
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
 		this.mainBlock.style.text = this.text;
 		this.container.appendChild(this.mainBlock.container);
-//		console.log(this.inputTypes);
 		this.mainBlock.update();
+		this.mainBlock.hitBox.draggable = true;
 		if (this.inputTypes && this.inputTypes.length > 0) {
 			this.subBlocks = [];
 			let firstHalf = "";
 			let remainder = this.text;
 			let index = 0;
 			let pShift = 12;
-			//console.log("program block has " + this.inputTypes.length + "input types: ")
 			for (let types in this.inputTypes) {
-				//console.log(this.inputTypes[types]);
-				//console.log(types);
-				console.log(`$` + String(parseInt(types) + 1));
 				index = remainder.indexOf(`$` + String(parseInt(types) + 1));
 				firstHalf = remainder.substring(0, index);
 				remainder = remainder.substring(index);
-				console.log(firstHalf + "    " + remainder);
 				this.subBlocks[types] = new Block();
 				this.subBlocks[types].style.left = pShift + getStringWidth(firstHalf);
 				this.subBlocks[types].style.top = 10;
@@ -331,12 +330,14 @@ class programBlock {
 				}
 				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
 				this.subBlocks[types].update();
-				console.log(this.subBlocks[types].style.height);
 
 				pShift += getStringWidth(firstHalf);
 			}
 		} 
 	
+		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
+			console.log("Dragging");
+		});	
 	}
 	
 	update() {
@@ -369,6 +370,27 @@ class programBlock {
 
 	execute() {
 		console.log("Executing")
+	}
+
+	generateDropSites() {
+		if (this.typeManager.getSize(this.type) == "Bracket") {
+			this.dropSite = document.createElement("div");
+			this.dropSite.style.position = "absolute";
+			this.dropSite.style.width = this.mainBlock.style.width + "px";
+			this.dropSite.style.height = "32px";
+			this.dropSite.style.left = "16px";
+			this.dropSite.style.top = (this.mainBlock.style.height - 18)+ "px";
+			console.log(this.dropSite);
+			this.container.appendChild(this.dropSite);
+			
+			this.dropSite.addEventListener("dragover", (ev) => {
+				ev.preventDefault();
+			});
+			this.dropSite.addEventListener("drop", (ev) => {
+				ev.preventDefault();
+				console.log("Dropped");
+			});			
+		} 
 	}
 
 	deleteBlock() {
