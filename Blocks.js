@@ -254,6 +254,10 @@ class typeManager {
 		this.map.set(iName, {"Color": iColor, "Size": iSize, "EdgeShapes": iEdgeShapes});
 	}
 
+	contains(iType) {
+		return !(this.map.get(iType.replace(/^#/, "")) == null);
+	}
+
 	getColor(iType) {
 		return this.map.get(iType.replace(/^#/, ""))["Color"];
 	}
@@ -320,7 +324,11 @@ class programBlock {
 				this.subBlocks[types].style.color = "White";
 				this.subBlocks[types].style.size = "Small";
 				this.subBlocks[types].style.text = " ";
-				this.subBlocks[types].style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
+				if (this.typeManager.contains(this.inputTypes[types])) {
+					this.subBlocks[types].style.edgeShapes = this.typeManager.getEdgeShapes(this.inputTypes[types]);
+				} else {	
+					this.subBlocks[types].style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
+				}
 				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
 				this.subBlocks[types].update();
 				console.log(this.subBlocks[types].style.height);
