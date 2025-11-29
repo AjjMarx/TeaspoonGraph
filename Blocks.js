@@ -36,7 +36,7 @@ class Block {
 		this.style = {
 			width : 50,
 			height : 28,
-			innerHeight : 0,
+			innerHeight : 28,
 			left : 0,
 			top : 0,
 			color : "Orange",
@@ -76,17 +76,16 @@ class Block {
 			this.hitBox.style.width = String(this.style.width ) + "px";
 			this.hitBox.style.height = String(this.style.height - 8) + "px";
 		} if (this.style.size == "Bracket") {
-			this.style.innerHeight = 32;
-			this.style.height += this.style.innerHeight;
+			//this.style.height += this.style.innerHeight;
 			this.style.width = getStringWidth(this.style.text) + 16;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
-			this.container.style.height = (this.style.height + 24) + "px";
+			this.container.style.height = (this.style.height + this.style.innerHeight + 24) + "px";
 			this.hitBox.style.left = "8px";
 			this.hitBox.style.top = "8px";
 			this.hitBox.style.width = String(this.style.width) + "px";
-			this.hitBox.style.height = String(this.style.height - this.style.innerHeight) + "px";
+			this.hitBox.style.height = String(this.style.height) + "px";
 		}
 		this.container.innerHTML = this.generateSVG();
 		this.container.appendChild(this.hitBox);
@@ -98,14 +97,14 @@ class Block {
 		} else if (this.style.size == "Small") {
 			return this.style.top + this.style.height + 1;
 		} else if (this.style.size == "Bracket") {
-			return this.style.top + this.style.height + 5;
+			return this.style.top + this.style.height + this.style.innerHeight + 12;
 		}
 	}
 
 	generateSVG() {
 		let temp;
 		if (this.style.size == "Bracket") {
-			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (24 + this.style.height) + `">`;
+			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (24 + this.style.height + this.style.innerHeight) + `">`;
 		} else {
 			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (16 + this.style.height) + `">`;
 		}		
@@ -208,7 +207,8 @@ class Block {
 
 			temp += `12,` + (4 + this.style.height) + ` `;
 		} else if (this.style.size == "Bracket") {
-			let tHeight = this.style.height - this.style.innerHeight;	
+			let tHeight = this.style.height;
+			let totHeight = this.style.height + this.style.innerHeight + 6;	
 			temp += `8,` + (8 + tHeight) + ` 8,8 `;
 
 			if (this.style.edgeShapes[1] == "Straight") {
@@ -224,21 +224,21 @@ class Block {
 			
 			temp += '47.3,' + (8 + tHeight) + ' 39.3,' + (15 + tHeight) + ' 32.7,' + 
 			(15 + tHeight) + ' 24.7,' + (8 + tHeight)  + ` 15,` + (8 + tHeight) + ` ` +
-			`15,` + (this.style.height) + ` 24.7, ` + (this.style.height) + ` 32.7,` + (this.style.height + 7) + 
-			` 39.3,` + (this.style.height + 7) + ' 47.3,' + (this.style.height) + 
-			` 58,` + (this.style.height) + ` 58,` + (this.style.height + 12) + ` `; 
+			`15,` + (totHeight) + ` 24.7, ` + (totHeight) + ` 32.7,` + (totHeight + 7) + 
+			` 39.3,` + (totHeight + 7) + ' 47.3,' + (totHeight) + 
+			` 58,` + (totHeight) + ` 58,` + (totHeight + 12) + ` `; 
 			
 			if (this.style.edgeShapes[3] == "Straight") {
-				temp += `8,` + (12 + this.style.height) + ` `;
+				temp += `8,` + (12 + totHeight) + ` `;
 			} else if (this.style.edgeShapes[3] == "Puzzle") {
-				temp += '39.3,' + (12 + this.style.height) + ' 31.3,' + (19 + this.style.height) + ' 24.7,' + 
-				(19 + this.style.height) + ' 16.7,' + (12 + this.style.height)  + ` 8,` + (12 + this.style.height) + ` `;
+				temp += '39.3,' + (12 + totHeight) + ' 31.3,' + (19 + totHeight) + ' 24.7,' + 
+				(19 + totHeight) + ' 16.7,' + (12 + totHeight)  + ` 8,` + (12 + totHeight) + ` `;
 			}
 		}
 
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
-		temp += `<text fill="#ffffff" font-size="15" style="user-select: none;" x="16" y="` + (14 +(this.style.height - this.style.innerHeight)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		temp += `<text fill="#ffffff" font-size="15" style="user-select: none;" x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
 		temp += `</svg>`;
 		
 		return temp;
@@ -390,6 +390,7 @@ class programBlock {
 
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
+			//this.mainBlock.update();
 			this.dropSite = document.createElement("div");
 			this.dropSite.style.position = "absolute";
 			this.dropSite.style.width = this.mainBlock.style.width + "px";
@@ -411,8 +412,9 @@ class programBlock {
 				console.log(defaultData);
 				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 4, this.typeManager, this.container);
+					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 					newBlock.generateDropSites();
+					//this.mainBlock.style.innerHeight = 32;//newBlock.style.height; 
 				}
 				//this.children.unshift(newBlock);
 			});			
