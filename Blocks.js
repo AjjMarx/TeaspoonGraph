@@ -394,8 +394,9 @@ class programBlock {
 			this.dropSite.style.position = "absolute";
 			this.dropSite.style.width = this.mainBlock.style.width + "px";
 			this.dropSite.style.height = "32px";
-			this.dropSite.style.left = "16px";
-			this.dropSite.style.top = (this.mainBlock.style.height - 18)+ "px";
+			this.dropSite.style.left = (this.mainBlock.style.left + 8) + "px";
+			this.dropSite.style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
+			this.dropSite.style.zIndex = "999";
 			console.log(this.dropSite);
 			this.container.appendChild(this.dropSite);
 			
@@ -408,7 +409,11 @@ class programBlock {
 				console.log(defaultName);
 				let defaultData = this.typeManager.getFunctionData(defaultName);
 				console.log(defaultData);
-				let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], defaultData["Input"], 18, 60, this.typeManager, this.container);
+				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
+					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 4, this.typeManager, this.container);
+					newBlock.generateDropSites();
+				}
 				//this.children.unshift(newBlock);
 			});			
 		} 
