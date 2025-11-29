@@ -89,7 +89,7 @@ document.body.appendChild(credit);
 credit.style.position = "absolute";
 credit.style.bottom = "0%";
 credit.style.width = "600px";
-credit.style. right = "72px";
+credit.style. right = "30px";
 credit.style.height = "2em";
 credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
 
@@ -150,8 +150,10 @@ sidebar.appendChild(divLabel);
 sidebar.appendChild(sliders["divide"]);
 */
 window.addEventListener('wheel', (event) => {
-	cameraDistance += event.deltaY/100;
-	cameraDistance = Math.min(maximumDistance, Math.max(minimumDistance, cameraDistance));
+	if (canvas.matches(":hover")) {
+		cameraDistance += event.deltaY/100;
+		cameraDistance = Math.min(maximumDistance, Math.max(minimumDistance, cameraDistance));
+	}
 //	sliders["dist"].value = cameraDistance;
 });
 
