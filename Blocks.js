@@ -4,10 +4,11 @@ const Palette = [
 	["#E7C54B", "Yellow"],
 	["#9FEB81", "Lime"], 
 	["#3EB56F", "Green"],
-	["#5ED6D0", "Aqua"],
+	["#46C0AC", "Aqua"],
 	["#39A2E3", "Blue"],
 	["#9F6FF2", "Purple"],
-	["#F299E3", "Pink"] 
+	["#F299E3", "Pink"],
+	["#FFFFFF", "White"] 
 ];
 
 const PaletteReverse = {
@@ -19,7 +20,8 @@ const PaletteReverse = {
 	Aqua : 5,
 	Blue : 6,
 	Purple : 7,
-	Pink: 8
+	Pink: 8,
+	White: 9
 };
 
 class Block {
@@ -33,7 +35,7 @@ class Block {
 
 		this.style = {
 			width : 50,
-			height : 32,
+			height : 28,
 			innerHeight : 0,
 			left : 0,
 			top : 0,
@@ -294,7 +296,39 @@ class programBlock {
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
 		this.mainBlock.style.text = this.text;
 		this.container.appendChild(this.mainBlock.container);
+//		console.log(this.inputTypes);
 		this.mainBlock.update();
+		if (this.inputTypes && this.inputTypes.length > 0) {
+			this.subBlocks = [];
+			let firstHalf = "";
+			let remainder = this.text;
+			let index = 0;
+			let pShift = 12;
+			//console.log("program block has " + this.inputTypes.length + "input types: ")
+			for (let types in this.inputTypes) {
+				//console.log(this.inputTypes[types]);
+				//console.log(types);
+				console.log(`$` + String(parseInt(types) + 1));
+				index = remainder.indexOf(`$` + String(parseInt(types) + 1));
+				firstHalf = remainder.substring(0, index);
+				remainder = remainder.substring(index);
+				console.log(firstHalf + "    " + remainder);
+				this.subBlocks[types] = new Block();
+				this.subBlocks[types].style.left = pShift + getStringWidth(firstHalf);
+				this.subBlocks[types].style.top = 10;
+				this.subBlocks[types].style.height = 24;
+				this.subBlocks[types].style.color = "White";
+				this.subBlocks[types].style.size = "Small";
+				this.subBlocks[types].style.text = " ";
+				this.subBlocks[types].style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
+				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
+				this.subBlocks[types].update();
+				console.log(this.subBlocks[types].style.height);
+
+				pShift += getStringWidth(firstHalf);
+			}
+		} 
+	
 	}
 	
 	update() {
