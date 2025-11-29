@@ -28,9 +28,11 @@ class Block {
 	constructor() {
 		this.container = document.createElement("div");
 		this.hitBox = document.createElement("div");
+		this.svg = document.createElement("div");
 
 		this.container.id = "Block";
 		this.container.style.position = "absolute";
+		this.svg.style.position = "absolute";
 		this.hitBox.style.position = "absolute";
 
 		this.style = {
@@ -48,7 +50,7 @@ class Block {
 
 		this.style.width = this.style.text.length * 8 + 24;
 	
-		this.container.innerHTML = this.generateSVG();
+		this.svg.innerHTML = this.generateSVG();
 
 		//this.update();
 	}
@@ -87,7 +89,8 @@ class Block {
 			this.hitBox.style.width = String(this.style.width) + "px";
 			this.hitBox.style.height = String(this.style.height) + "px";
 		}
-		this.container.innerHTML = this.generateSVG();
+		this.svg.innerHTML = this.generateSVG();
+		this.container.appendChild(this.svg);
 		this.container.appendChild(this.hitBox);
 	}
 
@@ -344,6 +347,8 @@ class programBlock {
 				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
 				this.subBlocks[types].update();
 
+				this.subBlocks[types].container.style.zIndex = "999";
+	
 				pShift += getStringWidth(firstHalf);
 			}
 		} 
