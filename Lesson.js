@@ -18,33 +18,32 @@ async function LoadLesson() {
 
 
 
-		const playground = document.createElement("div");
-		document.body.appendChild(playground);
+		const toolBox = document.createElement("div");
+		document.body.appendChild(toolBox);
+		toolBox.style.position = "absolute";
+		toolBox.style.overflowY = 'auto';
 
-		playground.style.left = "100px";
-		playground.style.top = "100px";
-		playground.style.width = "300px";
-		playground.style.height = "300px";
+		toolBox.style.left = "10px";
+		toolBox.style.top = "30px";
+		toolBox.style.width = "300px";
+		toolBox.style.bottom = "10px";
 
+		let mainTypes = new typeManager();
+		for (i of lessonData["Code"]["Types"]) {
+			mainTypes.add(i["Name"], i["Color"], i["Size"], i["EdgeShapes"]);
+		}
 
 		let blocks = [];
-		blocks[-1] = new Block();
-		playground.appendChild(blocks[-1].container);
-		blocks[-1].style.left = 100;
-		blocks[-1].style.top = 100;
-		blocks[-1].update();
-		
-		for (i in lessonData["Code"]["Types"]) { 
-			blocks[i] = new Block();
-
-			playground.appendChild(blocks[i].container);
-			blocks[i].style.left = 100;
-			blocks[i].style.top = blocks[i-1].getBottom() + 15;
-			blocks[i].style.color = lessonData["Code"]["Types"][i]["Color"];
-			blocks[i].style.text = lessonData["Code"]["Types"][i]["Name"];
-			blocks[i].style.size = lessonData["Code"]["Types"][i]["Size"];
-			blocks[i].style.edgeShapes = lessonData["Code"]["Types"][i]["EdgeShapes"];
-			blocks[i].update();
+	
+		let it = 0;	
+		let startTop = 10;
+		for (blockName in lessonData["Code"]["Functions"]) {
+			let blockData = lessonData["Code"]["Functions"][blockName];
+			if (it > 0) {
+				startTop = blocks[it-1].getBottom() + 10
+			} 
+			blocks[it] = new programBlock(blockData["type"], blockData["text"], blockData["inputs"], 30, startTop, mainTypes, toolBox);
+			it++;
 		}
 
 		requestAnimationFrame(renderGlobe);

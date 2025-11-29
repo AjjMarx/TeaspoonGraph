@@ -1,7 +1,7 @@
 const Palette = [
 	["#F75454", "Red"],
 	["#E6A45A", "Orange"],
-	["#E3D12D", "Yellow"],
+	["#E7C54B", "Yellow"],
 	["#9FEB81", "Lime"], 
 	["#3EB56F", "Green"],
 	["#5ED6D0", "Aqua"],
@@ -22,15 +22,6 @@ const PaletteReverse = {
 	Pink: 8
 };
 
-const sizeHash = {
-	bracket : 0,
-	normal : 8,
-	small : 12,
-	Bracket : 0,
-	Normal : 8,
-	Small : 12
-}
-
 class Block {
 	constructor() {
 		this.container = document.createElement("div");
@@ -48,8 +39,8 @@ class Block {
 			top : 0,
 			color : "Orange",
 			size : "Normal",
-			edgeShapes : ["Straight", "Puzzle", "Straight", "Puzzle"],
-			text : "Trade $1 $2 For $3 $4"
+			edgeShapes : ["Straight", "Straight", "Straight", "Straight"],
+			text : "Null",
 		};
 		this.shift = 0;
 
@@ -66,8 +57,8 @@ class Block {
 			this.style.width = getStringWidth(this.style.text) + 16;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
-			this.container.style.width = (this.style.width) + "px";
-			this.container.style.height = (this.style.height) + "px";
+			this.container.style.width = (this.style.width + 16) + "px";
+			this.container.style.height = (this.style.height + 16) + "px";
 			this.hitBox.style.left = "8px";
 			this.hitBox.style.top = "8px";
 			this.hitBox.style.width = String(this.style.width) + "px";
@@ -76,8 +67,8 @@ class Block {
 			this.style.width = getStringWidth(this.style.text) + 16 ;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
-			this.container.style.width = (this.style.width) + "px";
-			this.container.style.height = (this.style.height) + "px";
+			this.container.style.width = (this.style.width + 16) + "px";
+			this.container.style.height = (this.style.height + 16) + "px";
 			this.hitBox.style.left = "8px";
 			this.hitBox.style.top = "12px";
 			this.hitBox.style.width = String(this.style.width ) + "px";
@@ -88,8 +79,8 @@ class Block {
 			this.style.width = getStringWidth(this.style.text) + 16;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
-			this.container.style.width = (this.style.width) + "px";
-			this.container.style.height = (this.style.height) + "px";
+			this.container.style.width = (this.style.width + 16) + "px";
+			this.container.style.height = (this.style.height + 24) + "px";
 			this.hitBox.style.left = "8px";
 			this.hitBox.style.top = "8px";
 			this.hitBox.style.width = String(this.style.width) + "px";
@@ -100,7 +91,13 @@ class Block {
 	}
 
 	getBottom() {
-		return this.style.top + this.style.height + 1;
+		if (this.style.size == "Normal") {
+			return this.style.top + this.style.height + 1;
+		} else if (this.style.size == "Small") {
+			return this.style.top + this.style.height + 1;
+		} else if (this.style.size == "Bracket") {
+			return this.style.top + this.style.height + 5;
+		}
 	}
 
 	generateSVG() {
@@ -172,7 +169,7 @@ class Block {
 				temp += `4,` + (8 + this.style.height/2) + ` 12,12 `;
 			} else if (this.style.edgeShapes[2] == "Round") { 
 				for (let i = 3.14159; i > 0; i-=0.39269) {
-					temp += (12 + Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
+					temp += (16 + Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
 				}
 			} else if (this.style.edgeShapes[2] == "Arrow") {
 				temp += ` 12,` + (4 + this.style.height);
@@ -194,7 +191,7 @@ class Block {
 				temp += (12 + this.style.width) + `,` + (8 + this.style.height/2) + ` ` + (4 + this.style.width) + `,` + (4 + this.style.height) + ` `;
 			} else if (this.style.edgeShapes[2] == "Round") {
 				for (let i = 0; i < 3.14159; i+=0.39269) {
-					temp += (4 + this.style.width - Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
+					temp += (0 + this.style.width - Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
 				}
 			} else if (this.style.edgeShapes[2] == "Arrow") {
 				temp += (3 + this.style.width) + `,` + (8 + this.style.height/3) + ` `;
@@ -224,8 +221,8 @@ class Block {
 			temp += (8 + this.style.width) + `,` + (8 + tHeight) + ` `;
 			
 			temp += '47.3,' + (8 + tHeight) + ' 39.3,' + (15 + tHeight) + ' 32.7,' + 
-			(15 + tHeight) + ' 24.7,' + (8 + tHeight)  + ` 16,` + (8 + tHeight) + ` ` +
-			`16,` + (this.style.height) + ` 24.7, ` + (this.style.height) + ` 32.7,` + (this.style.height + 7) + 
+			(15 + tHeight) + ' 24.7,' + (8 + tHeight)  + ` 15,` + (8 + tHeight) + ` ` +
+			`15,` + (this.style.height) + ` 24.7, ` + (this.style.height) + ` 32.7,` + (this.style.height + 7) + 
 			` 39.3,` + (this.style.height + 7) + ' 47.3,' + (this.style.height) + 
 			` 58,` + (this.style.height) + ` 58,` + (this.style.height + 12) + ` `; 
 			
@@ -239,17 +236,107 @@ class Block {
 
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
-		temp += `<text fill="#ffffff" font-size="16" style="user-select: none;" x="16" y="` + (14 +(this.style.height - this.style.innerHeight)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		temp += `<text fill="#ffffff" font-size="15" style="user-select: none;" x="16" y="` + (14 +(this.style.height - this.style.innerHeight)/2)+ `"` + `>` + this.style.text + ` </text>`;
 		temp += `</svg>`;
 		
 		return temp;
 	}
 }
 
+class typeManager {
+	constructor() {
+		this.map = new Map();	
+	}
+
+	add(iName, iColor, iSize, iEdgeShapes) {
+		this.map.set(iName, {"Color": iColor, "Size": iSize, "EdgeShapes": iEdgeShapes});
+	}
+
+	getColor(iType) {
+		return this.map.get(iType.replace(/^#/, ""))["Color"];
+	}
+	
+	getSize(iType) {
+		return this.map.get(iType.replace(/^#/, ""))["Size"];
+	}
+
+	getEdgeShapes(iType) {
+		return this.map.get(iType.replace(/^#/, ""))["EdgeShapes"];
+	}
+}
+
+class programBlock {
+	constructor(iType, iText, iInputTypes, iLeft, iTop, iTypeManager, iContainer) {
+		this.type = iType;
+		this.text = iText;
+		this.inputTypes = iInputTypes;
+		this.left = iLeft;
+		this.top = iTop;
+		this.typeManager = iTypeManager;
+		this.container = iContainer;
+		
+		this.inputs = [];
+		this.canHaveChildren = false;
+		this.children = [];
+		this.width = 0;
+		this.height = 0;
+		this.code = this.blankFunction;
+	
+		this.generateBlock();
+	}
+
+	generateBlock() {
+		this.mainBlock = new Block();
+		this.mainBlock.style.left = this.left;
+		this.mainBlock.style.top = this.top;
+		this.mainBlock.style.color = this.typeManager.getColor(this.type);
+		this.mainBlock.style.size = this.typeManager.getSize(this.type);
+		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
+		this.mainBlock.style.text = this.text;
+		this.container.appendChild(this.mainBlock.container);
+		this.mainBlock.update();
+	}
+	
+	update() {
+		this.mainBlock.update();
+	}
+
+	async blankFunction() {
+		return new Promise((resolve) => {
+			resolve();
+		});
+	}
+
+	setPosition(iLeft, iTop) {
+		this.left = iLeft;
+		this.top = iTop;
+		this.mainBlock.style.left = this.left;
+		this.mainBlock.style.top = this.top;
+		this.update();
+	}
+		
+	setText(iText) {
+		this.text = iText;
+		this.mainBlock.style.text = this.text;
+		this.update();
+	}
+	
+	getBottom() {
+		return this.mainBlock.getBottom();
+	}
+
+	execute() {
+		console.log("Executing")
+	}
+
+	deleteBlock() {
+
+	}
+}
 
 const sampleCanvas = document.createElement("canvas");
 const sampleCanvasContext = sampleCanvas.getContext('2d');
-sampleCanvasContext.font = "16px 'Roboto Mono', monospace";
+sampleCanvasContext.font = "15px 'Roboto Mono', monospace";
 
 function getStringWidth(str) {
 	const textMeasure = sampleCanvasContext.measureText(str);
