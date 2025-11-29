@@ -201,7 +201,7 @@
 		},
 		{
 			"Name" : "Flow",
-			"Color" : "Yellow",
+			"Color" : "Orange",
 			"Size" : "Bracket",
 			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]
 		},
@@ -212,10 +212,10 @@
 			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]	
 		},
 		{
-			"Name" : "Integer",
+			"Name" : "Number",
 			"Color" : "Aqua",
 			"Size" : "Small",
-			"EdgeShapes" : ["Straight", "Straight", "Round", "Straight"]
+			"EdgeShapes" : ["Straight", "Straight", "Straight", "Straight"]
 		},
 		{
 			"Name" : "Boolean",
@@ -227,7 +227,7 @@
 			"Name" : "Good",
 			"Color" : "Pink",
 			"Size" : "Small",
-			"EdgeShapes" : ["Straight", "Straight", "Straight", "Straight"]
+			"EdgeShapes" : ["Straight", "Straight", "Round", "Straight"]
 		},
 		{
 			"Name" : "Direction",
@@ -258,20 +258,20 @@
 	},
 	"While" : {
 		"type" : "Flow",
-		"text" : "While $1",
+		"text" : "While $1 Is True...",
 		"inputs" : ["Boolean","Code"],
 		"code" : null 
 	},
 	"If" : {
 		"type" : "Flow",
-		"text" : "If $1",
+		"text" : "If $1 Is True...",
 		"inputs" : ["Boolean","Code"],
 		"code" : null
 	},
 	"For" : {
 		"type" : "Flow",
-		"text" : "For $1 in $2",
-		"inputs" : "#Small",
+		"text" : "For Every One Of $1...",
+		"inputs" : ["#Small"],
 		"code" : null
 	},
 	"Move_To" : {
@@ -295,7 +295,7 @@
 	"Trade" : {
 		"type" : "Code",
 		"text" : "Trade $1 $2 For $3 $4",
-		"inputs" : ["Integer", "Good", "Integer", "Good"],
+		"inputs" : ["Number", "Good", "Number", "Good"],
 		"code" : null
 	},
 	"Neighors" : {
@@ -303,6 +303,158 @@
 		"text" : "My Neighbors",
 		"inputs" : null,
 		"code" : null
+	},
+	"Edges" : {
+		"type" : "#Edge",
+		"text" : "My Paths",
+		"inputs" : null,
+		"code" : null
+	},
+	"Direction_Of" : {
+		"type" : "Direction",
+		"text" : "Direction of $1",
+		"inputs" : ["Edge"],
+		"code" : null
+	},
+	"Length" : {
+		"type" : "Number",
+		"text" : "Length of $1",
+		"inputs" : ["Edge"],
+		"code" : null
+	},
+	"Exchange_Rate" : {
+		"type" : "Number",
+		"text" : "Value of $1 and $2 in $3",
+		"inputs" : ["Good", "Good", "Vertex"],
+		"code" : null
+	},
+	"North" : {
+		"type" : "Direction",
+		"text" : "North",
+		"inputs" : null,
+		"code" : null
+	},
+	"South" : {
+		"type" : "Direction",
+		"text" : "South",
+		"inputs" : null,
+		"code" : null
+	},
+	"East" : {
+		"type" : "Direction",
+		"text" : "East",
+		"inputs" : null,
+		"code" : null
+	},
+	"West" : {
+		"type" : "Direction",
+		"text" : "West",
+		"inputs" : null,
+		"code" : null
+	},
+	"Degrees" : {
+		"type" : "Direction",
+		"text" : "$1º",
+		"inputs" : ["Number"],
+		"code" : null
+	},
+	"Plus" : {
+		"type" : "Number",
+		"text" : "$1 + $2",
+		"inputs" : ["Number", "Number"],
+		"code" : null
+	},
+	"Minus" : {
+		"type" : "Number",
+		"text" : "$1 - $2",
+		"inputs" : ["Number", "Number"],
+		"code" : null
+	},
+	"Divide" : {
+		"type" : "Number",
+		"text" : "$1 ÷ $2",
+		"inputs" : ["Number", "Number"],
+		"code" : null
+	},
+	"Multiply" : {
+		"type" : "Number",
+		"text" : "$1 x $2",
+		"inputs" : ["Number", "Number"],
+		"code" : null
+	},
+	"And" : {
+		"type" : "Boolean",
+		"text" : "$1 And $2",
+		"inputs" : ["Boolean", "Boolean"],
+		"code" : null
+	},
+	"Or" : {
+		"type" : "Boolean",
+		"text" : "$1 or $2",
+		"inputs" : ["Boolean", "Boolean"],
+		"code" : null
+	},
+	"Not" : {
+		"type" : "Boolean",
+		"text" : "Not $2",
+		"inputs" : ["Boolean"],
+		"code" : null
+	},
+	"Equals" : {
+		"type" : "Boolean",
+		"text" : "$1 Equals $2",
+		"inputs" : ["Boolean", "Boolean"],
+		"code" : null
+	},
+	"True" : {
+		"type" : "Boolean",
+		"text" : "True",
+		"inputs" : null,
+		"code" : null
+	},
+	"False" : {
+		"type" : "Boolean",
+		"text" : "False",
+		"inputs" : null,
+		"code" : null
+	},
+	"Gold" : {
+		"type" : "Good",
+		"text" : "Gold",
+		"inputs" : null,
+		"code" : null
+	},
+	"Salt" : {
+		"type" : "Good",
+		"text" : "Salt",
+		"inputs" : null,
+		"code" : null
+	},
+	"Ivory" : {
+		"type" : "Good",
+		"text" : "Ivory",
+		"inputs" : null,
+		"code" : null
+	},
+	"Ceramics" : {
+		"type" : "Good",
+		"text" : "Ceramics",
+		"inputs" : null,
+		"code" : null
 	}
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
   }}
 }
