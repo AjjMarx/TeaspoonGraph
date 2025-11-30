@@ -308,6 +308,7 @@ class programBlock {
 		this.top = iTop;
 		this.typeManager = iTypeManager;
 		this.container = iContainer;
+		this.dropsiteCollection = null;
 		
 		this.canDrag = true;
 		this.inputs = [];
@@ -322,6 +323,8 @@ class programBlock {
 		this.width = 0;
 		this.height = 0;
 		this.code = this.blankFunction;
+
+		this.IDnum = crypto.randomUUID();
 	
 		this.generateBlock();
 	}
@@ -357,6 +360,7 @@ class programBlock {
 				this.subBlocks[types].style.color = "White";
 				this.subBlocks[types].style.size = "Small";
 				this.subBlocks[types].style.text = " ";
+				this.subBlocks[types].container.style.pointerEvents = 'none';
 				if (this.typeManager.contains(this.inputTypes[types])) {
 					this.subBlocks[types].style.edgeShapes = this.typeManager.getEdgeShapes(this.inputTypes[types]);
 				} else {	
@@ -374,14 +378,26 @@ class programBlock {
 		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
 			if (this.canDrag) {
 				console.log("Dragging");
+			
 				if (!!window.chrome) {
 					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
 				} else {
 					e.dataTransfer.setDragImage(this.mainBlock.svg.firstChild, 0, 0);
-				}
+				}	
+				
 				e.dataTransfer.setData("application/Block", JSON.stringify({
-					Default : this.defaultName
+					Default : this.defaultName,
+					ID : this.IDnum
 				}));
+				setTimeout(() => {
+					for (let boxes of this.dropsiteCollection) { boxes.style.zIndex = "999"; }
+				}, 1);	
+			}
+		});
+		this.mainBlock.hitBox.addEventListener("dragend", (e) => {
+			if (this.canDrag) {
+				console.log("Done dragging");
+				for (let boxes of this.dropsiteCollection) { boxes.style.zIndex = "-1"; }
 			}
 		});	
 	}
@@ -445,7 +461,8 @@ class programBlock {
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.dropSites["Backet"] = document.createElement("div");
-			//this.dropSites["Backet"].style.outline = "1px solid blue";
+			this.dropsiteCollection.push(this.dropSites["Backet"]);
+			this.dropSites["Backet"].style.outline = "1px solid blue";
 			this.dropSites["Backet"].style.position = "absolute";
 			this.dropSites["Backet"].style.width = this.mainBlock.style.width + "px";
 			this.dropSites["Backet"].style.height = "32px";
@@ -462,10 +479,12 @@ class programBlock {
 				console.log(e);
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
+				let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 				let defaultData = this.typeManager.getFunctionData(defaultName);
 				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
+					newBlock.dropsiteCollection = this.dropsiteCollection;
 					newBlock.generateDropSites();
 					newBlock.parent = this;
 					this.children.unshift(newBlock);
@@ -477,7 +496,8 @@ class programBlock {
 		
 		if ((this.typeManager.getSize(this.type) == "Normal" || this.typeManager.getSize(this.type) == "Bracket") && this.typeManager.getEdgeShapes(this.type)[3] == "Puzzle") {
 			this.dropSites["below"] = document.createElement("div");
-			//this.dropSites["below"].style.outline = "1px solid blue";
+			this.dropsiteCollection.push(this.dropSites["below"]);
+			this.dropSites["below"].style.outline = "1px solid blue";
 			this.dropSites["below"].style.position = "absolute";
 			this.dropSites["below"].style.width = (this.mainBlock.style.width + 16) + "px";
 			this.dropSites["below"].style.height = (this.mainBlock.style.height) + "px";
@@ -497,6 +517,7 @@ class programBlock {
 				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 					defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+					newBlock.dropsiteCollection = this.dropsiteCollection;
 					newBlock.generateDropSites();
 					newBlock.parent = this.parent;
 					console.log(this.parent.children, this.parent.children.indexOf(this));

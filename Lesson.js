@@ -34,6 +34,7 @@ async function LoadLesson() {
 		}
 
 		let blocks = [];
+		let dropCollection = [];
 	
 		let it = 0;	
 		let startTop = 10;
@@ -45,6 +46,8 @@ async function LoadLesson() {
 					startTop = blocks[it-1].getBottom() + 10
 				} 
 				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
+				blocks[it].IDnum = 0;
+				blocks[it].dropsiteCollection = dropCollection;
 				blocks[it].update();
 				it++;
 			}
@@ -60,6 +63,7 @@ async function LoadLesson() {
 
 		let headerData = lessonData["Code"]["Functions"]["On_Start"];
 		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainManager, playground);
+		headerBlock.dropsiteCollection = dropCollection;
 		headerBlock.generateDropSites();
 		headerBlock.toggleDrag(false);
 		
