@@ -92,7 +92,7 @@ credit.style.width = "600px";
 credit.style. right = "30px";
 credit.style.height = "2em";
 credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
-
+credit.style.userSelect = 'none';
 /*
 sidebar.style.width = "300px";
 sidebar.style.height = "300px";
