@@ -38,14 +38,16 @@ async function LoadLesson() {
 		let it = 0;	
 		let startTop = 10;
 		for (blockName in lessonData["Code"]["Functions"]) {
-			let blockData = lessonData["Code"]["Functions"][blockName];
-			mainManager.addFunction(blockName, blockData["type"], blockData["text"], blockData["inputs"], blockData["code"]);
-			if (it > 0) {
-				startTop = blocks[it-1].getBottom() + 10
-			} 
-			blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
-			blocks[it].update();
-			it++;
+			if (blockName != "On_Start") {
+				let blockData = lessonData["Code"]["Functions"][blockName];
+				mainManager.addFunction(blockName, blockData["type"], blockData["text"], blockData["inputs"], blockData["code"]);
+				if (it > 0) {
+					startTop = blocks[it-1].getBottom() + 10
+				} 
+				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
+				blocks[it].update();
+				it++;
+			}
 		}
 
 		const playground = document.createElement("div");
@@ -59,6 +61,7 @@ async function LoadLesson() {
 		let headerData = lessonData["Code"]["Functions"]["On_Start"];
 		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainManager, playground);
 		headerBlock.generateDropSites();
+		headerBlock.toggleDrag(false);
 		
 		let programSequence = [headerBlock];
 

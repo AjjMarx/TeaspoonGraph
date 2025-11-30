@@ -157,4 +157,11 @@ window.addEventListener('wheel', (event) => {
 //	sliders["dist"].value = cameraDistance;
 });
 
+document.addEventListener('dragstart', e => {
+	if (e.target.tagName.toLowerCase() === 'text') {
+		e.preventDefault();
+		e.stopPropagation();
+	}
+}, true);
+
 LoadLesson();

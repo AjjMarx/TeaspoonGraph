@@ -51,8 +51,8 @@ class Block {
 		this.style.width = this.style.text.length * 8 + 24;
 	
 		this.svg.innerHTML = this.generateSVG();
-
-		//this.update();
+		this.svg.firstChild.addEventListener("dragstart", e => e.preventDefault());
+		this.svg.firstChild.lastChild.addEventListener("dragstart", e => e.preventDefault());
 	}
 
 	update() {
@@ -90,6 +90,8 @@ class Block {
 			this.hitBox.style.height = String(this.style.height) + "px";
 		}
 		this.svg.innerHTML = this.generateSVG();
+		this.svg.firstChild.addEventListener("dragstart", e => e.preventDefault());
+		this.svg.firstChild.lastChild.addEventListener("dragstart", e => e.preventDefault());
 		this.container.appendChild(this.svg);
 		this.container.appendChild(this.hitBox);
 	}
@@ -253,9 +255,8 @@ class Block {
 
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
-		temp += `<text fill="#ffffff" font-size="15" style="user-select: none;" x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		temp += `<text fill="#ffffff" font-size="15" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
 		temp += `</svg>`;
-		
 		return temp;
 	}
 }
@@ -308,6 +309,7 @@ class programBlock {
 		this.typeManager = iTypeManager;
 		this.container = iContainer;
 		
+		this.canDrag = true;
 		this.inputs = [];
 		this.children = [];
 		this.dropSites = {};
@@ -337,7 +339,7 @@ class programBlock {
 		}
 		this.container.appendChild(this.mainBlock.container);
 		this.mainBlock.update();
-		this.mainBlock.hitBox.draggable = true;
+		this.mainBlock.hitBox.draggable = this.canDrag;
 		if (this.inputTypes && this.inputTypes.length > 0) {
 			this.subBlocks = [];
 			let firstHalf = "";
@@ -370,10 +372,17 @@ class programBlock {
 		} 
 	
 		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
-			console.log("Dragging");
-			e.dataTransfer.setData("application/Block", JSON.stringify({
-				Default : this.defaultName
-			}));
+			if (this.canDrag) {
+				console.log("Dragging");
+				if (!!window.chrome) {
+					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
+				} else {
+					e.dataTransfer.setDragImage(this.mainBlock.svg.firstChild, 0, 0);
+				}
+				e.dataTransfer.setData("application/Block", JSON.stringify({
+					Default : this.defaultName
+				}));
+			}
 		});	
 	}
 	
@@ -436,7 +445,7 @@ class programBlock {
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.dropSites["Backet"] = document.createElement("div");
-			this.dropSites["Backet"].style.outline = "1px solid blue";
+			//this.dropSites["Backet"].style.outline = "1px solid blue";
 			this.dropSites["Backet"].style.position = "absolute";
 			this.dropSites["Backet"].style.width = this.mainBlock.style.width + "px";
 			this.dropSites["Backet"].style.height = "32px";
@@ -450,10 +459,11 @@ class programBlock {
 			});
 
 			this.dropSites["Backet"].addEventListener("drop", (e) => {
+				console.log(e);
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 				let defaultData = this.typeManager.getFunctionData(defaultName);
-				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
+				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 					newBlock.generateDropSites();
@@ -467,7 +477,7 @@ class programBlock {
 		
 		if ((this.typeManager.getSize(this.type) == "Normal" || this.typeManager.getSize(this.type) == "Bracket") && this.typeManager.getEdgeShapes(this.type)[3] == "Puzzle") {
 			this.dropSites["below"] = document.createElement("div");
-			this.dropSites["below"].style.outline = "1px solid blue";
+			//this.dropSites["below"].style.outline = "1px solid blue";
 			this.dropSites["below"].style.position = "absolute";
 			this.dropSites["below"].style.width = (this.mainBlock.style.width + 16) + "px";
 			this.dropSites["below"].style.height = (this.mainBlock.style.height) + "px";
@@ -484,7 +494,7 @@ class programBlock {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 				let defaultData = this.typeManager.getFunctionData(defaultName);
-				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
+				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 					defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
 					newBlock.generateDropSites();
@@ -523,9 +533,10 @@ class programBlock {
 			return this
 		}
 	}
-
-	deleteBlock() {
-
+	
+	toggleDrag(bl) {
+		if (bl) { this.canDrag = true; } else { this.canDrag = false; } 
+		this.mainBlock.hitBox.draggable = this.canDrag;
 	}
 }
 
