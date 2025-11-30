@@ -310,6 +310,7 @@ class programBlock {
 		
 		this.inputs = [];
 		this.children = [];
+		this.dropSites = {};
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.canHaveChildren = true;
 		} else {
@@ -362,7 +363,7 @@ class programBlock {
 				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
 				this.subBlocks[types].update();
 
-				this.subBlocks[types].container.style.zIndex = "999";
+				this.subBlocks[types].container.style.zIndex = "99";
 	
 				pShift += getStringWidth(firstHalf);
 			}
@@ -390,9 +391,7 @@ class programBlock {
 					child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
 				} 
 				child.update();
-				console.log(child.getBottom());
 				inner = Math.max(inner, child.getBottom() - this.mainBlock.style.top - this.mainBlock.style.height + 2);
-				//inner += child.mainBlock.getTotalHeight();
 			}
 		}
 
@@ -401,6 +400,7 @@ class programBlock {
 			this.mainBlock.setInnerHeight(Math.max(20, inner)); 
 		}	
 		this.mainBlock.update();
+		this.updateDropSites();
 		
 		console.log("Done updating " + this.defaultName);
 	}
@@ -436,20 +436,21 @@ class programBlock {
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			//this.mainBlock.update();
-			this.dropSite = document.createElement("div");
-			this.dropSite.style.position = "absolute";
-			this.dropSite.style.width = this.mainBlock.style.width + "px";
-			this.dropSite.style.height = "32px";
-			this.dropSite.style.left = (this.mainBlock.style.left + 8) + "px";
-			this.dropSite.style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
-			this.dropSite.style.zIndex = "999";
+			this.dropSites["Backet"] = document.createElement("div");
+			this.dropSites["Backet"].style.outline = "1px solid blue";
+			this.dropSites["Backet"].style.position = "absolute";
+			this.dropSites["Backet"].style.width = this.mainBlock.style.width + "px";
+			this.dropSites["Backet"].style.height = "32px";
+			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
+			this.dropSites["Backet"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
+			this.dropSites["Backet"].style.zIndex = "999";
 			//console.log(this.dropSite);
-			this.container.appendChild(this.dropSite);
+			this.container.appendChild(this.dropSites["Backet"]);
 			
-			this.dropSite.addEventListener("dragover", (e) => {
+			this.dropSites["Backet"].addEventListener("dragover", (e) => {
 				e.preventDefault();
 			});
-			this.dropSite.addEventListener("drop", (e) => {
+			this.dropSites["Backet"].addEventListener("drop", (e) => {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 				let defaultData = this.typeManager.getFunctionData(defaultName);
@@ -464,6 +465,20 @@ class programBlock {
 				this.getRoot().update();
 			});			
 		} 
+	}
+
+	updateDropSites() {
+		if (this.dropSites["Backet"]) {
+			console.log("Updating bracket");
+			this.dropSites["Backet"].style.top = (this.mainBlock.style.top + this.mainBlock.style.height/2) + "px";
+			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
+			if (this.children[0]) {
+				this.dropSites["Backet"].style.removeProperty('height');
+				console.log(this.children[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
+				this.dropSites["Backet"].style.bottom = (this.children[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
+				this.children[0].mainBlock.hitBox.getBoundingClientRect().top + this.children[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
+			}
+		}	
 	}
 
 	getRoot() {
