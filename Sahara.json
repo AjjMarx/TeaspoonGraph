@@ -258,25 +258,25 @@
 	},
 	"Forever" : {
 		"type" : "Flow",
-		"text" : "Forever Repeat...",
+		"text" : "Forever Repeat",
 		"inputs" : null,
 		"code" : null 
 	},
 	"While" : {
 		"type" : "Flow",
-		"text" : "While $1 Is True...",
+		"text" : "While $1 Is True",
 		"inputs" : ["Boolean"],
 		"code" : null 
 	},
 	"If" : {
 		"type" : "Flow",
-		"text" : "If $1 Is True...",
+		"text" : "If $1 Is True",
 		"inputs" : ["Boolean"],
 		"code" : null
 	},
 	"For" : {
 		"type" : "Flow",
-		"text" : "For Every One Of $1...",
+		"text" : "For Every One Of $1",
 		"inputs" : ["#Small"],
 		"code" : null
 	},
