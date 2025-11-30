@@ -25,7 +25,7 @@ async function LoadLesson() {
 
 		toolBox.style.left = "10px";
 		toolBox.style.top = "30px";
-		toolBox.style.width = "250px";
+		toolBox.style.width = "270px";
 		toolBox.style.bottom = "10px";
 
 		let mainManager = new typeManager();
@@ -44,6 +44,7 @@ async function LoadLesson() {
 				startTop = blocks[it-1].getBottom() + 10
 			} 
 			blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
+			blocks[it].update();
 			it++;
 		}
 

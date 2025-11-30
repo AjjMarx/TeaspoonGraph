@@ -38,7 +38,7 @@ class Block {
 		this.style = {
 			width : 50,
 			height : 28,
-			innerHeight : 28,
+			innerHeight : 0,
 			left : 0,
 			top : 0,
 			color : "Orange",
@@ -94,6 +94,12 @@ class Block {
 		this.container.appendChild(this.hitBox);
 	}
 
+	setInnerHeight(val) {
+		console.log(val);
+		this.style.innerHeight = val;
+		console.log(this.style.innerHeight);
+	}
+
 	getBottom() {
 		if (this.style.size == "Normal") {
 			return this.style.top + this.style.height + 1;
@@ -104,10 +110,18 @@ class Block {
 		}
 	}
 
+	getTotalHeight() {
+		if (this.style.size == "Bracket") {
+			return this.style.height + this.style.innerHeight + 14;
+		} else {
+			return this.style.height + 4;
+		}
+	}
+
 	generateSVG() {
 		let temp;
 		if (this.style.size == "Bracket") {
-			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (24 + this.style.height + this.style.innerHeight) + `">`;
+			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (26 + this.style.height + this.style.innerHeight) + `">`;
 		} else {
 			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (16 + this.style.height) + `">`;
 		}		
@@ -297,9 +311,9 @@ class programBlock {
 		this.container = iContainer;
 		
 		this.inputs = [];
-		if (this.type == "Bracket") {
+		this.children = [];
+		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.canHaveChildren = true;
-			this.children = [];
 		} else {
 			this.canHaveChildren = false;
 		}
@@ -319,6 +333,9 @@ class programBlock {
 		this.mainBlock.style.size = this.typeManager.getSize(this.type);
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
 		this.mainBlock.style.text = this.text;
+		if (this.mainBlock.style.size == "Bracket") {
+			this.mainBlock.style.innerHeight = 20;
+		}
 		this.container.appendChild(this.mainBlock.container);
 		this.mainBlock.update();
 		this.mainBlock.hitBox.draggable = true;
@@ -362,7 +379,31 @@ class programBlock {
 	}
 	
 	update() {
+		console.log("Updateing " + this.defaultName);
+		
+		let inner = 0;
+		console.log(this.children, this.children.length);
+		if (this.children.length > 0) {
+			for (let ch in this.children) {
+				let child = this.children[ch];
+				//if (ch == 0) {
+				//	child.mainBlock.style.top = this.mainBlock.Height;
+				//} else {
+				//	child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
+				//} 
+				child.update();
+				inner += child.mainBlock.getTotalHeight();
+			}
+		}
+
+		//console.log(inner);
+		if (this.typeManager.getSize(this.type) == "Bracket") { 
+			this.mainBlock.setInnerHeight(Math.max(20, inner)); 
+		}	
 		this.mainBlock.update();
+		console.log(this.mainBlock.style.innerHeight);
+		
+		console.log("Done updating " + this.defaultName);
 	}
 
 	async blankFunction() {
@@ -403,7 +444,7 @@ class programBlock {
 			this.dropSite.style.left = (this.mainBlock.style.left + 8) + "px";
 			this.dropSite.style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
 			this.dropSite.style.zIndex = "999";
-			console.log(this.dropSite);
+			//console.log(this.dropSite);
 			this.container.appendChild(this.dropSite);
 			
 			this.dropSite.addEventListener("dragover", (e) => {
@@ -412,18 +453,26 @@ class programBlock {
 			this.dropSite.addEventListener("drop", (e) => {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
-				console.log(defaultName);
 				let defaultData = this.typeManager.getFunctionData(defaultName);
-				console.log(defaultData);
 				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
 					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 					newBlock.generateDropSites();
-					//this.mainBlock.style.innerHeight = 32;//newBlock.style.height; 
+					newBlock.parent = this;
+					this.children.unshift(newBlock);
 				}
-				//this.children.unshift(newBlock);
+				console.log(this.getRoot());
+				this.getRoot().update();
 			});			
 		} 
+	}
+
+	getRoot() {
+		if (this.parent) {
+			return this.parent.getRoot();
+		} else {
+			return this
+		}
 	}
 
 	deleteBlock() {
