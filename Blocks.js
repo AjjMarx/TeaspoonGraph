@@ -378,10 +378,10 @@ class programBlock {
 	}
 	
 	update() {
-		console.log("Updateing " + this.defaultName);
+		//console.log("Updateing " + this.defaultName);
 		
 		let inner = 0;
-		console.log(this.children, this.children.length);
+		//console.log(this.children, this.children.length);
 		if (this.children.length > 0) {
 			for (let ch in this.children) {
 				let child = this.children[ch];
@@ -402,7 +402,7 @@ class programBlock {
 		this.mainBlock.update();
 		this.updateDropSites();
 		
-		console.log("Done updating " + this.defaultName);
+		//console.log("Done updating " + this.defaultName);
 	}
 
 	async blankFunction() {
@@ -435,7 +435,6 @@ class programBlock {
 
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
-			//this.mainBlock.update();
 			this.dropSites["Backet"] = document.createElement("div");
 			this.dropSites["Backet"].style.outline = "1px solid blue";
 			this.dropSites["Backet"].style.position = "absolute";
@@ -444,12 +443,12 @@ class programBlock {
 			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
 			this.dropSites["Backet"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
 			this.dropSites["Backet"].style.zIndex = "999";
-			//console.log(this.dropSite);
 			this.container.appendChild(this.dropSites["Backet"]);
 			
 			this.dropSites["Backet"].addEventListener("dragover", (e) => {
 				e.preventDefault();
 			});
+
 			this.dropSites["Backet"].addEventListener("drop", (e) => {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
@@ -461,24 +460,60 @@ class programBlock {
 					newBlock.parent = this;
 					this.children.unshift(newBlock);
 				}
-				console.log(this.getRoot());
+				//console.log(this.getRoot());
 				this.getRoot().update();
 			});			
-		} 
+		} 	
+		
+		if ((this.typeManager.getSize(this.type) == "Normal" || this.typeManager.getSize(this.type) == "Bracket") && this.typeManager.getEdgeShapes(this.type)[3] == "Puzzle") {
+			this.dropSites["below"] = document.createElement("div");
+			this.dropSites["below"].style.outline = "1px solid blue";
+			this.dropSites["below"].style.position = "absolute";
+			this.dropSites["below"].style.width = (this.mainBlock.style.width + 16) + "px";
+			this.dropSites["below"].style.height = (this.mainBlock.style.height) + "px";
+			this.dropSites["below"].style.left = (this.mainBlock.style.left) + "px";
+			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
+			this.dropSites["below"].style.zIndex = "999";
+			this.container.appendChild(this.dropSites["below"]);
+		
+			this.dropSites["below"].addEventListener("dragover", (e) => {
+				e.preventDefault();
+			});
+
+			this.dropSites["below"].addEventListener("drop", (e) => {
+				e.preventDefault();
+				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
+				let defaultData = this.typeManager.getFunctionData(defaultName);
+				if (this.typeManager.getEdgeShapes(defaultData["Type"])[0] == this.typeManager.getEdgeShapes(this.type)[2]) {
+					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+					defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+					newBlock.generateDropSites();
+					newBlock.parent = this.parent;
+					console.log(this.parent.children, this.parent.children.indexOf(this));
+					this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, newBlock);
+				}
+				//console.log(this.getRoot());
+				this.getRoot().update();
+			});
+		}
 	}
 
 	updateDropSites() {
 		if (this.dropSites["Backet"]) {
-			console.log("Updating bracket");
+			//console.log("Updating bracket");
 			this.dropSites["Backet"].style.top = (this.mainBlock.style.top + this.mainBlock.style.height/2) + "px";
 			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
 			if (this.children[0]) {
 				this.dropSites["Backet"].style.removeProperty('height');
-				console.log(this.children[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
+				//console.log(this.children[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
 				this.dropSites["Backet"].style.bottom = (this.children[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
 				this.children[0].mainBlock.hitBox.getBoundingClientRect().top + this.children[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
 			}
 		}	
+		if (this.dropSites["below"]) {
+			//console.log("Updating below");
+			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
+		}
 	}
 
 	getRoot() {
