@@ -95,9 +95,7 @@ class Block {
 	}
 
 	setInnerHeight(val) {
-		console.log(val);
 		this.style.innerHeight = val;
-		console.log(this.style.innerHeight);
 	}
 
 	getBottom() {
@@ -106,7 +104,7 @@ class Block {
 		} else if (this.style.size == "Small") {
 			return this.style.top + this.style.height + 1;
 		} else if (this.style.size == "Bracket") {
-			return this.style.top + this.style.height + this.style.innerHeight + 12;
+			return this.style.top + this.style.height + this.style.innerHeight + 11;
 		}
 	}
 
@@ -386,13 +384,15 @@ class programBlock {
 		if (this.children.length > 0) {
 			for (let ch in this.children) {
 				let child = this.children[ch];
-				//if (ch == 0) {
-				//	child.mainBlock.style.top = this.mainBlock.Height;
-				//} else {
-				//	child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
-				//} 
+				if (ch == 0) {
+					child.mainBlock.style.top = this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 10;
+				} else {
+					child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
+				} 
 				child.update();
-				inner += child.mainBlock.getTotalHeight();
+				console.log(child.getBottom());
+				inner = Math.max(inner, child.getBottom() - this.mainBlock.style.top - this.mainBlock.style.height + 2);
+				//inner += child.mainBlock.getTotalHeight();
 			}
 		}
 
@@ -401,7 +401,6 @@ class programBlock {
 			this.mainBlock.setInnerHeight(Math.max(20, inner)); 
 		}	
 		this.mainBlock.update();
-		console.log(this.mainBlock.style.innerHeight);
 		
 		console.log("Done updating " + this.defaultName);
 	}
