@@ -446,6 +446,7 @@ class programBlock {
 		}	
 		this.mainBlock.update();
 		this.updateDropSites();
+		this.generateSubblocks();
 		
 		//console.log("Done updating " + this.defaultName);
 	}
@@ -583,6 +584,25 @@ class programBlock {
 				this.getRoot().update();
 			});
 		}
+		
+		if (this.subBlocks.length > 0) {
+			console.log("Adding dropsites for the subblocks");
+			for (let sub in this.subBlocks) {
+				let subBlock = this.subBlocks[sub];
+				this.dropSites[sub] = document.createElement("div");
+				this.dropsiteCollection.push(this.dropSites[sub]);
+				this.dropSites[sub].style.outline = "1px solid red";
+				this.dropSites[sub].style.position = "absolute"
+				console.log(subBlock.hitBox);
+				this.dropSites[sub].style.left = subBlock.hitBox.getBoundingClientRect().left - this.container.getBoundingClientRect().left+ "px";
+				this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
+				this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
+				this.dropSites[sub].style.height = subBlock.hitBox.getBoundingClientRect().height + "px";
+				this.dropSites[sub].style.zIndex = "999";
+				this.container.appendChild(this.dropSites[sub]);
+				console.log(this.dropSites[sub]);
+			}
+		}
 	}
 
 	updateDropSites() {
@@ -597,9 +617,22 @@ class programBlock {
 				this.children[0].mainBlock.hitBox.getBoundingClientRect().top + this.children[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
 			}
 		}	
+
 		if (this.dropSites["below"]) {
 			//console.log("Updating below");
 			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
+		}
+
+		if (this.subBlocks.length > 0) {
+			for (let sub in this.subBlocks) {
+				let subBlock = this.subBlocks[sub];
+				if (this.dropSites[sub]) {
+					this.dropSites[sub].style.left = subBlock.hitBox.getBoundingClientRect().left - this.container.getBoundingClientRect().left+ "px";
+					this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
+					this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
+					this.dropSites[sub].style.height = subBlock.hitBox.getBoundingClientRect().height + "px";
+				}
+			}			
 		}
 	}
 
