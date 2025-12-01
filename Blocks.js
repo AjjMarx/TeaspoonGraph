@@ -375,7 +375,7 @@ class programBlock {
 			}
 		} 
 	
-		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
+		this.mainBlock.hitBox.addEventListener("dragstart", async (e) => {
 			if (this.canDrag) {
 				console.log("Dragging");
 				
@@ -389,11 +389,13 @@ class programBlock {
 				if (this.parent) {
 					console.log("Removing from sequence");
 					this.parent.children.splice(this.parent.children.indexOf(this), 1);
-					setTimeout(() => { 
+					await setTimeout(() => { 
 						this.eraseRender();
 						this.removeDropSites();
-						this.getRoot().update(); }, 1
-					);
+						this.getRoot().update(); 
+					}, 1);
+					this.container.clipboard = this;
+					//this.parent = null;	
 				}	
 				
 				e.dataTransfer.setData("application/Block", JSON.stringify({
@@ -505,14 +507,23 @@ class programBlock {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 				let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
-				let defaultData = this.typeManager.getFunctionData(defaultName);
-				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
-					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-					defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
-					newBlock.dropsiteCollection = this.dropsiteCollection;
-					newBlock.generateDropSites();
-					newBlock.parent = this;
-					this.children.unshift(newBlock);
+				if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
+					console.log("Subtree is being moved"); 
+					let blockToMove = this.container.clipboard;
+					blockToMove.parent = this;
+					blockToMove.dropsiteCollection = this.dropsiteCollection;
+					blockToMove.generateDropSites();
+					this.children.unshift(blockToMove);	
+				} else {
+					let defaultData = this.typeManager.getFunctionData(defaultName);
+					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
+						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+						defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
+						newBlock.dropsiteCollection = this.dropsiteCollection;
+						newBlock.generateDropSites();
+						newBlock.parent = this;
+						this.children.unshift(newBlock);
+					}
 				}
 				//console.log(this.getRoot());
 				this.getRoot().update();
@@ -538,15 +549,26 @@ class programBlock {
 			this.dropSites["below"].addEventListener("drop", (e) => {
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
+				let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 				let defaultData = this.typeManager.getFunctionData(defaultName);
-				if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
-					let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-					defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
-					newBlock.dropsiteCollection = this.dropsiteCollection;
-					newBlock.generateDropSites();
-					newBlock.parent = this.parent;
-					console.log(this.parent.children, this.parent.children.indexOf(this));
-					this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, newBlock);
+				if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
+					console.log("Subtree is being moved"); 
+					let blockToMove = this.container.clipboard;
+					blockToMove.parent = this.parent;
+					blockToMove.dropsiteCollection = this.dropsiteCollection;
+					blockToMove.generateDropSites();
+					//console.log(this.parent.children, this.parent.children.indexOf(this));
+					this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, blockToMove);
+				} else {
+					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
+						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+						defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+						newBlock.dropsiteCollection = this.dropsiteCollection;
+						newBlock.generateDropSites();
+						newBlock.parent = this.parent;
+						//console.log(this.parent.children, this.parent.children.indexOf(this));
+						this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, newBlock);
+					}
 				}
 				//console.log(this.getRoot());
 				this.getRoot().update();

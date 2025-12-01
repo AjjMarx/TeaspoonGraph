@@ -61,6 +61,7 @@ async function LoadLesson() {
 		playground.style.right = "640px";
 		playground.style.bottom = "10px";
 		playground.style.overflowY = 'auto';
+		playground.clipboard = null;
 
 		let headerData = lessonData["Code"]["Functions"]["On_Start"];
 		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainManager, playground);
