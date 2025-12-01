@@ -34,7 +34,7 @@ class Block {
 		this.container.style.position = "absolute";
 		this.svg.style.position = "absolute";
 		this.hitBox.style.position = "absolute";
-
+		
 		this.style = {
 			width : 50,
 			height : 28,
@@ -348,9 +348,8 @@ class programBlock {
 	
 		this.mainBlock.hitBox.addEventListener("dragstart", async (e) => {
 			if (this.canDrag) {
-				console.log("Dragging");
-				
-			
+				console.log("Dragging, ", this.mainBlock.hitBox.style.zIndex, this.mainBlock.svg.style.zIndex);
+					
 				if (!!window.chrome) {
 					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
 				} else {
@@ -374,7 +373,11 @@ class programBlock {
 					ID : this.IDnum
 				}));
 				setTimeout(() => {
-					for (let boxes of this.dropsiteCollection) { boxes.style.zIndex = "999"; }
+					for (let box of this.dropsiteCollection) {
+						if ((box.type != "Parameter" && this.mainBlock.style.size != "Small") || (box.type == "Parameter" && this.mainBlock.style.size == "Small")) { 
+							box.style.zIndex = "999"; 
+						}
+					}
 				}, 1);	
 			}
 		});
@@ -495,22 +498,23 @@ class programBlock {
 
 	generateDropSites() {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
-			this.dropSites["Backet"] = document.createElement("div");
-			this.dropsiteCollection.push(this.dropSites["Backet"]);
-			this.dropSites["Backet"].style.outline = "1px solid blue";
-			this.dropSites["Backet"].style.position = "absolute";
-			this.dropSites["Backet"].style.width = this.mainBlock.style.width + "px";
-			this.dropSites["Backet"].style.height = "32px";
-			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
-			this.dropSites["Backet"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
-			this.dropSites["Backet"].style.zIndex = "999";
-			this.container.appendChild(this.dropSites["Backet"]);
+			this.dropSites["bracket"] = document.createElement("div");
+			this.dropsiteCollection.push(this.dropSites["bracket"]);
+			this.dropSites["bracket"].style.outline = "1px solid blue";
+			this.dropSites["bracket"].style.position = "absolute";
+			this.dropSites["bracket"].style.width = this.mainBlock.style.width + "px";
+			this.dropSites["bracket"].style.height = "32px";
+			this.dropSites["bracket"].style.left = (this.mainBlock.style.left + 8) + "px";
+			this.dropSites["bracket"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
+			this.dropSites["bracket"].style.zIndex = "999";
+			this.dropSites["bracket"].type = "Bracket";
+			this.container.appendChild(this.dropSites["bracket"]);
 			
-			this.dropSites["Backet"].addEventListener("dragover", (e) => {
+			this.dropSites["bracket"].addEventListener("dragover", (e) => {
 				e.preventDefault();
 			});
 
-			this.dropSites["Backet"].addEventListener("drop", (e) => {
+			this.dropSites["bracket"].addEventListener("drop", (e) => {
 				console.log(e);
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
@@ -549,6 +553,7 @@ class programBlock {
 			this.dropSites["below"].style.left = (this.mainBlock.style.left) + "px";
 			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
 			this.dropSites["below"].style.zIndex = "999";
+			this.dropSites["below"].type = "Below";
 			this.container.appendChild(this.dropSites["below"]);
 		
 			this.dropSites["below"].addEventListener("dragover", (e) => {
@@ -599,21 +604,38 @@ class programBlock {
 				this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
 				this.dropSites[sub].style.height = subBlock.hitBox.getBoundingClientRect().height + "px";
 				this.dropSites[sub].style.zIndex = "999";
+				this.dropSites[sub].type = "Parameter";
 				this.container.appendChild(this.dropSites[sub]);
 				console.log(this.dropSites[sub]);
+
+				this.dropSites[sub].addEventListener("dragover", (e) => {
+					e.preventDefault();
+				});
+				this.dropSites[sub].addEventListener("drop", (e) => {
+					e.preventDefault();
+					let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"];
+					let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
+					let defaultData = this.typeManager.getFunctionData(defaultName);
+					if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) {
+						console.log("Moving small block from clipboard");
+					} else {
+						console.log("Adding new small block");
+					}
+					this.update();	
+				});
 			}
 		}
 	}
 
 	updateDropSites() {
-		if (this.dropSites["Backet"]) {
+		if (this.dropSites["bracket"]) {
 			//console.log("Updating bracket");
-			this.dropSites["Backet"].style.top = (this.mainBlock.style.top + this.mainBlock.style.height/2) + "px";
-			this.dropSites["Backet"].style.left = (this.mainBlock.style.left + 8) + "px";
+			this.dropSites["bracket"].style.top = (this.mainBlock.style.top + this.mainBlock.style.height/2) + "px";
+			this.dropSites["bracket"].style.left = (this.mainBlock.style.left + 8) + "px";
 			if (this.children[0]) {
-				this.dropSites["Backet"].style.removeProperty('height');
+				this.dropSites["bracket"].style.removeProperty('height');
 				//console.log(this.children[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
-				this.dropSites["Backet"].style.bottom = (this.children[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
+				this.dropSites["bracket"].style.bottom = (this.children[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
 				this.children[0].mainBlock.hitBox.getBoundingClientRect().top + this.children[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
 			}
 		}	
