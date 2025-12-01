@@ -164,8 +164,8 @@ document.addEventListener('dragstart', e => {
 	}
 }, true);
 
-document.addEventListener('click', function(event) {
-    console.log('Clicked element:', event.target);
-});
+//document.addEventListener('click', function(event) {
+//    console.log('Clicked element:', event.target);
+//});
 
 LoadLesson();
