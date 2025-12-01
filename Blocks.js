@@ -427,7 +427,8 @@ class programBlock {
 					child.mainBlock.style.top = this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 10;
 				} else {
 					child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
-				} 
+				}
+				child.mainBlock.style.left = this.mainBlock.style.left + 8; 
 				child.update();
 				inner = Math.max(inner, child.getBottom() - this.mainBlock.style.top - this.mainBlock.style.height + 2);
 			}
@@ -512,7 +513,7 @@ class programBlock {
 					let blockToMove = this.container.clipboard;
 					blockToMove.parent = this;
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
-					blockToMove.generateDropSites();
+					blockToMove.regenerateDropSite();
 					this.children.unshift(blockToMove);	
 				} else {
 					let defaultData = this.typeManager.getFunctionData(defaultName);
@@ -556,7 +557,7 @@ class programBlock {
 					let blockToMove = this.container.clipboard;
 					blockToMove.parent = this.parent;
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
-					blockToMove.generateDropSites();
+					blockToMove.regenerateDropSite();
 					//console.log(this.parent.children, this.parent.children.indexOf(this));
 					this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, blockToMove);
 				} else {
@@ -603,6 +604,15 @@ class programBlock {
 		if (this.children) {
 			for (let child of this.children) {
 				child.removeDropSites();
+			}
+		}
+	}
+		
+	regenerateDropSite() {
+		this.generateDropSites();
+		if (this.children) {
+			for (let child of this.children) {
+				child.regenerateDropSite();
 			}
 		}
 	}
