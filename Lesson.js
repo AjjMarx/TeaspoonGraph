@@ -1,7 +1,7 @@
 async function LoadLesson() {
 	console.log("Lesson Loading");
 	const filePath = "Sahara.json";
-	try {
+	//try {
 		const res = await fetch(filePath);
 		const lessonData = await res.json();
 		console.log(lessonData["Vertices"]);
@@ -72,9 +72,9 @@ async function LoadLesson() {
 		let programSequence = [headerBlock];
 
 		requestAnimationFrame(renderGlobe);
-	} catch(err) {
-		console.log("Lesson data could not be loaded:\n" + err);
-	}
+	//} catch(err) {
+	//	console.log("Lesson data could not be loaded:\n" + err);
+	//}
 }
 
 

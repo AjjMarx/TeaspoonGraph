@@ -33,8 +33,13 @@ class Block {
 		this.container.id = "Block";
 		this.container.style.position = "absolute";
 		this.svg.style.position = "absolute";
+		this.container.style.pointerEvents = 'none';
+		this.svg.style.pointerEvents = 'none';
+		this.hitBox.style.pointerEvents = 'auto';
 		this.hitBox.style.position = "absolute";
+		//this.hitBox.style.outline = "1px solid green";
 		
+
 		this.style = {
 			width : 50,
 			height : 28,
@@ -44,11 +49,14 @@ class Block {
 			color : "Orange",
 			size : "Normal",
 			edgeShapes : ["Straight", "Straight", "Straight", "Straight"],
-			text : "Null",
+			rawText : null,
+			text : null,
+			parameterWidths : null
 		};
+		this.innerSections = []
+	
 		this.shift = 0;
 
-		this.style.width = this.style.text.length * 8 + 24;
 	
 		this.svg.innerHTML = this.generateSVG();
 		this.svg.firstChild.addEventListener("dragstart", e => e.preventDefault());
@@ -56,9 +64,19 @@ class Block {
 	}
 
 	update() {
-		
-		if (this.style.size == "Normal") {
+		this.splitStr();
+		if (typeof(this.style.text) == 'object') { 
+			this.style.width = 16;
+			for (let sub of this.style.text) {
+				this.style.width += Number(getStringWidth(sub));
+			} 
+			for (let wid of this.style.parameterWidths) {
+				this.style.width += Number(wid);
+			}
+		} else if (typeof(this.style.text) == 'string') {
 			this.style.width = getStringWidth(this.style.text) + 16;
+		}
+		if (this.style.size == "Normal") {
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -68,7 +86,6 @@ class Block {
 			this.hitBox.style.width = String(this.style.width) + "px";
 			this.hitBox.style.height = String(this.style.height) + "px";
 		} else if (this.style.size == "Small") {
-			this.style.width = getStringWidth(this.style.text) + 16 ;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -78,8 +95,6 @@ class Block {
 			this.hitBox.style.width = String(this.style.width ) + "px";
 			this.hitBox.style.height = String(this.style.height - 8) + "px";
 		} if (this.style.size == "Bracket") {
-			//this.style.height += this.style.innerHeight;
-			this.style.width = getStringWidth(this.style.text) + 16;
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -94,6 +109,33 @@ class Block {
 		this.svg.firstChild.lastChild.addEventListener("dragstart", e => e.preventDefault());
 		this.container.appendChild(this.svg);
 		this.container.appendChild(this.hitBox);
+	}
+
+	splitStr() {
+		let iter = 0;
+		let contains = true;
+		let remainder = this.style.rawText;
+		let tempTextArr = [];
+		let tempInnerArr = [];
+		while (contains && iter < 100) {
+			let index = remainder.indexOf(`$` + String(parseInt(iter) + 1));
+			if (index > -1) { contains = true; } else {contains = false; break; }
+			tempTextArr[iter] = remainder.substring(0, index);
+			tempInnerArr[iter] = Number(getStringWidth(tempTextArr[iter]));
+			remainder = remainder.substring(index + 1 + String(parseInt(iter) + 1).length); 
+			iter++;
+		}
+		tempTextArr.push(remainder);
+		if (tempTextArr.length > 1) { 
+			console.log("Has params", tempTextArr, tempInnerArr);
+			this.style.text = tempTextArr;
+			this.innerSections = tempInnerArr;
+			this.style.parameterWidths = new Array(this.innerSections.length).fill(24); 
+		} else {
+			console.log("No params", tempTextArr, tempInnerArr);
+			this.style.text = this.style.rawText;
+			this.innerSections = [];
+		}
 	}
 
 	setInnerHeight(val) {
@@ -117,6 +159,17 @@ class Block {
 			return this.style.height + 4;
 		}
 	}
+
+	getPCoord(n) {
+		if (Number.isInteger(Number(n)) && n >= 0 && n < this.style.parameterWidths.length) {
+			let temp = 16 + this.innerSections[0];
+			for (let i=0; i < n && i < this.style.parameterWidths.length && i+1 < this.innerSections.length; i++) {	
+				temp += this.style.parameterWidths[i] + this.innerSections[i + 1]; 
+			}
+			return temp;
+		}
+		else return 0;
+	} 
 
 	generateSVG() {
 		let temp;
@@ -255,7 +308,20 @@ class Block {
 
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
-		temp += `<text fill="#ffffff" font-size="15" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		if (typeof(this.style.text) == 'string') { 
+			temp += `<text fill="#ffffff" font-size="15" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
+			temp += `x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
+		} else if (typeof(this.style.text) == 'object') {
+			let xCoord = 16;
+			for (let iter in this.style.text) {
+				temp += `<text fill="#ffffff" font-size="15" xml:space="preserve" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
+				temp += `x="` + xCoord + `" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text[iter] + ` </text>`;
+				temp += `<line x1="` + xCoord + `" y1="0" x2="` + xCoord + `" y2="100" stroke="black" />`;
+				temp += `<line x1="` + this.getPCoord(iter) + `" y1="0" x2="` + this.getPCoord(iter) + `" y2="100" stroke="red" />`;
+				xCoord += ((this.style.parameterWidths[iter] ?? 0) + (this.innerSections[iter] ?? 0));
+				console.log(this.getPCoord(iter));
+			}
+		}
 		temp += `</svg>`;
 		return temp;
 	}
@@ -311,8 +377,10 @@ class programBlock {
 		this.dropsiteCollection = null;
 		
 		this.canDrag = true;
-		this.inputs = [];
-		this.children = [];
+		this.bChildren = []; //block children
+		if (this.inputTypes) {
+			this.pChildren = new Array(this.inputTypes.length).fill("Blank"); //parameter children
+		} else { this.pChildren = null; }
 		this.dropSites = {};
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.canHaveChildren = true;
@@ -336,7 +404,7 @@ class programBlock {
 		this.mainBlock.style.color = this.typeManager.getColor(this.type);
 		this.mainBlock.style.size = this.typeManager.getSize(this.type);
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
-		this.mainBlock.style.text = this.text;
+		this.mainBlock.style.rawText = this.text;
 		if (this.mainBlock.style.size == "Bracket") {
 			this.mainBlock.style.innerHeight = 20;
 		}
@@ -358,7 +426,7 @@ class programBlock {
 
 				if (this.parent) {
 					console.log("Removing from sequence");
-					this.parent.children.splice(this.parent.children.indexOf(this), 1);
+					this.parent.bChildren.splice(this.parent.bChildren.indexOf(this), 1);
 					await setTimeout(() => { 
 						this.eraseRender();
 						this.removeDropSites();
@@ -390,14 +458,52 @@ class programBlock {
 	}
 
 	generateSubblocks() {
-		this.subBlocks = [];
-		if (this.inputTypes && this.inputTypes.length > 0) {
+		if (this.inputTypes && this.pChildren && this.inputTypes.length > 0) {
 			let firstHalf = "";
 			let remainder = this.text;
 			let index = 0;
 			let pShift = 12;
-			for (let types in this.inputTypes) {
-				index = remainder.indexOf(`$` + String(parseInt(types) + 1));
+			let maxHeight = 0;
+			for (let it in this.pChildren) {
+				let sBlock = this.pChildren[it];
+				index = remainder.indexOf(`$` + String(parseInt(it) + 1));
+				firstHalf = remainder.substring(0, index);
+				remainder = remainder.substring(index);
+				if (sBlock == "Blank") {
+					this.pChildren[it] = new Block();
+					sBlock = this.pChildren[it];
+					sBlock.style.color = "White";
+					sBlock.style.size = "Small";
+					sBlock.style.rawText = " ";
+					sBlock.container.style.pointerEvents = 'none';	
+				} 
+				
+				if (sBlock instanceof Block){
+					sBlock.style.top = 10;
+					sBlock.style.height = 24;
+					maxHeight = Math.max(maxHeight, sBlock.style.height);
+					sBlock.style.left = this.mainBlock.getPCoord(it);
+					if (this.typeManager.contains(this.inputTypes[it])) {
+						 sBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.inputTypes[it]);
+					} else {
+						sBlock.style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
+					}
+					this.mainBlock.container.appendChild(sBlock.container);
+					sBlock.container.style.zIndex = "99"; 
+					sBlock.update();
+				} else if (sBlock instanceof programBlock){
+		//			console.log("Updating a subblock which is a program block.");
+		//			sBlock.generateSubblocks();
+		//			sBlock.mainBlock.style.top = this.mainBlock.style.top;
+		//			console.log(pShift + getStringWidth(firstHalf));
+		//			sBlock.mainBlock.style.left = pShift + getStringWidth(firstHalf);
+		//			maxHeight = Math.max(maxHeight, sBlock.mainBlock.getTotalHeight());
+		//			sBlock.mainBlock.container.style.zIndex = "99";
+		//			sBlock.update();
+				}
+				
+				pShift += getStringWidth(firstHalf);
+				/*index = remainder.indexOf(`$` + String(parseInt(types) + 1));
 				firstHalf = remainder.substring(0, index);
 				remainder = remainder.substring(index);
 				this.subBlocks[types] = new Block();
@@ -418,24 +524,25 @@ class programBlock {
 
 				this.subBlocks[types].container.style.zIndex = "99";
 	
-				pShift += getStringWidth(firstHalf);
+				pShift += getStringWidth(firstHalf);*/
 			}
+		//	this.mainBlock.style.height = Math.max(24, maxHeight + 4);
 		} 
-
 	}
 	
 	update() {
 		//console.log("Updateing " + this.defaultName);
 		
 		let inner = 0;
-		//console.log(this.children, this.children.length);
-		if (this.children.length > 0) {
-			for (let ch in this.children) {
-				let child = this.children[ch];
+		//console.log(this.bChildren, this.bChildren.length);
+		this.generateSubblocks();
+		if (this.bChildren.length > 0) {
+			for (let ch in this.bChildren) {
+				let child = this.bChildren[ch];
 				if (ch == 0) {
 					child.mainBlock.style.top = this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 10;
 				} else {
-					child.mainBlock.style.top = this.children[ch-1].mainBlock.getBottom();
+					child.mainBlock.style.top = this.bChildren[ch-1].mainBlock.getBottom();
 				}
 				child.mainBlock.style.left = this.mainBlock.style.left + 8; 
 				child.update();
@@ -449,20 +556,25 @@ class programBlock {
 		}	
 		this.mainBlock.update();
 		this.updateDropSites();
-		this.generateSubblocks();
 		
 		//console.log("Done updating " + this.defaultName);
 	}
 
 	eraseRender() {
 		this.mainBlock.svg.innerHTML = "";
-		if (this.subBlocks) {
-			for (let sub of this.subBlocks) {
+		if (this.pChildren) {
+			for (let sub of this.pChildren) {
+				let subBlock;
+				if (this.pChildren[sub] instanceof Block) {
+					subBlock = this.pChildren[sub];
+				} else if (this.pChildren[sub] instanceof programBlock) {
+					subBlock = this.pChildren[sub].mainBlock;
+				} else { continue; }
 				sub.svg.innerHTML = "";
 			}	
 		}
-		if (this.children) {
-			for (let child of this.children) {
+		if (this.bChildren) {
+			for (let child of this.bChildren) {
 				child.eraseRender();
 			}
 		}
@@ -484,7 +596,7 @@ class programBlock {
 		
 	setText(iText) {
 		this.text = iText;
-		this.mainBlock.style.text = this.text;
+		this.mainBlock.style.rawText = this.text;
 		this.update();
 	}
 	
@@ -513,7 +625,6 @@ class programBlock {
 			this.dropSites["bracket"].addEventListener("dragover", (e) => {
 				e.preventDefault();
 			});
-
 			this.dropSites["bracket"].addEventListener("drop", (e) => {
 				console.log(e);
 				e.preventDefault();
@@ -526,16 +637,18 @@ class programBlock {
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
 					blockToMove.generateSubblocks();
 					blockToMove.regenerateDropSite();
-					this.children.unshift(blockToMove);	
+					this.bChildren.unshift(blockToMove);	
 				} else {
 					let defaultData = this.typeManager.getFunctionData(defaultName);
 					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 						defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
+						newBlock.update();
+						newBlock.generateSubblocks();
 						newBlock.generateDropSites();
 						newBlock.parent = this;
-						this.children.unshift(newBlock);
+						this.bChildren.unshift(newBlock);
 					}
 				}
 				//console.log(this.getRoot());
@@ -572,17 +685,18 @@ class programBlock {
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
 					blockToMove.generateSubblocks();
 					blockToMove.regenerateDropSite();
-					//console.log(this.parent.children, this.parent.children.indexOf(this));
-					this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, blockToMove);
+					//console.log(this.parent.bChildren, this.parent.bChildren.indexOf(this));
+					this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
 				} else {
 					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-						defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+						defaultData["Input"], this.mainBlock.style.left, this.mainBlock.top, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
+						newBlock.update();
 						newBlock.generateDropSites();
 						newBlock.parent = this.parent;
-						//console.log(this.parent.children, this.parent.children.indexOf(this));
-						this.parent.children.splice(this.parent.children.indexOf(this) + 1, 0, newBlock);
+						//console.log(this.parent.pChildren, this.parent.pChildren.indexOf(this));
+						this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, newBlock);
 					}
 				}
 				//console.log(this.getRoot());
@@ -590,15 +704,21 @@ class programBlock {
 			});
 		}
 		
-		if (this.subBlocks.length > 0) {
-			console.log("Adding dropsites for the subblocks");
-			for (let sub in this.subBlocks) {
-				let subBlock = this.subBlocks[sub];
+		if (this.pChildren && this.pChildren.length > 0) {
+			this.generateSubblocks();
+			console.log("Adding dropsites for the subblocks", this.pChildren);
+			for (let sub in this.pChildren) {
+				let subBlock;
+				if (this.pChildren[sub] instanceof Block) {
+					subBlock = this.pChildren[sub];
+					console.log(subBlock);
+				} else if (this.pChildren[sub] instanceof programBlock) {
+					subBlock = this.pChildren[sub].mainBlock;
+				} else { continue; }
 				this.dropSites[sub] = document.createElement("div");
 				this.dropsiteCollection.push(this.dropSites[sub]);
 				this.dropSites[sub].style.outline = "1px solid red";
 				this.dropSites[sub].style.position = "absolute"
-				console.log(subBlock.hitBox);
 				this.dropSites[sub].style.left = subBlock.hitBox.getBoundingClientRect().left - this.container.getBoundingClientRect().left+ "px";
 				this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
 				this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
@@ -606,22 +726,41 @@ class programBlock {
 				this.dropSites[sub].style.zIndex = "999";
 				this.dropSites[sub].type = "Parameter";
 				this.container.appendChild(this.dropSites[sub]);
-				console.log(this.dropSites[sub]);
+				//console.log(this.dropSites[sub]);
 
 				this.dropSites[sub].addEventListener("dragover", (e) => {
 					e.preventDefault();
 				});
+
 				this.dropSites[sub].addEventListener("drop", (e) => {
 					e.preventDefault();
-					let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"];
+					let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 					let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 					let defaultData = this.typeManager.getFunctionData(defaultName);
-					if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) {
-						console.log("Moving small block from clipboard");
+					if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
+						console.log("Small subtree is being moved"); 
+						//let blockToMove = this.container.clipboard;
+						//blockToMove.parent = this.parent;
+						//blockToMove.dropsiteCollection = this.dropsiteCollection;
+						//blockToMove.generateSubblocks();
+						//blockToMove.regenerateDropSite();
+						//console.log(this.parent.children, this.parent.children.indexOf(this));
+						//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
 					} else {
-						console.log("Adding new small block");
+						if (this.typeManager.getSize(defaultData["Type"]) == "Small") {
+							console.log("Small block being added to " + sub);
+							let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+							defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+							newBlock.dropsiteCollection = this.dropsiteCollection;
+							newBlock.generateDropSites();
+							newBlock.parent = this.parent;
+							this.pChildren[sub] = newBlock;
+							//console.log(this.parent.children, this.parent.children.indexOf(this));
+							//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, newBlock);
+						}
 					}
-					this.update();	
+					//console.log(this.getRoot());
+					this.getRoot().update();
 				});
 			}
 		}
@@ -632,11 +771,11 @@ class programBlock {
 			//console.log("Updating bracket");
 			this.dropSites["bracket"].style.top = (this.mainBlock.style.top + this.mainBlock.style.height/2) + "px";
 			this.dropSites["bracket"].style.left = (this.mainBlock.style.left + 8) + "px";
-			if (this.children[0]) {
+			if (this.bChildren[0]) {
 				this.dropSites["bracket"].style.removeProperty('height');
-				//console.log(this.children[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
-				this.dropSites["bracket"].style.bottom = (this.children[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
-				this.children[0].mainBlock.hitBox.getBoundingClientRect().top + this.children[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
+				//console.log(this.bChildren[0].mainBlock.hitBox.parentElement.getBoundingClientRect().height);
+				this.dropSites["bracket"].style.bottom = (this.bChildren[0].mainBlock.container.parentElement.getBoundingClientRect().height - 
+				this.bChildren[0].mainBlock.hitBox.getBoundingClientRect().top + this.bChildren[0].mainBlock.hitBox.getBoundingClientRect().height/2 + 3) + "px";
 			}
 		}	
 
@@ -645,10 +784,15 @@ class programBlock {
 			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
 		}
 
-		if (this.subBlocks.length > 0) {
-			for (let sub in this.subBlocks) {
-				let subBlock = this.subBlocks[sub];
-				if (this.dropSites[sub]) {
+		if (this.pChildren && this.pChildren.length > 0) {
+			for (let sub in this.pChildren) {
+				if (this.dropSites[sub] && this.pChildren[sub]) {
+					let subBlock;
+					if (this.pChildren[sub] instanceof Block) {
+						subBlock = this.pChildren[sub];
+					} else if (this.pChildren[sub] instanceof programBlock) {
+						subBlock = this.pChildren[sub].mainBlock;
+					} else { continue; }
 					this.dropSites[sub].style.left = subBlock.hitBox.getBoundingClientRect().left - this.container.getBoundingClientRect().left+ "px";
 					this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
 					this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
@@ -664,17 +808,24 @@ class programBlock {
 				this.dropSites[site].remove();
 			}
 		}
-		if (this.children) {
-			for (let child of this.children) {
+		if (this.bChildren) {
+			for (let child of this.bChildren) {
 				child.removeDropSites();
+			}
+		}
+		if (this.pChildren) {
+			for (let child of this.pChildren) {
+				if (child instanceof programBlock) {
+					child.removeDropSites();
+				}
 			}
 		}
 	}
 		
 	regenerateDropSite() {
 		this.generateDropSites();
-		if (this.children) {
-			for (let child of this.children) {
+		if (this.bChildren) {
+			for (let child of this.bChildren) {
 				child.regenerateDropSite();
 			}
 		}
@@ -700,5 +851,5 @@ sampleCanvasContext.font = "15px 'Roboto Mono', monospace";
 
 function getStringWidth(str) {
 	const textMeasure = sampleCanvasContext.measureText(str);
-	return textMeasure.width;
+	return Number(textMeasure.width);
 }
