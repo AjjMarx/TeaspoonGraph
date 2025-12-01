@@ -378,11 +378,22 @@ class programBlock {
 		this.mainBlock.hitBox.addEventListener("dragstart", (e) => {
 			if (this.canDrag) {
 				console.log("Dragging");
+				
 			
 				if (!!window.chrome) {
 					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
 				} else {
 					e.dataTransfer.setDragImage(this.mainBlock.svg.firstChild, 0, 0);
+				}
+
+				if (this.parent) {
+					console.log("Removing from sequence");
+					this.parent.children.splice(this.parent.children.indexOf(this), 1);
+					setTimeout(() => { 
+						this.eraseRender();
+						this.removeDropSites();
+						this.getRoot().update(); }, 1
+					);
 				}	
 				
 				e.dataTransfer.setData("application/Block", JSON.stringify({
@@ -428,6 +439,20 @@ class programBlock {
 		this.updateDropSites();
 		
 		//console.log("Done updating " + this.defaultName);
+	}
+
+	eraseRender() {
+		this.mainBlock.svg.innerHTML = "";
+		if (this.subBlocks) {
+			for (let sub of this.subBlocks) {
+				sub.svg.innerHTML = "";
+			}	
+		}
+		if (this.children) {
+			for (let child of this.children) {
+				child.eraseRender();
+			}
+		}
 	}
 
 	async blankFunction() {
@@ -544,6 +569,19 @@ class programBlock {
 		if (this.dropSites["below"]) {
 			//console.log("Updating below");
 			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
+		}
+	}
+
+	removeDropSites() {
+		if (this.dropSites) {
+			for (let site in this.dropSites) {
+				this.dropSites[site].remove();
+			}
+		}
+		if (this.children) {
+			for (let child of this.children) {
+				child.removeDropSites();
+			}
 		}
 	}
 
