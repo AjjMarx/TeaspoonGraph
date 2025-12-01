@@ -322,6 +322,12 @@
 		"inputs" : ["Edge"],
 		"code" : null
 	},
+	"Edge_In" : {
+		"type" : "Edge",
+		"text" : "Edge In The Direction Of $1",
+		"inputs" : ["Direction"],
+		"code" : null
+	},
 	"Length" : {
 		"type" : "Number",
 		"text" : "Length of $1 ",
