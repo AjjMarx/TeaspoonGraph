@@ -51,7 +51,8 @@ class Block {
 			edgeShapes : ["Straight", "Straight", "Straight", "Straight"],
 			rawText : null,
 			text : null,
-			parameterWidths : null
+			parameterWidths : null,
+			stroke : false
 		};
 		this.innerSections = []
 	
@@ -127,12 +128,10 @@ class Block {
 		}
 		tempTextArr.push(remainder);
 		if (tempTextArr.length > 1) { 
-			console.log("Has params", tempTextArr, tempInnerArr);
 			this.style.text = tempTextArr;
 			this.innerSections = tempInnerArr;
-			this.style.parameterWidths = new Array(this.innerSections.length).fill(24); 
+			if (this.style.parameterWidths == null) { this.style.parameterWidths = new Array(this.innerSections.length).fill(24); } 
 		} else {
-			console.log("No params", tempTextArr, tempInnerArr);
 			this.style.text = this.style.rawText;
 			this.innerSections = [];
 		}
@@ -306,8 +305,12 @@ class Block {
 			}
 		}
 
+		if (this.style.stroke) {
+			temp += `" stroke="white `;
+		}
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
+
 		if (typeof(this.style.text) == 'string') { 
 			temp += `<text fill="#ffffff" font-size="15" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
 			temp += `x="16" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text + ` </text>`;
@@ -316,10 +319,9 @@ class Block {
 			for (let iter in this.style.text) {
 				temp += `<text fill="#ffffff" font-size="15" xml:space="preserve" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
 				temp += `x="` + xCoord + `" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text[iter] + ` </text>`;
-				temp += `<line x1="` + xCoord + `" y1="0" x2="` + xCoord + `" y2="100" stroke="black" />`;
-				temp += `<line x1="` + this.getPCoord(iter) + `" y1="0" x2="` + this.getPCoord(iter) + `" y2="100" stroke="red" />`;
+				//temp += `<line x1="` + xCoord + `" y1="0" x2="` + xCoord + `" y2="100" stroke="black" />`;
+				//temp += `<line x1="` + this.getPCoord(iter) + `" y1="0" x2="` + this.getPCoord(iter) + `" y2="100" stroke="red" />`;
 				xCoord += ((this.style.parameterWidths[iter] ?? 0) + (this.innerSections[iter] ?? 0));
-				console.log(this.getPCoord(iter));
 			}
 		}
 		temp += `</svg>`;
@@ -403,6 +405,7 @@ class programBlock {
 		this.mainBlock.style.top = this.top;
 		this.mainBlock.style.color = this.typeManager.getColor(this.type);
 		this.mainBlock.style.size = this.typeManager.getSize(this.type);
+		if (this.typeManager.getSize(this.type) == "Small") { this.mainBlock.style.stroke = true; }
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
 		this.mainBlock.style.rawText = this.text;
 		if (this.mainBlock.style.size == "Bracket") {
@@ -492,14 +495,14 @@ class programBlock {
 					sBlock.container.style.zIndex = "99"; 
 					sBlock.update();
 				} else if (sBlock instanceof programBlock){
-		//			console.log("Updating a subblock which is a program block.");
-		//			sBlock.generateSubblocks();
-		//			sBlock.mainBlock.style.top = this.mainBlock.style.top;
-		//			console.log(pShift + getStringWidth(firstHalf));
-		//			sBlock.mainBlock.style.left = pShift + getStringWidth(firstHalf);
-		//			maxHeight = Math.max(maxHeight, sBlock.mainBlock.getTotalHeight());
-		//			sBlock.mainBlock.container.style.zIndex = "99";
-		//			sBlock.update();
+					console.log("Updating a subblock which is a program block.");
+					sBlock.generateSubblocks();
+					sBlock.mainBlock.style.top = this.mainBlock.style.top;
+					sBlock.mainBlock.style.left = this.mainBlock.style.left + this.mainBlock.getPCoord(it) - 8;
+					this.mainBlock.style.parameterWidths[it] = sBlock.mainBlock.style.width;
+					maxHeight = Math.max(maxHeight, sBlock.mainBlock.getTotalHeight());
+					sBlock.mainBlock.container.style.zIndex = "99";
+					sBlock.update();
 				}
 				
 				pShift += getStringWidth(firstHalf);
@@ -527,7 +530,8 @@ class programBlock {
 				pShift += getStringWidth(firstHalf);*/
 			}
 		//	this.mainBlock.style.height = Math.max(24, maxHeight + 4);
-		} 
+		}
+		this.mainBlock.update(); 
 	}
 	
 	update() {
