@@ -327,6 +327,10 @@ class Block {
 		temp += `</svg>`;
 		return temp;
 	}
+
+	destruct() {
+		this.container.remove();
+	}
 }
 
 class typeManager {
@@ -358,11 +362,28 @@ class typeManager {
 	}
 	
 	getSize(iType) {
-		return this.typeMap.get(iType.replace(/^#/, ""))["Size"];
+		if (this.typeMap.has(iType.replace(/^#/, ""))) {
+			return this.typeMap.get(iType.replace(/^#/, ""))["Size"];
+		} else { return undefined; }
 	}
 
 	getEdgeShapes(iType) {
 		return this.typeMap.get(iType.replace(/^#/, ""))["EdgeShapes"];
+	}
+
+	isPlural(iType) {
+		return iType[0] == '#';
+	}
+
+	typeMatch(t1, t2) {
+		console.log(t1,t2);
+		if (t1 == t2) { return true; }
+		console.log(t1,this.getSize(t2),this.isPlural(t1),this.isPlural(t2));
+		if (t1.replace(/^#/, "") == this.getSize(t2) && this.isPlural(t1)==this.isPlural(t2) ) { return true; }
+		console.log(this.getSize(t1),t2,this.isPlural(t1),this.isPlural(t2));
+		if (t2.replace(/^#/, "") == this.getSize(t1) && this.isPlural(t1)==this.isPlural(t2) ) { return true; }
+		console.log("FALSE");
+		return false;
 	}
 }
 
@@ -741,26 +762,29 @@ class programBlock {
 					let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 					let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 					let defaultData = this.typeManager.getFunctionData(defaultName);
-					if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
-						console.log("Small subtree is being moved"); 
-						//let blockToMove = this.container.clipboard;
-						//blockToMove.parent = this.parent;
-						//blockToMove.dropsiteCollection = this.dropsiteCollection;
-						//blockToMove.generateSubblocks();
-						//blockToMove.regenerateDropSite();
-						//console.log(this.parent.children, this.parent.children.indexOf(this));
-						//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
-					} else {
-						if (this.typeManager.getSize(defaultData["Type"]) == "Small") {
-							console.log("Small block being added to " + sub);
-							let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-							defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
-							newBlock.dropsiteCollection = this.dropsiteCollection;
-							newBlock.generateDropSites();
-							newBlock.parent = this.parent;
-							this.pChildren[sub] = newBlock;
+					console.log(defaultData["Type"], this.inputTypes[sub]);
+					if (this.typeManager.getSize(defaultData["Type"]) == "Small" && this.typeManager.typeMatch(defaultData["Type"], this.inputTypes[sub])) {
+						if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
+							console.log("Small subtree is being moved"); 
+							//let blockToMove = this.container.clipboard;
+							//blockToMove.parent = this.parent;
+							//blockToMove.dropsiteCollection = this.dropsiteCollection;
+							//blockToMove.generateSubblocks();
+							//blockToMove.regenerateDropSite();
 							//console.log(this.parent.children, this.parent.children.indexOf(this));
-							//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, newBlock);
+							//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
+						} else {
+								console.log("Small block being added to " + sub);
+								console.log(this.pChildren[sub]);
+								this.pChildren[sub].destruct();
+								let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
+								defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+								newBlock.dropsiteCollection = this.dropsiteCollection;
+								newBlock.generateDropSites();
+								newBlock.parent = this.parent;
+								this.pChildren[sub] = newBlock;
+								//console.log(this.parent.children, this.parent.children.indexOf(this));
+								//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, newBlock);
 						}
 					}
 					//console.log(this.getRoot());
@@ -846,6 +870,23 @@ class programBlock {
 	toggleDrag(bl) {
 		if (bl) { this.canDrag = true; } else { this.canDrag = false; } 
 		this.mainBlock.hitBox.draggable = this.canDrag;
+	}
+
+	destruct() {
+		if (this.pChildren) {
+			for (let child of this.pChildren) {
+				child.remove();
+			}
+		}
+		
+		if (this.bChildren) {
+			for (let child of this.pChildren) {
+				child.remove();
+			}		
+		}
+	
+		this.removeDropSites();
+		this.mainBlock.remove();
 	}
 }
 

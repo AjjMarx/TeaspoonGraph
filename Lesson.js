@@ -25,7 +25,7 @@ async function LoadLesson() {
 
 		toolBox.style.left = "10px";
 		toolBox.style.top = "30px";
-		toolBox.style.width = "270px";
+		toolBox.style.width = "280px";
 		toolBox.style.bottom = "10px";
 
 		let mainManager = new typeManager();
