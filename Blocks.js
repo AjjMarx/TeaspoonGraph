@@ -536,30 +536,7 @@ class programBlock {
 				}
 				
 				pShift += getStringWidth(firstHalf);
-				/*index = remainder.indexOf(`$` + String(parseInt(types) + 1));
-				firstHalf = remainder.substring(0, index);
-				remainder = remainder.substring(index);
-				this.subBlocks[types] = new Block();
-				this.subBlocks[types].style.left = pShift + getStringWidth(firstHalf);
-				this.subBlocks[types].style.top = 10;
-				this.subBlocks[types].style.height = 24;
-				this.subBlocks[types].style.color = "White";
-				this.subBlocks[types].style.size = "Small";
-				this.subBlocks[types].style.text = " ";
-				this.subBlocks[types].container.style.pointerEvents = 'none';
-				if (this.typeManager.contains(this.inputTypes[types])) {
-					this.subBlocks[types].style.edgeShapes = this.typeManager.getEdgeShapes(this.inputTypes[types]);
-				} else {	
-					this.subBlocks[types].style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
-				}
-				this.mainBlock.container.appendChild(this.subBlocks[types].container);	
-				this.subBlocks[types].update();
-
-				this.subBlocks[types].container.style.zIndex = "99";
-	
-				pShift += getStringWidth(firstHalf);*/
 			}
-		//	this.mainBlock.style.height = Math.max(24, maxHeight + 4);
 		}
 		this.mainBlock.update(); 
 	}
@@ -614,6 +591,7 @@ class programBlock {
 
 	async blankFunction() {
 		return new Promise((resolve) => {
+			console.log("Executing " + this.type);
 			resolve();
 		});
 	}
