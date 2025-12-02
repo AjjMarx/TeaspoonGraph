@@ -254,25 +254,25 @@
 		"type" : "Header",
 		"text" : "On Start",
 		"inputs" : null,
-		"code" : null
+		"code" : "console.log(\"Hello from the JSON! I'm the Header!\"); this.executeBlockChildren();"
 	},
 	"Forever" : {
 		"type" : "Flow",
 		"text" : "Forever Repeat",
 		"inputs" : null,
-		"code" : null 
+		"code" : "while (true && this.bChildren.length > 0) { this.executeBlockChildren(); }"
 	},
 	"While" : {
 		"type" : "Flow",
 		"text" : "While $1 Is True",
 		"inputs" : ["Boolean"],
-		"code" : null 
+		"code" : "while (p[0] == true) { this.executeBlockChildren(); }"
 	},
 	"If" : {
 		"type" : "Flow",
 		"text" : "If $1 Is True",
 		"inputs" : ["Boolean"],
-		"code" : null
+		"code" : "if (p[0] == true) { this.executeBlockChildren(); }"
 	},
 	"For" : {
 		"type" : "Flow",
@@ -350,25 +350,25 @@
 		"type" : "Direction",
 		"text" : "North",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"North\""
 	},
 	"South" : {
 		"type" : "Direction",
 		"text" : "South",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"South\""
 	},
 	"East" : {
 		"type" : "Direction",
 		"text" : "East",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"East\""
 	},
 	"West" : {
 		"type" : "Direction",
 		"text" : "West",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"West\""
 	},
 	"Degrees" : {
 		"type" : "Direction",
@@ -380,85 +380,85 @@
 		"type" : "Number",
 		"text" : "$1 + $2",
 		"inputs" : ["Number", "Number"],
-		"code" : null
+		"code" : "return (p[0] + p[1])"
 	},
 	"Minus" : {
 		"type" : "Number",
 		"text" : "$1 - $2",
 		"inputs" : ["Number", "Number"],
-		"code" : null
+		"code" : "return (p[0] - p[1])"
 	},
 	"Divide" : {
 		"type" : "Number",
 		"text" : "$1 ÷ $2",
 		"inputs" : ["Number", "Number"],
-		"code" : null
+		"code" : "return (p[0] / p[1])"
 	},
 	"Multiply" : {
 		"type" : "Number",
 		"text" : "$1 x $2",
 		"inputs" : ["Number", "Number"],
-		"code" : null
+		"code" : "return (p[0] * p[1])"
 	},
 	"And" : {
 		"type" : "Boolean",
 		"text" : "$1 And $2",
 		"inputs" : ["Boolean", "Boolean"],
-		"code" : null
+		"code" : "return (p[0] && p[1])"
 	},
 	"Or" : {
 		"type" : "Boolean",
 		"text" : "$1 or $2",
 		"inputs" : ["Boolean", "Boolean"],
-		"code" : null
+		"code" : "return (p[0] || p[1])"
 	},
 	"Not" : {
 		"type" : "Boolean",
 		"text" : "Not $1",
 		"inputs" : ["Boolean"],
-		"code" : null
+		"code" : "return !(p[0])"
 	},
 	"Equals" : {
 		"type" : "Boolean",
 		"text" : "$1 Equals $2",
 		"inputs" : ["Small", "Small"],
-		"code" : null
+		"code" : "return (p[0] == p[1])"
 	},
 	"True" : {
 		"type" : "Boolean",
 		"text" : "True",
 		"inputs" : null,
-		"code" : null
+		"code" : "return true;"
 	},
 	"False" : {
 		"type" : "Boolean",
 		"text" : "False",
 		"inputs" : null,
-		"code" : null
+		"code" : "return false;"
 	},
 	"Gold" : {
 		"type" : "Good",
 		"text" : "Gold",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"gold\""
 	},
 	"Salt" : {
 		"type" : "Good",
 		"text" : "Salt",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"Salt\""
 	},
 	"Ivory" : {
 		"type" : "Good",
 		"text" : "Ivory",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"Ivory\""
 	},
 	"Ceramics" : {
 		"type" : "Good",
 		"text" : "Ceramics",
 		"inputs" : null,
-		"code" : null
+		"code" : "return \"Ceramics\""
 	}
   }}
 }

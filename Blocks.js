@@ -629,6 +629,10 @@ class programBlock {
 			} 
 			if (allow) {
 				await setTimeout(async () => {
+					let p = [];
+					for (let child in this.pChildren) {
+						p[child] = await this.pChildren[child].execute();
+					}
 					let result = await eval("(async function(){" + this.code + "}).call(this)")
 					resolve(result);
 				}, 500);
