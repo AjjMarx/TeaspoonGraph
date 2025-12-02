@@ -22,6 +22,8 @@ async function LoadLesson() {
 		document.body.appendChild(toolBox);
 		toolBox.style.position = "absolute";
 		toolBox.style.overflowY = 'auto';
+		toolBox.style.backgroundColor = "#E0E0EF";
+		toolBox.style.borderRadius = '20px';
 
 		toolBox.style.left = "10px";
 		toolBox.style.top = "30px";
@@ -38,6 +40,7 @@ async function LoadLesson() {
 	
 		let it = 0;	
 		let startTop = 10;
+		let horizontal = 10;
 		for (blockName in lessonData["Code"]["Functions"]) {
 			if (blockName != "On_Start") {
 				let blockData = lessonData["Code"]["Functions"][blockName];
@@ -48,7 +51,14 @@ async function LoadLesson() {
 				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], null, 10, startTop, mainManager, toolBox);
 				blocks[it].IDnum = 0;
 				blocks[it].dropsiteCollection = dropCollection;
+				if (horizontal + blocks[it].mainBlock.style.width + 10< 250 && it > 0) { 
+					blocks[it].mainBlock.style.left = horizontal + 10;
+					blocks[it].mainBlock.style.top = blocks[it-1].mainBlock.style.top;
+				} else {
+					horizontal = 10;
+				}
 				blocks[it].update();
+				horizontal += blocks[it].mainBlock.style.width + 10;
 				it++;
 			}
 		}
