@@ -354,7 +354,7 @@ class typeManager {
 	}
 
 	contains(iType) {
-		return !(this.typeMap.get(iType.replace(/^#/, "")) == null);
+		return (this.typeMap.has(iType.replace(/^#/, "")));
 	}
 
 	getColor(iType) {
@@ -376,13 +376,9 @@ class typeManager {
 	}
 
 	typeMatch(t1, t2) {
-		console.log(t1,t2);
 		if (t1 == t2) { return true; }
-		console.log(t1,this.getSize(t2),this.isPlural(t1),this.isPlural(t2));
 		if (t1.replace(/^#/, "") == this.getSize(t2) && this.isPlural(t1)==this.isPlural(t2) ) { return true; }
-		console.log(this.getSize(t1),t2,this.isPlural(t1),this.isPlural(t2));
 		if (t2.replace(/^#/, "") == this.getSize(t1) && this.isPlural(t1)==this.isPlural(t2) ) { return true; }
-		console.log("FALSE");
 		return false;
 	}
 }
@@ -440,7 +436,7 @@ class programBlock {
 	
 		this.mainBlock.hitBox.addEventListener("dragstart", async (e) => {
 			if (this.canDrag) {
-				console.log("Dragging, ", this.type);
+				//console.log("Dragging, ", this.type);
 					
 				if (!!window.chrome) {
 					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
@@ -450,7 +446,7 @@ class programBlock {
 
 				if (this.parent) {
 					if (this.mainBlock.style.size != "Small") {
-						console.log("Removing normal/bracket from sequence");
+						//console.log("Removing normal/bracket from sequence");
 						this.parent.bChildren.splice(this.parent.bChildren.indexOf(this), 1);
 						await setTimeout(() => { 
 							this.eraseRender();
@@ -460,7 +456,7 @@ class programBlock {
 						this.container.clipboard = this;
 						//this.parent = null;	
 					} else if (this.mainBlock.style.size == "Small") {
-						console.log("Removing small from sequence");
+						//console.log("Removing small from sequence");
 						this.container.clipboard = this;
 						this.parent.pChildren[this.parent.pChildren.indexOf(this)] = "Blank";
 						this.parent.generateSubblocks();
@@ -487,7 +483,7 @@ class programBlock {
 		});
 		this.mainBlock.hitBox.addEventListener("dragend", (e) => {
 			if (this.canDrag) {
-				console.log("Done dragging");
+				//console.log("Done dragging");
 				for (let boxes of this.dropsiteCollection) { boxes.style.zIndex = "-1"; }
 			}
 		});	
@@ -599,16 +595,12 @@ class programBlock {
 	}
 
 	eraseRender() {
-		console.log("erasing");
 		this.mainBlock.svg.innerHTML = "";
 		if (this.pChildren) {
 			for (let sub in this.pChildren) {
-				console.log(sub);
 				if (this.pChildren[sub] instanceof Block) {
-					console.log("t");
 					this.pChildren[sub].svg.innerHTML = "";
 				} else if (this.pChildren[sub] instanceof programBlock) {
-					console.log("u");
 					this.pChildren[sub].eraseRender();
 				} else { continue; }
 			}	
@@ -666,14 +658,15 @@ class programBlock {
 				e.preventDefault();
 			});
 			this.dropSites["bracket"].addEventListener("drop", (e) => {
-				console.log(e);
+				//console.log(e);
 				e.preventDefault();
 				let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 				let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 				if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
-					console.log("Subtree is being moved"); 
+					//console.log("Subtree is being moved"); 
 					let blockToMove = this.container.clipboard;
 					blockToMove.parent = this;
+					this.container.clipboard = null;
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
 					blockToMove.generateSubblocks();
 					blockToMove.regenerateDropSite();
@@ -719,9 +712,10 @@ class programBlock {
 				let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 				let defaultData = this.typeManager.getFunctionData(defaultName);
 				if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
-					console.log("Subtree is being moved"); 
+					//console.log("Subtree is being moved"); 
 					let blockToMove = this.container.clipboard;
 					blockToMove.parent = this.parent;
+					this.container.clipboard = null;
 					blockToMove.dropsiteCollection = this.dropsiteCollection;
 					blockToMove.generateSubblocks();
 					blockToMove.regenerateDropSite();
@@ -746,12 +740,12 @@ class programBlock {
 		
 		if (this.pChildren && this.pChildren.length > 0) {
 			this.generateSubblocks();
-			console.log("Adding dropsites for the subblocks", this.pChildren);
+			//console.log("Adding dropsites for the subblocks", this.pChildren);
 			for (let sub in this.pChildren) {
 				let subBlock;
 				if (this.pChildren[sub] instanceof Block) {
 					subBlock = this.pChildren[sub];
-					console.log(subBlock);
+					//console.log(subBlock);
 				} else if (this.pChildren[sub] instanceof programBlock) {
 					subBlock = this.pChildren[sub].mainBlock;
 				} else { continue; }
@@ -777,20 +771,23 @@ class programBlock {
 					let defaultName = JSON.parse(e.dataTransfer.getData("application/Block"))["Default"]; 
 					let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 					let defaultData = this.typeManager.getFunctionData(defaultName);
-					console.log(defaultData["Type"], this.inputTypes[sub]);
+					//console.log(defaultData["Type"], this.inputTypes[sub]);
 					if (this.typeManager.getSize(defaultData["Type"]) == "Small" && this.typeManager.typeMatch(defaultData["Type"], this.inputTypes[sub])) {
 						if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
-							console.log("Small subtree is being moved"); 
-							//let blockToMove = this.container.clipboard;
-							//blockToMove.parent = this.parent;
-							//blockToMove.dropsiteCollection = this.dropsiteCollection;
-							//blockToMove.generateSubblocks();
-							//blockToMove.regenerateDropSite();
+							//console.log("Small subtree is being moved to " + sub); 
+							this.pChildren[sub].destruct();
+							let blockToMove = this.container.clipboard;
+							blockToMove.parent = this;
+							this.pChildren[sub] = blockToMove;
+							this.container.clipboard = null;
+							blockToMove.dropsiteCollection = this.dropsiteCollection;
+							blockToMove.generateSubblocks();
+							blockToMove.regenerateDropSite();
 							//console.log(this.parent.children, this.parent.children.indexOf(this));
 							//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
 						} else {
-								console.log("Small block being added to " + sub);
-								console.log(this.pChildren[sub]);
+								//console.log("Small block being added to " + sub);
+								//console.log(this.pChildren[sub]);
 								this.pChildren[sub].destruct();
 								let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 								defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
