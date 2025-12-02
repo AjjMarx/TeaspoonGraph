@@ -300,7 +300,7 @@
 	},
 	"Of" : {
 		"type" : "List",
-		"text" : "$1's $2",
+		"text" : "$1‘s $2",
 		"inputs" : ["Type", "Type"],
 		"code" : null
 	},
