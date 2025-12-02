@@ -240,11 +240,11 @@ class Block {
 				temp += `12,` + (4 + this.style.height) + ` 12,12 `;
 			} else if (this.style.edgeShapes[0] == "Angle") {
 				temp += `4,` + (8 + this.style.height/2) + ` 12,12 `;
-			} else if (this.style.edgeShapes[2] == "Round") { 
+			} else if (this.style.edgeShapes[0] == "Round") { 
 				for (let i = 3.14159; i > 0; i-=0.39269) {
 					temp += (16 + Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
 				}
-			} else if (this.style.edgeShapes[2] == "Arrow") {
+			} else if (this.style.edgeShapes[0] == "Arrow") {
 				temp += ` 12,` + (4 + this.style.height);
 				temp += ` 13,` + (8 + this.style.height * 0.66); 
 				temp += ` 10,` + (8 + this.style.height * 0.66); 
@@ -644,7 +644,6 @@ class programBlock {
 	}
 
 	async executeBlockChildren() {
-		console.log("Executing the children");
 		return new Promise(async (resolve) => {
 			if (this.bChildren) {
 				for (let child of this.bChildren) {
@@ -665,7 +664,7 @@ class programBlock {
 			this.dropSites["bracket"].style.height = "32px";
 			this.dropSites["bracket"].style.left = (this.mainBlock.style.left + 8) + "px";
 			this.dropSites["bracket"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
-			this.dropSites["bracket"].style.zIndex = "999";
+			this.dropSites["bracket"].style.zIndex = "-1";
 			this.dropSites["bracket"].type = "Bracket";
 			this.container.appendChild(this.dropSites["bracket"]);
 			
@@ -713,7 +712,7 @@ class programBlock {
 			this.dropSites["below"].style.height = (this.mainBlock.style.height) + "px";
 			this.dropSites["below"].style.left = (this.mainBlock.style.left) + "px";
 			this.dropSites["below"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.height/2)+ "px";
-			this.dropSites["below"].style.zIndex = "999";
+			this.dropSites["below"].style.zIndex = "-1";
 			this.dropSites["below"].type = "Below";
 			this.container.appendChild(this.dropSites["below"]);
 		
@@ -772,7 +771,7 @@ class programBlock {
 				this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
 				this.dropSites[sub].style.width = subBlock.hitBox.getBoundingClientRect().width + "px";
 				this.dropSites[sub].style.height = subBlock.hitBox.getBoundingClientRect().height + "px";
-				this.dropSites[sub].style.zIndex = "999";
+				this.dropSites[sub].style.zIndex = "-1";
 				this.dropSites[sub].type = "Parameter";
 				this.container.appendChild(this.dropSites[sub]);
 				//console.log(this.dropSites[sub]);
