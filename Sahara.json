@@ -236,13 +236,13 @@
 			"EdgeShapes" : ["Arrow", "Straight", "Arrow", "Straight"]
 		},
 		{
-			"Name" : "Vertex",
+			"Name" : "Type",
 			"Color" : "Green",
 			"Size" : "Small",
 			"EdgeShapes" : ["Round", "Straight", "Round", "Straight"]
 		},
 		{
-			"Name" : "Edge",
+			"Name" : "List",
 			"Color" : "Aqua",
 			"Size" : "Small",
 			"EdgeShapes" : ["Angle", "Straight", "Angle", "Straight"]
@@ -277,19 +277,13 @@
 	"For" : {
 		"type" : "Flow",
 		"text" : "For Every One Of $1",
-		"inputs" : ["#Small"],
+		"inputs" : ["List"],
 		"code" : null
 	},
 	"Move_To" : {
 		"type" : "Code",
 		"text" : "Move to $1 ",
-		"inputs" : ["Vertex"],
-		"code" : null
-	},
-	"Move_Along" : {
-		"type" : "Code",
-		"text" : "Move Along $1 ",
-		"inputs" : ["Edge"],
+		"inputs" : ["Type"],
 		"code" : null
 	},
 	"Move_To_The" : {
@@ -304,28 +298,34 @@
 		"inputs" : ["Number", "Good", "Number", "Good"],
 		"code" : null
 	},
-	"Neighors" : {
-		"type" : "#Vertex",
-		"text" : "My Neighbors",
+	"Of" : {
+		"type" : "List",
+		"text" : "$1's $2",
+		"inputs" : ["Type", "Type"],
+		"code" : null
+	},
+	"Neighor" : {
+		"type" : "Type",
+		"text" : "Neighbor",
 		"inputs" : null,
 		"code" : null
 	},
-	"Edges" : {
-		"type" : "#Edge",
-		"text" : "My Paths",
+	"Edge" : {
+		"type" : "Type",
+		"text" : "Path",
 		"inputs" : null,
 		"code" : null
 	},
-	"Direction_Of" : {
-		"type" : "Direction",
-		"text" : "Direction of $1",
-		"inputs" : ["Edge"],
+	"Good" : {
+		"type" : "Type",
+		"text" : "Good",
+		"inputs" : null,
 		"code" : null
 	},
-	"Edge_In" : {
-		"type" : "Edge",
-		"text" : "Edge In The Direction Of $1",
-		"inputs" : ["Direction"],
+	"Me" : {
+		"type" : "Type",
+		"text" : "Me",
+		"inputs" : null,
 		"code" : null
 	},
 	"Length" : {
@@ -338,6 +338,12 @@
 		"type" : "Number",
 		"text" : "Value of $1 and $2 in $3",
 		"inputs" : ["Good", "Good", "Vertex"],
+		"code" : null
+	},
+	"Direction_Of" : {
+		"type" : "Direction",
+		"text" : "Direction of $1",
+		"inputs" : ["Type"],
 		"code" : null
 	},
 	"North" : {
@@ -415,7 +421,7 @@
 	"Equals" : {
 		"type" : "Boolean",
 		"text" : "$1 Equals $2",
-		"inputs" : ["Boolean", "Boolean"],
+		"inputs" : ["Small", "Small"],
 		"code" : null
 	},
 	"True" : {
