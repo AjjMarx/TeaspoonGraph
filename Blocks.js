@@ -440,7 +440,7 @@ class programBlock {
 	
 		this.mainBlock.hitBox.addEventListener("dragstart", async (e) => {
 			if (this.canDrag) {
-				console.log("Dragging, ", this.mainBlock.hitBox.style.zIndex, this.mainBlock.svg.style.zIndex);
+				console.log("Dragging, ", this.type);
 					
 				if (!!window.chrome) {
 					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
@@ -449,15 +449,19 @@ class programBlock {
 				}
 
 				if (this.parent) {
-					console.log("Removing from sequence");
-					this.parent.bChildren.splice(this.parent.bChildren.indexOf(this), 1);
-					await setTimeout(() => { 
-						this.eraseRender();
-						this.removeDropSites();
-						this.getRoot().update(); 
-					}, 1);
-					this.container.clipboard = this;
-					//this.parent = null;	
+					if (this.mainBlock.style.size != "Small") {
+						console.log("Removing normal/bracket from sequence");
+						this.parent.bChildren.splice(this.parent.bChildren.indexOf(this), 1);
+						await setTimeout(() => { 
+							this.eraseRender();
+							this.removeDropSites();
+							this.getRoot().update(); 
+						}, 1);
+						this.container.clipboard = this;
+						//this.parent = null;	
+					} else if (this.mainBlock.style.size == "Small") {
+						console.log("Removing small from sequence");
+					}
 				}	
 				
 				e.dataTransfer.setData("application/Block", JSON.stringify({
@@ -516,7 +520,7 @@ class programBlock {
 					sBlock.container.style.zIndex = "99"; 
 					sBlock.update();
 				} else if (sBlock instanceof programBlock){
-					console.log("Updating a subblock which is a program block.");
+					//console.log("Updating a subblock which is a program block.");
 					sBlock.generateSubblocks();
 					sBlock.mainBlock.style.top = this.mainBlock.style.top;
 					sBlock.mainBlock.style.left = this.mainBlock.style.left + this.mainBlock.getPCoord(it) - 8;
@@ -586,16 +590,19 @@ class programBlock {
 	}
 
 	eraseRender() {
+		console.log("erasing");
 		this.mainBlock.svg.innerHTML = "";
 		if (this.pChildren) {
-			for (let sub of this.pChildren) {
-				let subBlock;
+			for (let sub in this.pChildren) {
+				console.log(sub);
 				if (this.pChildren[sub] instanceof Block) {
-					subBlock = this.pChildren[sub];
+					console.log("t");
+					this.pChildren[sub].svg.innerHTML = "";
 				} else if (this.pChildren[sub] instanceof programBlock) {
-					subBlock = this.pChildren[sub].mainBlock;
+					console.log("u");
+					//this.pChildren[sub].mainBlock.svg.innerHTML = "";
+					this.pChildren[sub].eraseRender();
 				} else { continue; }
-				sub.svg.innerHTML = "";
 			}	
 		}
 		if (this.bChildren) {
