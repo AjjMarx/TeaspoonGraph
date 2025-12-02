@@ -212,12 +212,6 @@
 			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]	
 		},
 		{
-			"Name" : "Number",
-			"Color" : "Red",
-			"Size" : "Small",
-			"EdgeShapes" : ["Straight", "Straight", "Straight", "Straight"]
-		},
-		{
 			"Name" : "Boolean",
 			"Color" : "Green",
 			"Size" : "Small",
@@ -237,7 +231,7 @@
 		},
 		{
 			"Name" : "Type",
-			"Color" : "Green",
+			"Color" : "Red",
 			"Size" : "Small",
 			"EdgeShapes" : ["Round", "Straight", "Round", "Straight"]
 		},
@@ -246,6 +240,12 @@
 			"Color" : "Aqua",
 			"Size" : "Small",
 			"EdgeShapes" : ["Angle", "Straight", "Angle", "Straight"]
+		},
+		{
+			"Name" : "Value", 
+			"Color" : "Orange",
+			"Size" : "Small",
+			"EdgeShapes" : ["Angle", "Straight", "Straight", "Straight"]
 		}
 	], 
 	
@@ -276,7 +276,7 @@
 	},
 	"For" : {
 		"type" : "Flow",
-		"text" : "For Every One Of $1",
+		"text" : "For Every $1",
 		"inputs" : ["List"],
 		"code" : null
 	},
@@ -294,14 +294,20 @@
 	},
 	"Trade" : {
 		"type" : "Code",
-		"text" : "Trade $1 $2 For $3 $4",
-		"inputs" : ["Number", "Good", "Number", "Good"],
+		"text" : "Trade $1 For $2",
+		"inputs" : ["Good", "Good"],
 		"code" : null
 	},
 	"Of" : {
 		"type" : "List",
-		"text" : "$1‘s $2",
+		"text" : "$1 of $2",
 		"inputs" : ["Type", "Type"],
+		"code" : null
+	},
+	"Me" : {
+		"type" : "Type",
+		"text" : "Me",
+		"inputs" : null,
 		"code" : null
 	},
 	"Neighor" : {
@@ -322,22 +328,10 @@
 		"inputs" : null,
 		"code" : null
 	},
-	"Me" : {
+	"Value" : {
 		"type" : "Type",
-		"text" : "Me",
+		"text" : "Value",
 		"inputs" : null,
-		"code" : null
-	},
-	"Length" : {
-		"type" : "Number",
-		"text" : "Length of $1 ",
-		"inputs" : ["Edge"],
-		"code" : null
-	},
-	"Exchange_Rate" : {
-		"type" : "Number",
-		"text" : "Value of $1 and $2 in $3",
-		"inputs" : ["Good", "Good", "Vertex"],
 		"code" : null
 	},
 	"Direction_Of" : {
@@ -369,36 +363,6 @@
 		"text" : "West",
 		"inputs" : null,
 		"code" : "return \"West\""
-	},
-	"Degrees" : {
-		"type" : "Direction",
-		"text" : "$1º",
-		"inputs" : ["Number"],
-		"code" : null
-	},
-	"Plus" : {
-		"type" : "Number",
-		"text" : "$1 + $2",
-		"inputs" : ["Number", "Number"],
-		"code" : "return (p[0] + p[1])"
-	},
-	"Minus" : {
-		"type" : "Number",
-		"text" : "$1 - $2",
-		"inputs" : ["Number", "Number"],
-		"code" : "return (p[0] - p[1])"
-	},
-	"Divide" : {
-		"type" : "Number",
-		"text" : "$1 ÷ $2",
-		"inputs" : ["Number", "Number"],
-		"code" : "return (p[0] / p[1])"
-	},
-	"Multiply" : {
-		"type" : "Number",
-		"text" : "$1 x $2",
-		"inputs" : ["Number", "Number"],
-		"code" : "return (p[0] * p[1])"
 	},
 	"And" : {
 		"type" : "Boolean",
@@ -459,6 +423,44 @@
 		"text" : "Ceramics",
 		"inputs" : null,
 		"code" : "return \"Ceramics\""
+	},
+	"Value_Of" : {
+		"type" : "Value",
+		"text" : "Value of $1 in $2",
+		"inputs" : ["Good", "Type"],
+		"code" : null
+	},
+	"Very_High" : {
+		"type" : "Value",
+		"text" : "Very High",
+		"inputs" : null,
+		"code" : "return \"Very High\""
+	},
+	"High" : {
+		"type" : "Value",
+		"text" : "High",
+		"inputs" : null,
+		"code" : "return \"Very High\""
+	},
+	"Medium" : {
+		"type" : "Value",
+		"text" : "Medium",
+		"inputs" : null,
+		"code" : "return \"Very High\""
+	},
+	"Low" : {
+		"type" : "Value",
+		"text" : "Low",
+		"inputs" : null,
+		"code" : "return \"Very High\""
+	},
+	"Very Low" : {
+		"type" : "Value",
+		"text" : "Very Low",
+		"inputs" : null,
+		"code" : "return \"Very High\""
 	}
+	
+
   }}
 }
