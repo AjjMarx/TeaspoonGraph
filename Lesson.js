@@ -71,6 +71,8 @@ async function LoadLesson() {
 		
 		let programSequence = [headerBlock];
 
+		let mainExecutor = new Executor(programSequence, canvas);
+	
 		requestAnimationFrame(renderGlobe);
 	//} catch(err) {
 	//	console.log("Lesson data could not be loaded:\n" + err);
