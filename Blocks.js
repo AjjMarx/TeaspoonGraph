@@ -8,7 +8,8 @@ const Palette = [
 	["#39A2E3", "Blue"],
 	["#9F6FF2", "Purple"],
 	["#F299E3", "Pink"],
-	["#FFFFFF", "White"] 
+	["#FFFFFF", "White"], 
+	["#000000", "Black"]
 ];
 
 const PaletteReverse = {
@@ -21,7 +22,8 @@ const PaletteReverse = {
 	Blue : 6,
 	Purple : 7,
 	Pink: 8,
-	White: 9
+	White: 9,
+	Black: 10
 };
 
 class Block {
@@ -52,7 +54,8 @@ class Block {
 			rawText : null,
 			text : null,
 			parameterWidths : null,
-			stroke : false
+			stroke : false,
+			strokeColor : "White"
 		};
 		this.innerSections = []
 	
@@ -306,7 +309,7 @@ class Block {
 		}
 
 		if (this.style.stroke) {
-			temp += `" stroke="white `;
+			temp += `" stroke="` + Palette[PaletteReverse[this.style.strokeColor]][0] + ` `;
 		}
 
 		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
@@ -384,7 +387,7 @@ class typeManager {
 }
 
 class programBlock {
-	constructor(iDefault, iType, iText, iInputTypes, iLeft, iTop, iTypeManager, iContainer) {
+	constructor(iDefault, iType, iText, iInputTypes, iCode, iLeft, iTop, iTypeManager, iContainer) {
 		this.defaultName = iDefault
 		this.type = iType;
 		this.text = iText;
@@ -409,7 +412,7 @@ class programBlock {
 		this.parent = null;
 		this.width = 0;
 		this.height = 0;
-		this.code = this.blankFunction;
+		if (iCode) { this.code = iCode; } else { this.code = this.blankFunction; }
 
 		this.IDnum = crypto.randomUUID();
 	
@@ -591,7 +594,6 @@ class programBlock {
 
 	async blankFunction() {
 		return new Promise((resolve) => {
-			console.log("Executing " + this.type);
 			resolve();
 		});
 	}
@@ -614,8 +616,39 @@ class programBlock {
 		return this.mainBlock.getBottom();
 	}
 
-	execute() {
-		console.log("Executing")
+	async execute() {
+		return new Promise(async (resolve) => {
+			console.log("Executing " + this.type)
+			let allow = true;
+			if (this.inputTypes && this.inputTypes.length > 0) {
+				if (this.pChildren) {
+					for (let param in this.inputTypes) {
+						if (!(this.pChildren[param] instanceof programBlock)) { allow = false; } 
+					}
+				} else { allow = false; }
+			} 
+			if (allow) {
+				await setTimeout(async () => {
+					let result = await eval("(async function(){" + this.code + "}).call(this)")
+					resolve(result);
+				}, 500);
+			} else {
+				console.error("Not all parameters are fulfilled");
+				resolve();
+			}
+		});
+	}
+
+	async executeBlockChildren() {
+		console.log("Executing the children");
+		return new Promise(async (resolve) => {
+			if (this.bChildren) {
+				for (let child of this.bChildren) {
+					await child.execute();
+				}
+			}
+			resolve();
+		});
 	}
 
 	generateDropSites() {
@@ -653,7 +686,7 @@ class programBlock {
 					let defaultData = this.typeManager.getFunctionData(defaultName);
 					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-						defaultData["Input"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
+						defaultData["Input"], defaultData["Code"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
 						newBlock.update();
 						newBlock.generateSubblocks();
@@ -702,7 +735,7 @@ class programBlock {
 				} else {
 					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-						defaultData["Input"], this.mainBlock.style.left, this.mainBlock.top, this.typeManager, this.container);
+						defaultData["Input"], defaultData["Code"], this.mainBlock.style.left, this.mainBlock.top, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
 						newBlock.update();
 						newBlock.generateDropSites();
@@ -768,7 +801,7 @@ class programBlock {
 								//console.log(this.pChildren[sub]);
 								this.pChildren[sub].destruct();
 								let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
-								defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
+								defaultData["Input"], defaultData["Code"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
 								newBlock.dropsiteCollection = this.dropsiteCollection;
 								newBlock.generateDropSites();
 								newBlock.parent = this;

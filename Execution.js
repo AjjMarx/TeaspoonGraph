@@ -21,20 +21,24 @@ class Executor { //executes code
 	
 		this.playButton.innerHTML =  `<svg width="100" height="100"><circle cx="50" cy="50" r="45" fill="White" stroke="${Palette[4][0]}" stroke-width="4" /> <polygon points="80,50 35,76 35,24" stroke-width="4" fill="none" stroke="${Palette[4][0]}" /> </svg>`;
 	
-		console.log(this.playButton.querySelector("circle"));
 		this.playButton.querySelector("circle").style.pointerEvents = 'visibleFill';
 		this.playButton.querySelector("circle").style.cursor = 'pointer';
 
-		this.playButton.querySelector("circle").addEventListener('click', () => {
+		this.playButton.querySelector("circle").addEventListener('click', async () => {
 			if (this.playButtonStatus != "Playing") { 
 				this.playButtonStatus = "Playing"; 
-				this.playButton.querySelector("polygon").setAttribute("points", "30,70 70,70 70,30 30,30");
-				this.playButton.insert
+				await this.playButton.querySelector("polygon").setAttribute("points", "30,70 70,70 70,30 30,30");
+				this.executeSequence();
 			} else { 
 				this.playButtonStatus = "Paused";
 				this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 			} 
 			console.log(`play button: ${this.playButtonStatus}`);
 		});
+	}
+
+	executeSequence() {
+		console.log("Beginning execution from root");
+		this.root[0].execute();
 	}
 }

@@ -45,7 +45,7 @@ async function LoadLesson() {
 				if (it > 0) {
 					startTop = blocks[it-1].getBottom() + 10
 				} 
-				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], 10, startTop, mainManager, toolBox);
+				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], null, 10, startTop, mainManager, toolBox);
 				blocks[it].IDnum = 0;
 				blocks[it].dropsiteCollection = dropCollection;
 				blocks[it].update();
@@ -64,7 +64,7 @@ async function LoadLesson() {
 		playground.clipboard = null;
 
 		let headerData = lessonData["Code"]["Functions"]["On_Start"];
-		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], 10, 30, mainManager, playground);
+		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], headerData["code"], 10, 30, mainManager, playground);
 		headerBlock.dropsiteCollection = dropCollection;
 		headerBlock.generateDropSites();
 		headerBlock.toggleDrag(false);
