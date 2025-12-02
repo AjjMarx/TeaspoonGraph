@@ -275,8 +275,8 @@ const points = [];
 //}
 const edges = [];
 
-overlayContext.fillStyle = "red";
-overlayContext.font = "48px sans-serif";
+overlayContext.fillStyle = "White";
+overlayContext.font = "24px 'Roboto Mono', monospace";
 
 
 function proj(Ax, Ay, Az, onAxis, offAxis, cent, dist) {
@@ -321,18 +321,24 @@ function renderArc(p1, p2, onAxis, offAxis, cent, dist) {
 
 	let miniraise = 1.0;
 	
-	let step = Math.atan2(coeff1, coeff2)/Math.max(1, Math.floor(20 * Math.atan2(coeff1, coeff2)));
+	let step = Math.atan2(coeff1, coeff2)/Math.max(1, Math.floor(150 * Math.atan2(coeff1, coeff2)));
 	overlayContext.lineWidth = 2*window.scalingFactor;
 		
+	overlayContext.lineWidth = 5;
 	overlayContext.beginPath();
 	for (let t = 0; t < Math.atan2(coeff1, coeff2) + step/2; t += step) {
 		let Ax = (basisX[0]*Math.cos(t) + basisY[0]*Math.sin(t))*miniraise;
 		let Ay = (basisX[1]*Math.cos(t) + basisY[1]*Math.sin(t))*miniraise;
 		let Az = (basisX[2]*Math.cos(t) + basisY[2]*Math.sin(t))*miniraise;
 		let S = proj(Ax, Ay, Az, onAxis, offAxis, cent, dist)	
-	
+		
+		if (Math.atan2(coeff1, coeff2) < 6*step || Math.floor(Math.abs(t*75))%2 == 0) {
+			overlayContext.strokeStyle = `rgba(${0}, ${0}, ${0}, ${1})`;
+		} else {
+			overlayContext.strokeStyle = `rgba(${0}, ${0}, ${0}, ${0})`;
+		}
+		
 		if (S[2] > 1/dist) {
-			overlayContext.strokeStyle = `rgb(${0}, ${0}, ${255})`;
 			overlayContext.lineTo(window.scalingFactor*(S[0]), overlay.height - window.scalingFactor*(S[1]));
 			overlayContext.stroke();
 			overlayContext.beginPath();
@@ -341,6 +347,8 @@ function renderArc(p1, p2, onAxis, offAxis, cent, dist) {
 	}
 	overlayContext.stroke();
 }
+
+let refExecutor = null;
 
 function renderGlobe(t) {
 	gl.activeTexture(gl.TEXTURE0);
@@ -384,6 +392,9 @@ function renderGlobe(t) {
 	gl.disable(gl.BLEND);
 	gl.enable(gl.DEPTH_TEST);
 
+	overlayContext.clearRect(0, 0, canvas.width, canvas.height);
+	overlayContext.lineWidth = 10;
+
 	gl.useProgram(ballShader);
 	gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 	gl.enableVertexAttribArray(posLocBall);
@@ -417,8 +428,16 @@ function renderGlobe(t) {
 		let Sy = 300*(TLz/(cameraDistance - Ly)) + 300;
 		gl.scissor(window.scalingFactor*(Sx) - 80, window.scalingFactor*(Sy) - 80, 160, 160);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+	}
+	if (refExecutor && refExecutor.agent) {
+			coord = points[refExecutor.agent.index];
+
+			let [Sx, Sy, Ly] = proj(coord[0], coord[1], coord[2] - 0.01, onAxisDegree, offAxisDegree, centerAxis, cameraDistance);
 	
-		overlayContext.fillText(i, window.scalingFactor*(Sx) - 40, overlay.height - window.scalingFactor*(Sy) - 10);
+			overlayContext.font = `${(Ly*Ly)*28}px 'Roboto Mono', monospace`;	
+			overlayContext.strokeText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);
+			overlayContext.fillText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);
 	}
 	gl.disable(gl.SCISSOR_TEST);
 
@@ -429,7 +448,7 @@ function renderGlobe(t) {
 	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, overlay);	
 	gl.uniform1i(overlayTextureUniformLocation, 0);
 	gl.disable(gl.DEPTH_TEST);
-//	gl.drawArrays(gl.TRIANGLES, 0, 3);
+	gl.drawArrays(gl.TRIANGLES, 0, 3);
 	gl.disable(gl.BLEND);
 	gl.enable(gl.DEPTH_TEST);
 
@@ -438,7 +457,7 @@ function renderGlobe(t) {
 
 	gl.finish();
 	timeDelta = performance.now() - startTime;
-	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS";
+	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS (Virtual)";
 	requestAnimationFrame(renderGlobe);
 }
 

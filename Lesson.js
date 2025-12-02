@@ -10,7 +10,7 @@ async function LoadLesson() {
 			//console.log(vert);
 			let ph = 3.14159* (vert.Latitude)/180;
 			let th = -3.14159*(vert.Longitude)/180 + 1.5707;
-			points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), 0, 0, 0]);
+			points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), 0, 0, 0, vert.Name]);
 		}
 		for (edge of lessonData["Edges"]) {
 			edges.push(edge);
@@ -51,7 +51,7 @@ async function LoadLesson() {
 				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], null, 10, startTop, mainManager, toolBox);
 				blocks[it].IDnum = 0;
 				blocks[it].dropsiteCollection = dropCollection;
-				if (horizontal + blocks[it].mainBlock.style.width + 10< 250 && it > 0) { 
+				if (horizontal + blocks[it].mainBlock.style.width + 10< 270 && it > 0) { 
 					blocks[it].mainBlock.style.left = horizontal + 10;
 					blocks[it].mainBlock.style.top = blocks[it-1].mainBlock.style.top;
 				} else {
@@ -81,8 +81,9 @@ async function LoadLesson() {
 		
 		let programSequence = [headerBlock];
 
-		let mainExecutor = new Executor(programSequence, canvas);
-	
+		let mainExecutor = new Executor(programSequence, canvas, lessonData);
+
+		refExecutor = mainExecutor;	
 		requestAnimationFrame(renderGlobe);
 	//} catch(err) {
 	//	console.log("Lesson data could not be loaded:\n" + err);

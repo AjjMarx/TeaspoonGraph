@@ -1,11 +1,17 @@
 class Executor { //executes code
-	constructor(iRoot, iCanvas) {
+	constructor(iRoot, iCanvas, iData) {
 		console.log("Executor enabled");
 		
 		this.root = iRoot;
 		this.canvas = iCanvas;
-		
-		this.generatePlayButton(), this.playButtonStatus;		
+		this.data = iData;
+
+		this.playButtonStatus;
+		this.generatePlayButton();
+		this.agent = {};
+		this.labels = [];
+		this.agent.start = this.data["Start"];
+		this.generateAgent(); 		
 	}
 	
 	generatePlayButton() {
@@ -18,7 +24,7 @@ class Executor { //executes code
 		this.playButton.style.zIndex = "1";
 		this.playButton.style.pointerEvents = 'none';
 		this.canvas.parentNode.appendChild(this.playButton);
-	
+		
 		this.playButton.innerHTML =  `<svg width="100" height="100"><circle cx="50" cy="50" r="45" fill="White" stroke="${Palette[4][0]}" stroke-width="4" /> <polygon points="80,50 35,76 35,24" stroke-width="4" fill="none" stroke="${Palette[4][0]}" /> </svg>`;
 	
 		this.playButton.querySelector("circle").style.pointerEvents = 'visibleFill';
@@ -33,12 +39,49 @@ class Executor { //executes code
 				this.playButtonStatus = "Paused";
 				this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 			} 
-			console.log(`play button: ${this.playButtonStatus}`);
 		});
 	}
 
-	executeSequence() {
-		console.log("Beginning execution from root");
-		this.root[0].execute();
+	generateAgent() {
+		console.log("Generating the Agent");
+		this.agent.index = this.agent.start;
+		this.agent.longitude = this.data["Vertices"][this.agent.start]["Longitude"];
+		this.agent.latitude = this.data["Vertices"][this.agent.start]["Latitude"];
+		this.agent.name = this.data["Vertices"][this.agent.start]["Name"];
+		this.labels = [this.agent.index];
+		console.log(this.agent, this.getNeighbors(this.agent.index));
+	}
+
+	getAgentInfo() {
+		return this.agent;
+	}
+
+	getAdjacent(n) {
+		let temp = [];
+		for (let e of this.data["Edges"]) {
+			if (e[0] == n || e[1] == n) {
+				temp.push(e)
+			}
+		}
+		return temp;
+	}
+
+	getNeighbors(n) {
+		let adj = this.getAdjacent(n);
+		let temp = [];
+		for (let e of adj) {
+			if (e[0] != n) {
+				temp.push(e[0]);
+			} else if (e[1] != n) {
+				temp.push(e[1]);
+			}
+		}
+		return temp;
+	}
+
+	async executeSequence() {
+		await this.root[0].execute();
+		this.playButtonStatus = "Paused";
+		this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 	}
 }
