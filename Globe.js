@@ -7,7 +7,7 @@ if (!ext) {
 
 window.resolution = 600*2;
 window.scalingFactor = window.resolution / canvas.getBoundingClientRect().width;
-console.log(window.scalingFactor);
+console.log("Canvas scaling factor: " + window.scalingFactor);
 
 canvas.width = window.resolution;
 canvas.height = window.resolution;
