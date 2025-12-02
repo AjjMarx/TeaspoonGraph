@@ -461,6 +461,14 @@ class programBlock {
 						//this.parent = null;	
 					} else if (this.mainBlock.style.size == "Small") {
 						console.log("Removing small from sequence");
+						this.container.clipboard = this;
+						this.parent.pChildren[this.parent.pChildren.indexOf(this)] = "Blank";
+						this.parent.generateSubblocks();
+						await setTimeout(() => {
+							this.eraseRender();
+							this.removeDropSites();
+							this.parent.update();
+						}, 1);
 					}
 				}	
 				
@@ -500,6 +508,7 @@ class programBlock {
 				if (sBlock == "Blank") {
 					this.pChildren[it] = new Block();
 					sBlock = this.pChildren[it];
+					this.mainBlock.style.parameterWidths[it] = 24;
 					sBlock.style.color = "White";
 					sBlock.style.size = "Small";
 					sBlock.style.rawText = " ";
@@ -600,7 +609,6 @@ class programBlock {
 					this.pChildren[sub].svg.innerHTML = "";
 				} else if (this.pChildren[sub] instanceof programBlock) {
 					console.log("u");
-					//this.pChildren[sub].mainBlock.svg.innerHTML = "";
 					this.pChildren[sub].eraseRender();
 				} else { continue; }
 			}	
@@ -788,7 +796,7 @@ class programBlock {
 								defaultData["Input"], this.mainBlock.style.left, this.mainBlock.getBottom(), this.typeManager, this.container);
 								newBlock.dropsiteCollection = this.dropsiteCollection;
 								newBlock.generateDropSites();
-								newBlock.parent = this.parent;
+								newBlock.parent = this;
 								this.pChildren[sub] = newBlock;
 								//console.log(this.parent.children, this.parent.children.indexOf(this));
 								//this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, newBlock);
