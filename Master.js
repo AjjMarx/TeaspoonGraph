@@ -66,10 +66,10 @@ const FPSticker =  document.createElement("div");
 document.body.appendChild(FPSticker);
 
 FPSticker.style.position = "absolute";
-FPSticker.style.left = "5px";
-FPSticker.style.top = "5px";
-FPSticker.style.width = "100px";
-FPSticker.style.height = "50px";
+FPSticker.style.right = "5px";
+FPSticker.style.bottom = "5px";
+FPSticker.style.width = "170px";
+FPSticker.style.height = "25px";
 FPSticker.textContent = timeDelta;
 //const sidebar = document.createElement("div");
 //document.body.appendChild(sidebar);
