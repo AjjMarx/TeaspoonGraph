@@ -5,15 +5,19 @@ async function LoadLesson() {
 	
 		const res = await fetch(filePath);
 		const lessonData = await res.json();
+		lessonData.flip = [];
 		console.log(lessonData["Vertices"]);
+			
 		
 		titleSection.innerHTML = `<center><b>` + lessonData["LessonName"] + `</b></center>`; 	
 
-		for (vert of lessonData["Vertices"]) {
+		for (i in lessonData["Vertices"]) {
 			//console.log(vert);
+			let vert = lessonData["Vertices"][i];
 			let ph = 3.14159* (vert.Latitude)/180;
 			let th = -3.14159*(vert.Longitude)/180 + 1.5707;
 			points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), 0, 0, 0, vert.Name]);
+			lessonData.flip[vert.Name] = Number(i);
 			lessonData["Code"]["Functions"][vert.Name] = {
 				"type" : "Vertex",
 				"text" : vert.Name,
@@ -25,6 +29,8 @@ async function LoadLesson() {
 			edges.push(edge);
 		}
 
+		console.log(lessonData.flip);
+
 
 
 		const toolBox = document.createElement("div");
@@ -35,7 +41,7 @@ async function LoadLesson() {
 		toolBox.style.borderRadius = '20px';
 
 		toolBox.style.left = "10px";
-		toolBox.style.top = "30px";
+		toolBox.style.top = "10px";
 		toolBox.style.width = "280px";
 		toolBox.style.bottom = "10px";
 
