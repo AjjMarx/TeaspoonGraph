@@ -97,7 +97,7 @@ const credit = document.createElement("div");
 document.body.appendChild(credit);
 
 credit.style.position = "absolute";
-credit.style.bottom = "0%";
+credit.style.bottom = "calc(50vh - 300px)";
 credit.style.width = "600px";
 credit.style.right = "30px";
 credit.style.height = "2em";

@@ -1,10 +1,19 @@
 async function LoadLesson() {
 	console.log("Lesson Loading");
+
+	let browserInfo = navigator.userAgent;
+	let mobileRegexp = /android|iphone|kindle|ipad/i;
+	if (mobileRegexp.test(browserInfo)) {
+		console.error("Sorry, this webpage is not designed for mobile browsers. Please try again on a desktop or laptop browser");
+		document.body.innerHTML = `<center><h2>Sorry, this webpage is not designed for mobile browsers. Please try again on a desktop or laptop browser</h2><br><a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
+	} else {
+
 	const filePath = "Sahara.json";
-	//try {
+	let programSequence, lessonData, mainManager, dropCollection;
+	try {
 	
 		const res = await fetch(filePath);
-		const lessonData = await res.json();
+		lessonData = await res.json();
 		lessonData.flip = [];
 		lessonData["Vertex_Weights_Inverse"] = [];
 		console.log(lessonData["Vertices"]);
@@ -32,7 +41,6 @@ async function LoadLesson() {
 		for (i in lessonData["Vertex_Weights"]) {
 			lessonData["Vertex_Weights_Inverse"][lessonData["Vertex_Weights"][i]] = i;
 		}
-		console.log(lessonData["Vertex_Weights_Inverse"]);
 
 		const toolBox = document.createElement("div");
 		document.body.appendChild(toolBox);
@@ -46,13 +54,13 @@ async function LoadLesson() {
 		toolBox.style.width = "280px";
 		toolBox.style.bottom = "10px";
 
-		let mainManager = new typeManager();
+		mainManager = new typeManager();
 		for (i of lessonData["Code"]["Types"]) {
 			mainManager.addType(i["Name"], i["Color"], i["Size"], i["EdgeShapes"]);
 		}
 
 		let blocks = [];
-		let dropCollection = [];
+		dropCollection = [];
 	
 		let it = 0;	
 		let startTop = 10;
@@ -95,15 +103,16 @@ async function LoadLesson() {
 		headerBlock.generateDropSites();
 		headerBlock.toggleDrag(false);
 		
-		let programSequence = [headerBlock];
+		programSequence = [headerBlock];
 
-		let mainExecutor = new Executor(programSequence, canvas, lessonData, mainManager, dropCollection);
 
-		refExecutor = mainExecutor;	
-		requestAnimationFrame(renderGlobe);
-	//} catch(err) {
-	//	console.log("Lesson data could not be loaded:\n" + err);
-	//}
+	} catch(err) {
+		console.error("Lesson data could not be loaded:\n" + err);
+	}
+	let mainExecutor = new Executor(programSequence, canvas, lessonData, mainManager, dropCollection);
+	refExecutor = mainExecutor;	
+	requestAnimationFrame(renderGlobe);
+	}
 }
 
 
