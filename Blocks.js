@@ -616,9 +616,10 @@ class programBlock {
 		return this.mainBlock.getBottom();
 	}
 
-	async execute() {
+	async execute(refExecutor) {
 		return new Promise(async (resolve) => {
-			console.log("Executing " + this.type)
+			//console.log("Executing " + this.type)
+			if (refExecutor.playButtonStatus != "Playing") { return; }
 			let allow = true;
 			if (this.inputTypes && this.inputTypes.length > 0) {
 				if (this.pChildren) {
@@ -631,11 +632,11 @@ class programBlock {
 				await setTimeout(async () => {
 					let p = [];
 					for (let child in this.pChildren) {
-						p[child] = await this.pChildren[child].execute();
+						p[child] = await this.pChildren[child].execute(refExecutor);
 					}
-					let result = await eval("(async function(){" + this.code + "}).call(this)")
+					let result = await eval("(async function(){" + this.code + "}).call(this)") //say "refExecutor" is undefined
 					resolve(result);
-				}, 500);
+				}, 250);
 			} else {
 				console.error("Not all parameters are fulfilled");
 				resolve();
@@ -643,11 +644,11 @@ class programBlock {
 		});
 	}
 
-	async executeBlockChildren() {
+	async executeBlockChildren(refExecutor) {
 		return new Promise(async (resolve) => {
 			if (this.bChildren) {
 				for (let child of this.bChildren) {
-					await child.execute();
+					await child.execute(refExecutor);
 				}
 			}
 			resolve();
