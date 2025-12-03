@@ -250,12 +250,6 @@
 			"EdgeShapes" : ["Straight", "Straight", "Round", "Straight"]
 		},
 		{
-			"Name" : "Direction",
-			"Color" : "Purple",
-			"Size" : "Small",
-			"EdgeShapes" : ["Arrow", "Straight", "Arrow", "Straight"]
-		},
-		{
 			"Name" : "Type",
 			"Color" : "Red",
 			"Size" : "Small",
@@ -275,7 +269,7 @@
 		},
 		{
 			"Name" : "Vertex",
-			"Color" : "Aqua",
+			"Color" : "Purple",
 			"Size" : "Small",
 			"EdgeShapes" : ["Round", "Straight", "Straight", "Straight"]
 		}
@@ -286,25 +280,25 @@
 		"type" : "Header",
 		"text" : "On Start",
 		"inputs" : null,
-		"code" : "console.log(\"Hello from the JSON! I'm the Header!\"); this.executeBlockChildren();"
+		"code" : "console.log(\"'On Start' activated\"); this.executeBlockChildren(refExecutor);"
 	},
 	"Forever" : {
 		"type" : "Flow",
 		"text" : "Forever Repeat",
 		"inputs" : null,
-		"code" : "while (true && this.bChildren.length > 0) { this.executeBlockChildren(); }"
+		"code" : "for (let i = 0; i < 10000 && this.bChildren.length > 0; i++) { await this.executeBlockChildren(refExecutor); }"
 	},
 	"While" : {
 		"type" : "Flow",
 		"text" : "Repeat While $1 Is True",
 		"inputs" : ["Boolean"],
-		"code" : "while (p[0] == true) { this.executeBlockChildren(); }"
+		"code" : "while (p[0] == true) { this.executeBlockChildren(refExecutor); }"
 	},
 	"If" : {
 		"type" : "Flow",
 		"text" : "If $1 Is True",
 		"inputs" : ["Boolean"],
-		"code" : "if (p[0] == true) { this.executeBlockChildren(); }"
+		"code" : "if (p[0] == true) { this.executeBlockChildren(refExecutor); }"
 	},
 	"For" : {
 		"type" : "Flow",
@@ -316,13 +310,7 @@
 		"type" : "Code",
 		"text" : "Move to $1",
 		"inputs" : ["Vertex"],
-		"code" : null
-	},
-	"Move_To_The" : {
-		"type" : "Code",
-		"text" : "Move To The  $1 ",
-		"inputs" : ["Direction"],
-		"code" : null
+		"code" : "if (refExecutor.getNeighbors(refExecutor.agent.index).includes(Number(refExecutor.data.flip[p[0]]))) { refExecutor.labels = []; await refExecutor.moveTo(refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Latitude\"], refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Longitude\"], 0.0001); refExecutor.labels = [refExecutor.data.flip[p[0]]]} else { console.log(\"I don't know how to get to \" + p[0]); }"
 	},
 	"Trade" : {
 		"type" : "Code",
@@ -371,30 +359,6 @@
 		"text" : "Value",
 		"inputs" : null,
 		"code" : null
-	},
-	"North" : {
-		"type" : "Direction",
-		"text" : "North",
-		"inputs" : null,
-		"code" : "return \"North\""
-	},
-	"South" : {
-		"type" : "Direction",
-		"text" : "South",
-		"inputs" : null,
-		"code" : "return \"South\""
-	},
-	"East" : {
-		"type" : "Direction",
-		"text" : "East",
-		"inputs" : null,
-		"code" : "return \"East\""
-	},
-	"West" : {
-		"type" : "Direction",
-		"text" : "West",
-		"inputs" : null,
-		"code" : "return \"West\""
 	},
 	"And" : {
 		"type" : "Boolean",
