@@ -85,7 +85,7 @@ class Executor { //executes code
 		return temp;
 	}
 
-	moveTo(iLatitude, iLongitude, rate) {
+	async moveTo(iLatitude, iLongitude, rate) {
 		return new Promise((resolve) => {
 			const startTime = performance.now();
 			const p1 = toRect(Math.PI * this.agent.latitude/180, -Math.PI * this.agent.longitude/180 + Math.PI/2);
@@ -120,9 +120,10 @@ class Executor { //executes code
 					let Az = (basisX[2]*Math.cos(angle) + basisY[2]*Math.sin(angle));
 					this.agent.latitude = 180 * toSphere(Ax, Ay, Az)[0] / Math.PI;
 		  			this.agent.longitude = -((180/Math.PI) * (toSphere(Ax, Ay, Az)[1] - Math.PI/2));
-					console.log(this.agent.latitude, this.agent.longitude);	
 					requestAnimationFrame(interpolate.bind(this));
 				} else {
+					this.agent.latitude = iLatitude;
+					this.agent.longitude = iLongitude;
 					resolve();	
 				}
 			}
@@ -132,9 +133,9 @@ class Executor { //executes code
 	}
 
 	async executeSequence() {
-		await this.root[0].execute();
-		this.playButtonStatus = "Paused";
-		this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
+		await this.root[0].execute(this);
+	//	this.playButtonStatus = "Paused";
+	//	this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 	}
 }
 
