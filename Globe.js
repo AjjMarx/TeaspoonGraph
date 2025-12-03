@@ -404,25 +404,6 @@ function renderGlobe(t) {
 	gl.vertexAttribPointer(posLocBall, 2, gl.FLOAT, false, 0, 0);
 	gl.enable(gl.SCISSOR_TEST);
 	
-	if (refExecutor && refExecutor.agent) {
-		for (let index of refExecutor.labels) {
-			coord = points[index];
-
-			let [Sx, Sy, Ly] = proj(coord[0], coord[1], coord[2] - 0.01, onAxisDegree, offAxisDegree, centerAxis, cameraDistance);
-	
-			overlayContext.font = `28px 'Roboto Mono', monospace`;	
-			overlayContext.strokeText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);
-			overlayContext.fillText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);	
-		}
-		let ph = 3.14159 * refExecutor.agent.latitude / 180;
-		let th = -3.14159 * refExecutor.agent.longitude / 180 + 1.5707;
-		coord = [Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph)];
-		let [Sx, Sy, Ly] = proj(coord[0], coord[1], coord[2], onAxisDegree, offAxisDegree, centerAxis, cameraDistance);
-		if (refExecutor.agent.img) {
-			overlayContext.drawImage(refExecutor.agent.img, window.scalingFactor*(Sx) - 50, overlay.height - window.scalingFactor*(Sy) - 75, 75, 75);
-		}
-	}
-
 	for (const i in points) {
 		coord = points[i];
 		let Ax = coord[0];
@@ -450,8 +431,28 @@ function renderGlobe(t) {
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 
 	}
-
 	gl.disable(gl.SCISSOR_TEST);
+
+	if (refExecutor && refExecutor.agent) {
+		for (let index of refExecutor.labels) {
+			coord = points[index];
+
+			let [Sx, Sy, Ly] = proj(coord[0], coord[1], coord[2] - 0.01, onAxisDegree, offAxisDegree, centerAxis, cameraDistance);
+	
+			overlayContext.font = `28px 'Roboto Mono', monospace`;	
+			overlayContext.strokeText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);
+			overlayContext.fillText(coord[6], window.scalingFactor*(Sx) - overlayContext.measureText(coord[6]).width/2 , overlay.height - window.scalingFactor*(Sy) + overlayContext.measureText(coord[6]).actualBoundingBoxAscent);	
+		}
+		let ph = 3.14159 * refExecutor.agent.latitude / 180;
+		let th = -3.14159 * refExecutor.agent.longitude / 180 + 1.5707;
+		coord = [Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph)];
+		let [Sx, Sy, Ly] = proj(coord[0], coord[1], coord[2], onAxisDegree, offAxisDegree, centerAxis, cameraDistance);
+		if (refExecutor.agent.img) {
+			overlayContext.drawImage(refExecutor.agent.img, window.scalingFactor*(Sx) - 50, overlay.height - window.scalingFactor*(Sy) - 75, 75, 75);
+		}
+	}
+
+
 
 	gl.useProgram(overlayShader);
 	gl.enable(gl.BLEND);
