@@ -66,7 +66,7 @@ async function LoadLesson() {
 				blocks[it] = new programBlock(blockName, blockData["type"], blockData["text"], blockData["inputs"], null, 10, startTop, mainManager, toolBox);
 				blocks[it].IDnum = 0;
 				blocks[it].dropsiteCollection = dropCollection;
-				if (horizontal + blocks[it].mainBlock.style.width + 10< 270 && it > 0) { 
+				if (horizontal + blocks[it].mainBlock.style.width + 10< 250 && it > 0) { 
 					blocks[it].mainBlock.style.left = horizontal + 10;
 					blocks[it].mainBlock.style.top = blocks[it-1].mainBlock.style.top;
 				} else {
@@ -96,7 +96,7 @@ async function LoadLesson() {
 		
 		let programSequence = [headerBlock];
 
-		let mainExecutor = new Executor(programSequence, canvas, lessonData);
+		let mainExecutor = new Executor(programSequence, canvas, lessonData, mainManager, dropCollection);
 
 		refExecutor = mainExecutor;	
 		requestAnimationFrame(renderGlobe);

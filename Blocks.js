@@ -619,7 +619,7 @@ class programBlock {
 	async execute(refExecutor) {
 		return new Promise(async (resolve) => {
 			//console.log("Executing " + this.type)
-			if (refExecutor.playButtonStatus != "Playing") { return; }
+			if (refExecutor.playButtonStatus != "Playing") { console.log(refExecutor.playButtonStatus, "abort"); return; }
 			let allow = true;
 			if (this.inputTypes && this.inputTypes.length > 0) {
 				if (this.pChildren) {
