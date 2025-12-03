@@ -1,17 +1,22 @@
 class Executor { //executes code
-	constructor(iRoot, iCanvas, iData) {
+	constructor(iRoot, iCanvas, iData, iManager, iCollection) {
 		console.log("Executor enabled");
 		
 		this.root = iRoot;
 		this.canvas = iCanvas;
 		this.data = iData;
+		this.typeManager = iManager;
+		this.dropCollecton = iCollection;
 
 		this.playButtonStatus;
 		this.generatePlayButton();
 		this.agent = {};
 		this.labels = [];
 		this.agent.start = this.data["Start"];
-		this.generateAgent(); 		
+		this.generateAgent();
+		this.navBar; 	
+		this.navBlocks = [];	
+		this.generateNavigationInfo();
 	}
 	
 	generatePlayButton() {
@@ -20,7 +25,7 @@ class Executor { //executes code
 		this.playButton.style.height = "100px";
 		this.playButton.style.position = "absolute";
 		this.playButton.style.right = "280px";
-		this.playButton.style.bottom = "calc(50vh + 300px)";
+		this.playButton.style.bottom = "calc(50vh + 330px)";
 		this.playButton.style.zIndex = "1";
 		this.playButton.style.pointerEvents = 'none';
 		this.canvas.parentNode.appendChild(this.playButton);
@@ -40,6 +45,11 @@ class Executor { //executes code
 				this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 			} 
 		});
+	}
+
+	forceStop() {
+		this.playButtonStatus = "Paused";		
+		this.playButton.querySelector("polygon").setAttribute("points", "80,50 35,76 35,24");
 	}
 
 	generateAgent() {
@@ -85,6 +95,65 @@ class Executor { //executes code
 		return temp;
 	}
 
+	generateNavigationInfo() {
+		this.navBar = document.createElement("div");
+		this.navBar.style.width = "600px";
+		this.navBar.style.height = "30px";
+		this.navBar.style.position = "absolute";
+		this.navBar.style.right = "30px";
+		this.navBar.style.bottom = "calc(50vh + 300px)";
+		this.navBar.style.zIndex = "1";
+		this.navBar.style.pointerEvents = 'none';
+		this.canvas.parentNode.appendChild(this.navBar);
+		this.updateNavigationInfo();
+	}
+
+	updateNavigationInfo() {
+		this.navBar.innerHTML = "";
+		let leftSide = 10;
+		let hereDt = this.data["Code"]["Functions"]["Here"];
+		let hereBlck = new programBlock("Here", hereDt["type"], hereDt["text"], hereDt["inputs"], null, leftSide, 0, this.typeManager, this.navBar);
+		hereBlck.dropsiteCollection = this.dropCollecton;
+		hereBlck.IDnum = 0;
+		hereBlck.update();
+		leftSide += hereBlck.mainBlock.style.width + 12;
+		let txtBlck = document.createElement("div");
+		txtBlck.style.position = "absolute";
+		txtBlck.style.left = leftSide + "px";
+		txtBlck.innerHTML = "is";
+		txtBlck.style.top = "3px";
+		this.navBar.appendChild(txtBlck);
+		leftSide += 30;
+		//console.log(this.data["Vertices"][this.agent.index].Name);
+		let locDt = this.data["Code"]["Functions"][this.data["Vertices"][this.agent.index].Name];
+		let locBlck = new programBlock(this.data["Vertices"][this.agent.index].Name, locDt["type"], locDt["text"], locDt["inputs"], null, leftSide, 0, this.typeManager, this.navBar);
+		locBlck.dropsiteCollection = this.dropCollecton;
+		locBlck.IDnum = 0;
+		locBlck.update();
+		leftSide += locBlck.mainBlock.style.width + 20;
+		
+		let neiDt = this.data["Code"]["Functions"]["Neighbor"];
+		console.log(neiDt);
+		let neiBlck = new programBlock("Neighbor", neiDt["type"], neiDt["text"], neiDt["inputs"], null, leftSide, 0, this.typeManager, this.navBar);
+		neiBlck.dropsiteCollection = this.dropCollecton;
+		neiBlck.IDnum = 0;
+		neiBlck.mainBlock.style.rawText = "Neighbors";
+		neiBlck.update();
+		leftSide += neiBlck.mainBlock.style.width + 12;
+		this.navBlocks.push(hereBlck, locBlck, neiBlck);
+		for (let n of this.getNeighbors(this.agent.index)) {
+			let dt = this.data["Code"]["Functions"][this.data["Vertices"][n].Name];
+			//console.log(this.data["Vertices"][n].Name, this.data["Code"]["Functions"]);
+			console.log(this.data["Vertices"][n].Name);
+			let blck = new programBlock(this.data["Vertices"][n].Name, dt["type"], dt["text"], dt["inputs"], null, leftSide, 0, this.typeManager, this.navBar);
+			leftSide += blck.mainBlock.style.width + 5;
+			blck.dropsiteCollection = this.dropCollecton;
+			blck.IDnum = 0;
+			blck.update();
+			this.navBlocks.push(blck);
+		}
+	}
+
 	async moveTo(iLatitude, iLongitude, rate) {
 		return new Promise((resolve) => {
 			const startTime = performance.now();
@@ -124,6 +193,7 @@ class Executor { //executes code
 				} else {
 					this.agent.latitude = iLatitude;
 					this.agent.longitude = iLongitude;
+					//this.updateNavigationInfo();
 					resolve();	
 				}
 			}
