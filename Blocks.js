@@ -659,7 +659,7 @@ class programBlock {
 		if (this.typeManager.getSize(this.type) == "Bracket") {
 			this.dropSites["bracket"] = document.createElement("div");
 			this.dropsiteCollection.push(this.dropSites["bracket"]);
-			this.dropSites["bracket"].style.outline = "1px solid blue";
+			//this.dropSites["bracket"].style.outline = "1px solid blue";
 			this.dropSites["bracket"].style.position = "absolute";
 			this.dropSites["bracket"].style.width = this.mainBlock.style.width + "px";
 			this.dropSites["bracket"].style.height = "32px";
@@ -707,7 +707,7 @@ class programBlock {
 		if ((this.typeManager.getSize(this.type) == "Normal" || this.typeManager.getSize(this.type) == "Bracket") && this.typeManager.getEdgeShapes(this.type)[3] == "Puzzle") {
 			this.dropSites["below"] = document.createElement("div");
 			this.dropsiteCollection.push(this.dropSites["below"]);
-			this.dropSites["below"].style.outline = "1px solid blue";
+			//this.dropSites["below"].style.outline = "1px solid blue";
 			this.dropSites["below"].style.position = "absolute";
 			this.dropSites["below"].style.width = (this.mainBlock.style.width + 16) + "px";
 			this.dropSites["below"].style.height = (this.mainBlock.style.height) + "px";
@@ -766,7 +766,7 @@ class programBlock {
 				} else { continue; }
 				this.dropSites[sub] = document.createElement("div");
 				this.dropsiteCollection.push(this.dropSites[sub]);
-				this.dropSites[sub].style.outline = "1px solid red";
+				//this.dropSites[sub].style.outline = "1px solid red";
 				this.dropSites[sub].style.position = "absolute"
 				this.dropSites[sub].style.left = subBlock.hitBox.getBoundingClientRect().left - this.container.getBoundingClientRect().left+ "px";
 				this.dropSites[sub].style.top = subBlock.hitBox.getBoundingClientRect().top - this.container.getBoundingClientRect().top + "px";
