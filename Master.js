@@ -75,13 +75,23 @@ FPSticker.textContent = timeDelta;
 //document.body.appendChild(sidebar);
 
 const AttributionSection = document.createElement("div");
+
+AttributionSection.style.position = "absolute";
+AttributionSection.style.top = "2em";
+AttributionSection.style.height = "1em";
+AttributionSection.style.left = "25%";
+AttributionSection.style.width = "50%";
+AttributionSection.innerHTML = `<center>Created by Alexandra Marx, <a target="_blank" rel="noopener noreferrer" href="mailto:ajjmarx@umich.edu">ajjmarx@umich.edu</a>, <a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
 document.body.appendChild(AttributionSection);
 
-AttributionSection.style.position = "abolute";
-AttributionSection.style.top = "0%";
-AttributionSection.style.height = "2em";
-AttributionSection.style.width = "100%";
-AttributionSection.innerHTML = `<center>Created by Alexandra Marx, <a target="_blank" rel="noopener noreferrer" href="mailto:ajjmarx@umich.edu">ajjmarx@umich.edu</a>, <a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
+const titleSection = document.createElement("div");
+
+titleSection.style.position = "absolute";
+titleSection.style.top = "10px";
+titleSection.style.height = "1em";
+titleSection.style.width = "100%";
+titleSection.innerHTML = "<center>Untitled Lesson</center>"
+document.body.appendChild(titleSection);
 
 const credit = document.createElement("div");
 document.body.appendChild(credit);
@@ -89,7 +99,7 @@ document.body.appendChild(credit);
 credit.style.position = "absolute";
 credit.style.bottom = "0%";
 credit.style.width = "600px";
-credit.style. right = "30px";
+credit.style.right = "30px";
 credit.style.height = "2em";
 credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
 credit.style.userSelect = 'none';

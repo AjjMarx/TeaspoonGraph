@@ -2,15 +2,24 @@ async function LoadLesson() {
 	console.log("Lesson Loading");
 	const filePath = "Sahara.json";
 	//try {
+	
 		const res = await fetch(filePath);
 		const lessonData = await res.json();
 		console.log(lessonData["Vertices"]);
+		
+		titleSection.innerHTML = `<center><b>` + lessonData["LessonName"] + `</b></center>`; 	
 
 		for (vert of lessonData["Vertices"]) {
 			//console.log(vert);
 			let ph = 3.14159* (vert.Latitude)/180;
 			let th = -3.14159*(vert.Longitude)/180 + 1.5707;
 			points.push([Math.cos(th) * Math.cos(ph), Math.sin(th) * Math.cos(ph), Math.sin(ph), 0, 0, 0, vert.Name]);
+			lessonData["Code"]["Functions"][vert.Name] = {
+				"type" : "Vertex",
+				"text" : vert.Name,
+				"inputs" : null,
+				"code" : `return \"${vert.Name}\";`
+			};
 		}
 		for (edge of lessonData["Edges"]) {
 			edges.push(edge);
@@ -67,7 +76,7 @@ async function LoadLesson() {
 		document.body.appendChild(playground);
 		playground.style.position = "absolute";
 		playground.style.left = "320px";
-		playground.style.top = "30px";
+		playground.style.top = "80px";
 		playground.style.right = "640px";
 		playground.style.bottom = "10px";
 		playground.style.overflowY = 'auto';
