@@ -442,9 +442,9 @@ class programBlock {
 				//console.log("Dragging, ", this.type);
 					
 				if (!!window.chrome) {
-					e.dataTransfer.setDragImage(this.mainBlock.hitBox, 0, 0);
+					e.dataTransfer.setDragImage(this.mainBlock.hitBox, this.mainBlock.style.width/2, 0);
 				} else {
-					e.dataTransfer.setDragImage(this.mainBlock.svg.firstChild, 0, 0);
+					e.dataTransfer.setDragImage(this.mainBlock.svg.firstChild, this.mainBlock.style.width/2, 0);
 				}
 
 				if (this.parent) {
