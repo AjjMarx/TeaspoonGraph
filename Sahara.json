@@ -310,7 +310,7 @@
 		"type" : "Code",
 		"text" : "Move to $1",
 		"inputs" : ["Vertex"],
-		"code" : "if (refExecutor.getNeighbors(refExecutor.agent.index).includes(Number(refExecutor.data.flip[p[0]]))) { refExecutor.labels = []; await refExecutor.moveTo(refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Latitude\"], refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Longitude\"], 0.0001); refExecutor.labels = [refExecutor.data.flip[p[0]]]} else { console.log(\"I don't know how to get to \" + p[0]); }"
+		"code" : "if (refExecutor.getNeighbors(refExecutor.agent.index).includes(Number(refExecutor.data.flip[p[0]]))) { refExecutor.labels = []; await refExecutor.moveTo(refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Latitude\"], refExecutor.data[\"Vertices\"][refExecutor.data.flip[p[0]]][\"Longitude\"], 0.0001); refExecutor.agent.index = refExecutor.data.flip[p[0]]; refExecutor.labels = [refExecutor.data.flip[p[0]]]; refExecutor.navBar.innerHTML = \"\"; refExecutor.updateNavigationInfo() } else { console.log(\"I don't know how to get to \" + p[0]); refExecutor.forceStop(); }"
 	},
 	"Trade" : {
 		"type" : "Code",
@@ -336,7 +336,7 @@
 		"inputs" : null,
 		"code" : null
 	},
-	"Neighor" : {
+	"Neighbor" : {
 		"type" : "Type",
 		"text" : "Neighbor",
 		"inputs" : null,
