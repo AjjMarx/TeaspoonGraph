@@ -49,6 +49,15 @@ class Executor { //executes code
 		this.agent.latitude = this.data["Vertices"][this.agent.start]["Latitude"];
 		this.agent.name = this.data["Vertices"][this.agent.start]["Name"];
 		this.labels = [this.agent.index];
+	
+		console.log(this.data["Agent_Icon"]);	
+		this.agent.blob = new Blob([this.data["Agent_Icon"]], {type: "image/svg+xml;charset=utf-8"});
+		this.agent.url = URL.createObjectURL(this.agent.blob);
+		let localImg = new Image();
+		localImg.src = this.agent.url;
+		
+		localImg.onload = () => { this.agent.img = localImg; }
+
 		console.log(this.agent, this.getNeighbors(this.agent.index));
 	}
 
