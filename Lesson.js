@@ -6,8 +6,8 @@ async function LoadLesson() {
 		const res = await fetch(filePath);
 		const lessonData = await res.json();
 		lessonData.flip = [];
+		lessonData["Vertex_Weights_Inverse"] = [];
 		console.log(lessonData["Vertices"]);
-			
 		
 		titleSection.innerHTML = `<center><b>` + lessonData["LessonName"] + `</b></center>`; 	
 
@@ -29,9 +29,10 @@ async function LoadLesson() {
 			edges.push(edge);
 		}
 
-		console.log(lessonData.flip);
-
-
+		for (i in lessonData["Vertex_Weights"]) {
+			lessonData["Vertex_Weights_Inverse"][lessonData["Vertex_Weights"][i]] = i;
+		}
+		console.log(lessonData["Vertex_Weights_Inverse"]);
 
 		const toolBox = document.createElement("div");
 		document.body.appendChild(toolBox);

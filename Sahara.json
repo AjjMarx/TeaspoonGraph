@@ -316,7 +316,7 @@
 		"type" : "Code",
 		"text" : "Trade $1 For $2",
 		"inputs" : ["Good", "Good"],
-		"code" : null
+		"code" : "let f1 = refExecutor.quantities[refExecutor.data[\"Vertex_Weights_Inverse\"][p[0]]]; let f2 = refExecutor.quantities[refExecutor.data[\"Vertex_Weights_Inverse\"][p[1]]]; if (f1>0 && f2<1) {console.log(p[0], refExecutor.data[\"Vertex_Weights_Inverse\"][p[0]]); refExecutor.quantities[refExecutor.data[\"Vertex_Weights_Inverse\"][p[0]]] = Math.max(f1 - 0.05); refExecutor.quantities[refExecutor.data[\"Vertex_Weights_Inverse\"][p[1]]] = Math.max(f2 + 0.05); refExecutor.updateWeightsInfo(); } else { console.log(\"I don't have enough to trade or am over capacity\", f1, f2); refExecutor.forceStop() }"
 	},
 	"Error" : {
 		"type" : "Code",
@@ -400,7 +400,7 @@
 		"type" : "Good",
 		"text" : "Gold",
 		"inputs" : null,
-		"code" : "return \"gold\""
+		"code" : "return \"Gold\""
 	},
 	"Salt" : {
 		"type" : "Good",
@@ -424,7 +424,7 @@
 		"type" : "Good",
 		"text" : "Food",
 		"inputs" : null,
-		"code" : "return \"Ceramics\""
+		"code" : "return \"Food\""
 	},
 	"Value_Of" : {
 		"type" : "Value",

@@ -17,6 +17,9 @@ class Executor { //executes code
 		this.navBar; 	
 		this.navBlocks = [];	
 		this.generateNavigationInfo();
+		this.weightsBar;
+		this.quantities = new Array(this.data["Vertex_Weights"].length).fill(Number(0.1));
+		this.generateWeightsInfo();
 	}
 	
 	generatePlayButton() {
@@ -144,7 +147,7 @@ class Executor { //executes code
 		for (let n of this.getNeighbors(this.agent.index)) {
 			let dt = this.data["Code"]["Functions"][this.data["Vertices"][n].Name];
 			//console.log(this.data["Vertices"][n].Name, this.data["Code"]["Functions"]);
-			console.log(this.data["Vertices"][n].Name);
+			//console.log(this.data["Vertices"][n].Name);
 			let blck = new programBlock(this.data["Vertices"][n].Name, dt["type"], dt["text"], dt["inputs"], null, leftSide, 0, this.typeManager, this.navBar);
 			leftSide += blck.mainBlock.style.width + 5;
 			blck.dropsiteCollection = this.dropCollecton;
@@ -152,6 +155,36 @@ class Executor { //executes code
 			blck.update();
 			this.navBlocks.push(blck);
 		}
+	}
+
+	generateWeightsInfo() {
+	//	console.log("Generating weights info section");
+		this.weightsBar = document.createElement("div");
+		this.weightsBar.style.width = "600px";
+		this.weightsBar.style.bottom = "2em";
+		this.weightsBar.style.position = "absolute";
+		this.weightsBar.style.right = "30px";
+		this.weightsBar.style.top = "calc(50vh + 310px)";
+		this.weightsBar.style.zIndex = "1";
+		this.weightsBar.style.pointerEvents = 'none';
+		this.canvas.parentNode.appendChild(this.weightsBar);
+		let sections = [];
+		for (let i in this.data["Vertex_Weights"]) {
+			this.weightsBar.innerHTML += this.data["Vertex_Weights"][i] + "</br>";
+			sections[i] = document.createElement("div");
+			sections[i].style.position = "absolute";
+			sections[i].style.left = "100px";
+			sections[i].style.width = ((this.quantities[i]*0.99 + 0.01)*500) + "px";
+			sections[i].style.height = "1em";
+			sections[i].style.top = (i * 1.4)+ "em";
+			sections[i].style.backgroundColor = Palette[6][0];
+			this.weightsBar.appendChild(sections[i]);
+		}
+	}
+
+	updateWeightsInfo() {
+		this.weightsBar.remove();
+		this.generateWeightsInfo();
 	}
 
 	async moveTo(iLatitude, iLongitude, rate) {
