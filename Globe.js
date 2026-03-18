@@ -5,7 +5,7 @@ if (!ext) {
     console.warn("EXT_frag_depth not supported on this device!");
 }
 
-window.resolution = 400*2;
+window.resolution = 600*2;
 window.scalingFactor = window.resolution / canvas.getBoundingClientRect().width;
 console.log("Canvas scaling factor: " + window.scalingFactor);
 
@@ -425,8 +425,8 @@ function renderGlobe(t) {
 		    < (0.9 / (cameraDistance*cameraDistance - 1.0)) && Ly < 0.4) {
 			continue;
 		}
-		let Sx = 300*(TLx/(cameraDistance - Ly)) + 300;	
-		let Sy = 300*(TLz/(cameraDistance - Ly)) + 300;
+		let Sx = 200*(TLx/(cameraDistance - Ly)) + 200;	
+		let Sy = 200*(TLz/(cameraDistance - Ly)) + 200;
 		gl.scissor(window.scalingFactor*(Sx) - 80, window.scalingFactor*(Sy) - 80, 160, 160);
 		gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -470,7 +470,7 @@ function renderGlobe(t) {
 
 	gl.finish();
 	timeDelta = performance.now() - startTime;
-	//FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS";
+	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS (Virtual)";
 	requestAnimationFrame(renderGlobe);
 }
 
