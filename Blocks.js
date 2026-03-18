@@ -12,19 +12,34 @@ const Palette = [
 	["#000000", "Black"]
 ];
 
-const PaletteReverse = {
-	Red : 0,
+const PaletteIndex = {
+	Red    : 0,
 	Orange : 1,
 	Yellow : 2,
-	Lime : 3,
-	Green : 4,
-	Aqua : 5,
-	Blue : 6,
+	Lime   : 3,
+	Green  : 4,
+	Aqua   : 5,
+	Blue   : 6,
 	Purple : 7,
-	Pink: 8,
-	White: 9,
-	Black: 10
+	Pink   : 8,
+	White  : 9,
+	Black  : 10
 };
+
+const Edge = Object.freeze({
+	Straight: "Straight",
+	Puzzle  : "Puzzle",
+	Cap     : "Cap",
+	Round   : "Round",
+	Angle   : "Angle",
+	Arrow   : "Arrow"
+});
+
+const Size = Object.freeze({
+	Small   : "Small",
+	Normal  : "Normal",
+	Bracket : "Bracket"
+});
 
 class Block {
 	constructor() {
@@ -48,14 +63,14 @@ class Block {
 			innerHeight : 0,
 			left : 0,
 			top : 0,
-			color : "Orange",
-			size : "Normal",
-			edgeShapes : ["Straight", "Straight", "Straight", "Straight"],
+			color : PaletteIndex["Orange"],
+			size : Size.Normal,
+			edgeShapes : [Edge.Straight, Edge.Straight, Edge.Straight, Edge.Straight],
 			rawText : null,
 			text : null,
 			parameterWidths : null,
 			stroke : false,
-			strokeColor : "White"
+			strokeColor : PaletteIndex["White"]
 		};
 		this.innerSections = []
 	
@@ -80,7 +95,7 @@ class Block {
 		} else if (typeof(this.style.text) == 'string') {
 			this.style.width = getStringWidth(this.style.text) + 16;
 		}
-		if (this.style.size == "Normal") {
+		if (this.style.size == Size.Normal) {
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -89,7 +104,7 @@ class Block {
 			this.hitBox.style.top = "8px";
 			this.hitBox.style.width = String(this.style.width) + "px";
 			this.hitBox.style.height = String(this.style.height) + "px";
-		} else if (this.style.size == "Small") {
+		} else if (this.style.size == Size.Small) {
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -98,7 +113,7 @@ class Block {
 			this.hitBox.style.top = "12px";
 			this.hitBox.style.width = String(this.style.width ) + "px";
 			this.hitBox.style.height = String(this.style.height - 8) + "px";
-		} if (this.style.size == "Bracket") {
+		} if (this.style.size == Size.Bracket) {
 			this.container.style.left = String(this.style.left - 8) + "px";
 			this.container.style.top = String(this.style.top - 8) + "px";
 			this.container.style.width = (this.style.width + 16) + "px";
@@ -145,17 +160,17 @@ class Block {
 	}
 
 	getBottom() {
-		if (this.style.size == "Normal") {
+		if (this.style.size == Size.Normal) {
 			return this.style.top + this.style.height + 1;
-		} else if (this.style.size == "Small") {
+		} else if (this.style.size == Size.Small) {
 			return this.style.top + this.style.height + 1;
-		} else if (this.style.size == "Bracket") {
+		} else if (this.style.size == Size.Bracket) {
 			return this.style.top + this.style.height + this.style.innerHeight + 11;
 		}
 	}
 
 	getTotalHeight() {
-		if (this.style.size == "Bracket") {
+		if (this.style.size == Size.Bracket) {
 			return this.style.height + this.style.innerHeight + 14;
 		} else {
 			return this.style.height + 4;
@@ -175,7 +190,7 @@ class Block {
 
 	generateSVG() {
 		let temp;
-		if (this.style.size == "Bracket") {
+		if (this.style.size == Size.Bracket) {
 			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (26 + this.style.height + this.style.innerHeight) + `">`;
 		} else {
 			temp = `<svg width="` + (32 + this.style.width) + `" height="` + (16 + this.style.height) + `">`;
@@ -183,16 +198,16 @@ class Block {
 
 		temp += `<polygon points="`;
 		
-		if (this.style.size == "Normal") {	
-			if (this.style.edgeShapes[0] == "Straight") {
+		if (this.style.size == Size.Normal) {	
+			if (this.style.edgeShapes[0] == Edge.Straight) {
 				temp += `8,` + (8 + this.style.height) + ` 8,8 `;
-			} else if (this.style.edgeShapes[0] == "Angle") {
+			} else if (this.style.edgeShapes[0] == Edge.Angle) {
 				temp += `0,` + (8 + this.style.height/2) + ` 8,8 `;
-			} else if (this.style.edgeShapes[2] == "Round") { 
+			} else if (this.style.edgeShapes[2] == Edge.Round) { 
 				for (let i = 0; i < 3.14159; i+=0.39269) {
 					temp += (12 - 0.75*Math.sin(i)*this.style.height/2) + `,` + (8 + this.style.height/2 + Math.cos(i)*this.style.height/2) + ` `;
 				}
-			} else if (this.style.edgeShapes[2] == "Arrow") {
+			} else if (this.style.edgeShapes[2] == Edge.Arrow) {
 				temp += ` 8,` + (8 + this.style.height);
 				temp += ` 9,` + (8 + this.style.height * 0.75); 
 				temp += ` 6,` + (8 + this.style.height * 0.75); 
@@ -204,21 +219,21 @@ class Block {
 				temp += ` 8,8 `;
 			}
 
-			if (this.style.edgeShapes[1] == "Straight") {
+			if (this.style.edgeShapes[1] == Edge.Straight) {
 				temp += (8 + this.style.width) + `,8 `;	
-			} else if (this.style.edgeShapes[1] == "Puzzle") {
+			} else if (this.style.edgeShapes[1] == Edge.Puzzle) {
 				temp += `16,8 24,15 32,15 40,8 ` + (8 + this.style.width) + `,8 `;	
 			}		
 
-			if (this.style.edgeShapes[2] == "Straight") {
+			if (this.style.edgeShapes[2] == Edge.Straight) {
 				temp += (8 + this.style.width) + `,` + (8 + this.style.height) + ` `;
-			} else if (this.style.edgeShapes[2] == "Angle") {
+			} else if (this.style.edgeShapes[2] == Edge.Angle) {
 				temp += (16 + this.style.width) + `,` + (8 + this.style.height/2) + ` ` + (8 + this.style.width) + `,` + (8 + this.style.height) + ` `;
-			} else if (this.style.edgeShapes[2] == "Round") {
+			} else if (this.style.edgeShapes[2] == Edge.Round) {
 				for (let i = 3.14159; i > 0; i-=0.39269) {
 					temp += (8 + this.style.width + 0.75*Math.sin(i)*this.style.height/2) + `,` + (8 + this.style.height/2 + Math.cos(i)*this.style.height/2) + ` `;
 				}
-			} else if (this.style.edgeShapes[2] == "Arrow") {
+			} else if (this.style.edgeShapes[2] == Edge.Arrow) {
 				temp += (7 + this.style.width) + `,` + (8 + this.style.height/4) + ` `;
 				temp += (10 + this.style.width) + `,` + (8 + this.style.height/4) + ` `;
 				temp += (10 + this.style.width) + `,` + (8) + ` `;
@@ -229,22 +244,22 @@ class Block {
 				temp += (8 + this.style.width) + `,` + (8 + this.style.height) + ` `;
 			}
 
-			if (this.style.edgeShapes[3] == "Straight") {
+			if (this.style.edgeShapes[3] == Edge.Straight) {
 				temp += `8,` + (8 + this.style.height) + ` `;
-			} else if (this.style.edgeShapes[3] == "Puzzle") {
+			} else if (this.style.edgeShapes[3] == Edge.Puzzle) {
 				temp += '39.3,' + (8 + this.style.height) + ' 31.3,' + (15 + this.style.height) + ' 24.7,' + 
 				(15 + this.style.height) + ' 16.7,' + (8 + this.style.height)  + ` 8,` + (8 + this.style.height) + ` `;
 			}
-		} else if (this.style.size == "Small") {	
-			if (this.style.edgeShapes[0] == "Straight") {
+		} else if (this.style.size == Size.Small) {	
+			if (this.style.edgeShapes[0] == Edge.Straight) {
 				temp += `12,` + (4 + this.style.height) + ` 12,12 `;
-			} else if (this.style.edgeShapes[0] == "Angle") {
+			} else if (this.style.edgeShapes[0] == Edge.Angle) {
 				temp += `4,` + (8 + this.style.height/2) + ` 12,12 `;
-			} else if (this.style.edgeShapes[0] == "Round") { 
+			} else if (this.style.edgeShapes[0] == Edge.Round) { 
 				for (let i = 3.14159; i > 0; i-=0.39269) {
 					temp += (16 + Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
 				}
-			} else if (this.style.edgeShapes[0] == "Arrow") {
+			} else if (this.style.edgeShapes[0] == Edge.Arrow) {
 				temp += ` 12,` + (4 + this.style.height);
 				temp += ` 13,` + (8 + this.style.height * 0.66); 
 				temp += ` 10,` + (8 + this.style.height * 0.66); 
@@ -258,15 +273,15 @@ class Block {
 
 			temp += (4 + this.style.width) + `,12 `;	
 
-			if (this.style.edgeShapes[2] == "Straight") {
+			if (this.style.edgeShapes[2] == Edge.Straight) {
 				temp += (4 + this.style.width) + `,` + (4 + this.style.height) + ` `;
-			} else if (this.style.edgeShapes[2] == "Angle") {
+			} else if (this.style.edgeShapes[2] == Edge.Angle) {
 				temp += (12 + this.style.width) + `,` + (8 + this.style.height/2) + ` ` + (4 + this.style.width) + `,` + (4 + this.style.height) + ` `;
-			} else if (this.style.edgeShapes[2] == "Round") {
+			} else if (this.style.edgeShapes[2] == Edge.Round) {
 				for (let i = 0; i < 3.14159; i+=0.39269) {
 					temp += (0 + this.style.width - Math.sin(i)*(4 - this.style.height/2)) + `,` + (8 + this.style.height/2 + Math.cos(i)*(4 - this.style.height/2)) + ` `;
 				}
-			} else if (this.style.edgeShapes[2] == "Arrow") {
+			} else if (this.style.edgeShapes[2] == Edge.Arrow) {
 				temp += (3 + this.style.width) + `,` + (8 + this.style.height/3) + ` `;
 				temp += (6 + this.style.width) + `,` + (8 + this.style.height/3) + ` `;
 				temp += (6 + this.style.width) + `,` + (12) + ` `;
@@ -278,16 +293,16 @@ class Block {
 			}
 
 			temp += `12,` + (4 + this.style.height) + ` `;
-		} else if (this.style.size == "Bracket") {
+		} else if (this.style.size == Size.Bracket) {
 			let tHeight = this.style.height;
 			let totHeight = this.style.height + this.style.innerHeight + 6;	
 			temp += `8,` + (8 + tHeight) + ` 8,8 `;
 
-			if (this.style.edgeShapes[1] == "Straight") {
+			if (this.style.edgeShapes[1] == Edge.Straight) {
 				temp += (8 + this.style.width) + `,8 `;	
-			} else if (this.style.edgeShapes[1] == "Puzzle") {
+			} else if (this.style.edgeShapes[1] == Edge.Puzzle) {
 				temp += `16,8 24,15 32,15 40,8 ` + (8 + this.style.width) + `,8 `;	
-			} else if (this.style.edgeShapes[1] == "Cap") {
+			} else if (this.style.edgeShapes[1] == Edge.Cap) {
 				temp += `20,0 44,0 56,8 `;
 				temp += (8 + this.style.width) + `,8 `;
 			}		
@@ -300,19 +315,19 @@ class Block {
 			` 39.3,` + (totHeight + 7) + ' 47.3,' + (totHeight) + 
 			` 58,` + (totHeight) + ` 58,` + (totHeight + 12) + ` `; 
 			
-			if (this.style.edgeShapes[3] == "Straight") {
+			if (this.style.edgeShapes[3] == Edge.Straight) {
 				temp += `8,` + (12 + totHeight) + ` `;
-			} else if (this.style.edgeShapes[3] == "Puzzle") {
+			} else if (this.style.edgeShapes[3] == Edge.Puzzle) {
 				temp += '39.3,' + (12 + totHeight) + ' 31.3,' + (19 + totHeight) + ' 24.7,' + 
 				(19 + totHeight) + ' 16.7,' + (12 + totHeight)  + ` 8,` + (12 + totHeight) + ` `;
 			}
 		}
 
 		if (this.style.stroke) {
-			temp += `" stroke="` + Palette[PaletteReverse[this.style.strokeColor]][0] + ` `;
+			temp += `" stroke="` + Palette[this.style.strokeColor][0] + ` `;
 		}
 
-		temp += `" fill="` + Palette[PaletteReverse[this.style.color]][0]  + `"/>`;
+		temp += `" fill="` + Palette[this.style.color][0]  + `"/>`;
 
 		if (typeof(this.style.text) == 'string') { 
 			temp += `<text fill="#ffffff" font-size="15" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
@@ -321,7 +336,7 @@ class Block {
 			let xCoord = 16;
 			for (let iter in this.style.text) {
 				temp += `<text fill="#ffffff" font-size="15" xml:space="preserve" style="user-select: none; pointer-events: none; -webkit-user-select: none; -moz-user-select: none;" `
-				temp += `x="` + xCoord + `" y="` + (14 +(this.style.height)/2)+ `"` + `>` + this.style.text[iter] + ` </text>`;
+				temp += `x="` + xCoord + `" y="` + (14 + (this.style.height)/2)+ `"` + `>` + this.style.text[iter] + ` </text>`;
 				//temp += `<line x1="` + xCoord + `" y1="0" x2="` + xCoord + `" y2="100" stroke="black" />`;
 				//temp += `<line x1="` + this.getPCoord(iter) + `" y1="0" x2="` + this.getPCoord(iter) + `" y2="100" stroke="red" />`;
 				xCoord += ((this.style.parameterWidths[iter] ?? 0) + (this.innerSections[iter] ?? 0));
@@ -343,7 +358,7 @@ class typeManager {
 	}
 
 	addType(iName, iColor, iSize, iEdgeShapes) {
-		this.typeMap.set(iName, {"Color": iColor, "Size": iSize, "EdgeShapes": iEdgeShapes});
+		this.typeMap.set(iName, {"Color": PaletteIndex[iColor], "Size": iSize, "EdgeShapes": iEdgeShapes});
 	}
 	
 	addFunction(iDefault, iType, iText, iInput, iCode) {
@@ -388,6 +403,7 @@ class typeManager {
 
 class programBlock {
 	constructor(iDefault, iType, iText, iInputTypes, iCode, iLeft, iTop, iTypeManager, iContainer) {
+		console.log(iTop);
 		this.defaultName = iDefault
 		this.type = iType;
 		this.text = iText;
@@ -404,7 +420,7 @@ class programBlock {
 			this.pChildren = new Array(this.inputTypes.length).fill("Blank"); //parameter children
 		} else { this.pChildren = null; }
 		this.dropSites = {};
-		if (this.typeManager.getSize(this.type) == "Bracket") {
+		if (this.typeManager.getSize(this.type) == Size.Bracket) {
 			this.canHaveChildren = true;
 		} else {
 			this.canHaveChildren = false;
@@ -425,10 +441,10 @@ class programBlock {
 		this.mainBlock.style.top = this.top;
 		this.mainBlock.style.color = this.typeManager.getColor(this.type);
 		this.mainBlock.style.size = this.typeManager.getSize(this.type);
-		if (this.typeManager.getSize(this.type) == "Small") { this.mainBlock.style.stroke = true; }
+		if (this.typeManager.getSize(this.type) == Size.Small) { this.mainBlock.style.stroke = true; }
 		this.mainBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.type);
 		this.mainBlock.style.rawText = this.text;
-		if (this.mainBlock.style.size == "Bracket") {
+		if (this.mainBlock.style.size == Size.Bracket) {
 			this.mainBlock.style.innerHeight = 20;
 		}
 		this.container.appendChild(this.mainBlock.container);
@@ -448,7 +464,7 @@ class programBlock {
 				}
 
 				if (this.parent) {
-					if (this.mainBlock.style.size != "Small") {
+					if (this.mainBlock.style.size != Size.Small) {
 						//console.log("Removing normal/bracket from sequence");
 						this.parent.bChildren.splice(this.parent.bChildren.indexOf(this), 1);
 						await setTimeout(() => { 
@@ -458,7 +474,7 @@ class programBlock {
 						}, 1);
 						this.container.clipboard = this;
 						//this.parent = null;	
-					} else if (this.mainBlock.style.size == "Small") {
+					} else if (this.mainBlock.style.size == Size.Small) {
 						//console.log("Removing small from sequence");
 						this.container.clipboard = this;
 						this.parent.pChildren[this.parent.pChildren.indexOf(this)] = "Blank";
@@ -477,7 +493,7 @@ class programBlock {
 				}));
 				setTimeout(() => {
 					for (let box of this.dropsiteCollection) {
-						if ((box.type != "Parameter" && this.mainBlock.style.size != "Small") || (box.type == "Parameter" && this.mainBlock.style.size == "Small")) { 
+						if ((box.type != "Parameter" && this.mainBlock.style.size != Size.Small) || (box.type == "Parameter" && this.mainBlock.style.size == Size.Small)) { 
 							box.style.zIndex = "999"; 
 						}
 					}
@@ -508,8 +524,8 @@ class programBlock {
 					this.pChildren[it] = new Block();
 					sBlock = this.pChildren[it];
 					this.mainBlock.style.parameterWidths[it] = 24;
-					sBlock.style.color = "White";
-					sBlock.style.size = "Small";
+					sBlock.style.color = PaletteIndex["White"];
+					sBlock.style.size = Size.Small;
 					sBlock.style.rawText = " ";
 					sBlock.container.style.pointerEvents = 'none';	
 				} 
@@ -522,7 +538,7 @@ class programBlock {
 					if (this.typeManager.contains(this.inputTypes[it])) {
 						 sBlock.style.edgeShapes = this.typeManager.getEdgeShapes(this.inputTypes[it]);
 					} else {
-						sBlock.style.edgeShapes = ["Straight", "Straight", "Straight", "Straight"];
+						sBlock.style.edgeShapes = [Edge.Straight, Edge.Straight, Edge.Straight, Edge.Straight];
 					}
 					this.mainBlock.container.appendChild(sBlock.container);
 					sBlock.container.style.zIndex = "99"; 
@@ -565,7 +581,7 @@ class programBlock {
 		}
 
 		//console.log(inner);
-		if (this.typeManager.getSize(this.type) == "Bracket") { 
+		if (this.typeManager.getSize(this.type) == Size.Bracket) { 
 			this.mainBlock.setInnerHeight(Math.max(20, inner)); 
 		}	
 		this.mainBlock.update();
@@ -656,7 +672,7 @@ class programBlock {
 	}
 
 	generateDropSites() {
-		if (this.typeManager.getSize(this.type) == "Bracket") {
+		if (this.typeManager.getSize(this.type) == Size.Bracket) {
 			this.dropSites["bracket"] = document.createElement("div");
 			this.dropsiteCollection.push(this.dropSites["bracket"]);
 			//this.dropSites["bracket"].style.outline = "1px solid blue";
@@ -666,7 +682,7 @@ class programBlock {
 			this.dropSites["bracket"].style.left = (this.mainBlock.style.left + 8) + "px";
 			this.dropSites["bracket"].style.top = (this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 20)+ "px";
 			this.dropSites["bracket"].style.zIndex = "-1";
-			this.dropSites["bracket"].type = "Bracket";
+			this.dropSites["bracket"].type = Size.Bracket;
 			this.container.appendChild(this.dropSites["bracket"]);
 			
 			this.dropSites["bracket"].addEventListener("dragover", (e) => {
@@ -688,7 +704,7 @@ class programBlock {
 					this.bChildren.unshift(blockToMove);	
 				} else {
 					let defaultData = this.typeManager.getFunctionData(defaultName);
-					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
+					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == Edge.Puzzle) {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 						defaultData["Input"], defaultData["Code"], this.mainBlock.style.left + 8, this.mainBlock.getBottom() - this.mainBlock.style.innerHeight - 11, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
@@ -704,7 +720,7 @@ class programBlock {
 			});			
 		} 	
 		
-		if ((this.typeManager.getSize(this.type) == "Normal" || this.typeManager.getSize(this.type) == "Bracket") && this.typeManager.getEdgeShapes(this.type)[3] == "Puzzle") {
+		if ((this.typeManager.getSize(this.type) == Size.Normal || this.typeManager.getSize(this.type) == Size.Bracket) && this.typeManager.getEdgeShapes(this.type)[3] == Edge.Puzzle) {
 			this.dropSites["below"] = document.createElement("div");
 			this.dropsiteCollection.push(this.dropSites["below"]);
 			//this.dropSites["below"].style.outline = "1px solid blue";
@@ -737,7 +753,7 @@ class programBlock {
 					//console.log(this.parent.bChildren, this.parent.bChildren.indexOf(this));
 					this.parent.bChildren.splice(this.parent.bChildren.indexOf(this) + 1, 0, blockToMove);
 				} else {
-					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == "Puzzle") {
+					if (this.typeManager.getEdgeShapes(defaultData["Type"])[1] == Edge.Puzzle) {
 						let newBlock = new programBlock(defaultName, defaultData["Type"], defaultData["Text"], 
 						defaultData["Input"], defaultData["Code"], this.mainBlock.style.left, this.mainBlock.top, this.typeManager, this.container);
 						newBlock.dropsiteCollection = this.dropsiteCollection;
@@ -787,7 +803,7 @@ class programBlock {
 					let IDhash = JSON.parse(e.dataTransfer.getData("application/Block"))["ID"];
 					let defaultData = this.typeManager.getFunctionData(defaultName);
 					//console.log(defaultData["Type"], this.inputTypes[sub]);
-					if (this.typeManager.getSize(defaultData["Type"]) == "Small" && this.typeManager.typeMatch(defaultData["Type"], this.inputTypes[sub])) {
+					if (this.typeManager.getSize(defaultData["Type"]) == Size.Small && this.typeManager.typeMatch(defaultData["Type"], this.inputTypes[sub])) {
 						if (IDhash && this.container.clipboard && this.container.clipboard.IDnum == IDhash) { 
 							//console.log("Small subtree is being moved to " + sub); 
 							this.pChildren[sub].destruct();
