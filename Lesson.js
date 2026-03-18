@@ -105,7 +105,7 @@ async function LoadLesson() {
 		playground.className = "bento";
 		playground.style.left = "307px";
 		playground.style.top = "80px";
-		playground.style.right = "640px";
+		playground.style.right = "calc(30% + 13px)";
 		playground.style.bottom = "5px";
 		playground.style.overflowY = 'auto';
 		playground.clipboard = null;
@@ -119,6 +119,29 @@ async function LoadLesson() {
 		playgroundTitle.style.left = "304px";
 		playgroundTitle.style.top = "76px";
 		playgroundTitle.style.height = "1.5em";
+
+		const Field = document.getElementById("FieldWrapper");
+		console.log(Field);
+		Field.style.position = "absolute";
+		Field.style.right = "10px";
+		Field.style.width = "calc(30% - 14px)";
+		Field.style.top = "80px";
+		Field.style.bottom = "5px";
+
+		canvas.style.position = "relative"
+		canvas.style.width = "90%";
+		canvas.style.height =  "auto";
+		canvas.style.left = "5%";
+
+		const FieldTitle = document.createElement("div");
+		FieldTitle.className = "bentoTitle";
+		document.body.appendChild(FieldTitle);
+		FieldTitle.innerHTML = "FIELD";
+		FieldTitle.style.position = "absolute";
+		FieldTitle.style.backgroundColor = Palette[4][0];
+		FieldTitle.style.left = "calc(70% - 7px)";
+		FieldTitle.style.top = "76px";
+		FieldTitle.style.height = "1.5em";
 
 		let headerData1 = lessonData["Code"]["Functions"]["On_Start1"];
 		let headerData2 = lessonData["Code"]["Functions"]["On_Start2"];

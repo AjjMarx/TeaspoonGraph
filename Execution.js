@@ -16,10 +16,10 @@ class Executor { //executes code
 		this.generateAgent();
 		this.navBar; 	
 		this.navBlocks = [];	
-		this.generateNavigationInfo();
+		//this.generateNavigationInfo();
 		this.weightsBar;
 		this.quantities = new Array(this.data["Vertex_Weights"].length).fill(Number(0.1));
-		this.generateWeightsInfo();
+		//this.generateWeightsInfo();
 	}
 	
 	generatePlayButton() {
