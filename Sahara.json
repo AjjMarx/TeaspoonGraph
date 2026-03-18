@@ -1,5 +1,7 @@
 {
- 	"LessonName": "Lesson: A Medieval Saharan Trade Network",
+ 	"Title": "Lesson: A Medieval Saharan Trade Network",
+	"Subtitle" : "Created by Alexandra Marx <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"mailto:ajjmarx@umich.edu\">ajjmarx@umich.edu</a>",
+	"Description" : "From the 13th-16th centuries many empires dominated west Africa, including Mali, Songhai, and Marinid. In this lesson, you take on the role of a caravan trader, planning out routes based on local resources.",
 	"Envrionment" : "Globe",
 	"Interaction_Type" : "Agentic",
 	"Start" : 0,
@@ -276,11 +278,17 @@
 	], 
 	
 	"Functions" :{
-	"On_Start" : {
+	"On_Start1" : {
 		"type" : "Header",
-		"text" : "On Start",
+		"text" : "On Start 1",
 		"inputs" : null,
-		"code" : "console.log(\"'On Start' activated\"); this.executeBlockChildren(refExecutor);"
+		"code" : "console.log(\"'On Start 1' activated\"); this.executeBlockChildren(refExecutor);"
+	},
+	"On_Start2" : {
+		"type" : "Header",
+		"text" : "On Start 2",
+		"inputs" : null,
+		"code" : "console.log(\"'On Start 2' activated\"); this.executeBlockChildren(refExecutor);"
 	},
 	"Forever" : {
 		"type" : "Flow",
