@@ -5,7 +5,7 @@ if (!ext) {
     console.warn("EXT_frag_depth not supported on this device!");
 }
 
-window.resolution = 600*2;
+window.resolution = 400*2;
 window.scalingFactor = window.resolution / canvas.getBoundingClientRect().width;
 console.log("Canvas scaling factor: " + window.scalingFactor);
 
@@ -470,7 +470,7 @@ function renderGlobe(t) {
 
 	gl.finish();
 	timeDelta = performance.now() - startTime;
-	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS (Virtual)";
+	//FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS";
 	requestAnimationFrame(renderGlobe);
 }
 

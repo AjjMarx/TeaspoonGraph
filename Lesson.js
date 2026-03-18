@@ -18,7 +18,8 @@ async function LoadLesson() {
 		lessonData["Vertex_Weights_Inverse"] = [];
 		console.log(lessonData["Vertices"]);
 		
-		titleSection.innerHTML = `<center><b>` + lessonData["LessonName"] + `</b></center>`; 	
+		titleSection.innerHTML = `<center><b>` + lessonData["Title"] + `</b></center><center>` + lessonData["Subtitle"] + '</center>'; 
+		description.innerHTML = lessonData["Description"];
 
 		for (i in lessonData["Vertices"]) {
 			//console.log(vert);
@@ -43,16 +44,27 @@ async function LoadLesson() {
 		}
 
 		const toolBox = document.createElement("div");
+		toolBox.className = "bento";
 		document.body.appendChild(toolBox);
 		toolBox.style.position = "absolute";
 		toolBox.style.overflowY = 'auto';
-		toolBox.style.backgroundColor = "#E0E0EF";
-		toolBox.style.borderRadius = '20px';
+		//toolBox.style.backgroundColor = "#E0E0EF";
+		//toolBox.style.borderRadius = '20px';
 
 		toolBox.style.left = "10px";
-		toolBox.style.top = "10px";
+		toolBox.style.top = "80px";
 		toolBox.style.width = "280px";
-		toolBox.style.bottom = "10px";
+		toolBox.style.bottom = "5px";
+
+		const toolBoxTitle = document.createElement("div");
+		toolBoxTitle.className = "bentoTitle";
+		document.body.appendChild(toolBoxTitle);
+		toolBoxTitle.innerHTML = "TOOLBOX";
+		toolBoxTitle.style.position = "absolute";
+		toolBoxTitle.style.backgroundColor = Palette[0][0];
+		toolBoxTitle.style.left = "6px";
+		toolBoxTitle.style.top = "76px";
+		toolBoxTitle.style.height = "1.5em";
 
 		mainManager = new typeManager();
 		for (i of lessonData["Code"]["Types"]) {
@@ -63,7 +75,7 @@ async function LoadLesson() {
 		dropCollection = [];
 	
 		let it = 0;	
-		let startTop = 10;
+		let startTop = 45;
 		let horizontal = 10;
 		for (blockName in lessonData["Code"]["Functions"]) {
 			if (blockName != "On_Start") {
@@ -90,27 +102,43 @@ async function LoadLesson() {
 		const playground = document.createElement("div");
 		document.body.appendChild(playground);
 		playground.style.position = "absolute";
-		playground.style.left = "320px";
+		playground.className = "bento";
+		playground.style.left = "307px";
 		playground.style.top = "80px";
 		playground.style.right = "640px";
-		playground.style.bottom = "10px";
+		playground.style.bottom = "5px";
 		playground.style.overflowY = 'auto';
 		playground.clipboard = null;
 
-		let headerData = lessonData["Code"]["Functions"]["On_Start"];
-		let headerBlock = new programBlock("On_Start", headerData["type"], headerData["text"], headerData["inputs"], headerData["code"], 10, 30, mainManager, playground);
-		headerBlock.dropsiteCollection = dropCollection;
-		headerBlock.generateDropSites();
-		headerBlock.toggleDrag(false);
+		const playgroundTitle = document.createElement("div");
+		playgroundTitle.className = "bentoTitle";
+		document.body.appendChild(playgroundTitle);
+		playgroundTitle.innerHTML = "PLAYGROUND";
+		playgroundTitle.style.position = "absolute";
+		playgroundTitle.style.backgroundColor = Palette[6][0];
+		playgroundTitle.style.left = "304px";
+		playgroundTitle.style.top = "76px";
+		playgroundTitle.style.height = "1.5em";
+
+		let headerData1 = lessonData["Code"]["Functions"]["On_Start1"];
+		let headerData2 = lessonData["Code"]["Functions"]["On_Start2"];
+		let headerBlock1 = new programBlock("On_Start1", headerData1["type"], headerData1["text"], headerData1["inputs"], headerData1["code"], 10, 30, mainManager, playground);
+		let headerBlock2 = new programBlock("On_Start2", headerData2["type"], headerData2["text"], headerData2["inputs"], headerData2["code"], 10, 100, mainManager, playground);
+		headerBlock1.dropsiteCollection = dropCollection;
+		headerBlock2.dropsiteCollection = dropCollection;
+		headerBlock1.generateDropSites();
+		headerBlock2.generateDropSites();
+		headerBlock1.toggleDrag(false);
+		headerBlock2.toggleDrag(false);
 		
-		programSequence = [headerBlock];
+		programSequence = [headerBlock1, headerBlock2];
 
 
 	} catch(err) {
-		console.error("Lesson data could not be loaded:\n" + err);
+		console.error(err);
 	}
-	let mainExecutor = new Executor(programSequence, canvas, lessonData, mainManager, dropCollection);
-	refExecutor = mainExecutor;	
+	//let mainExecutor = new Executor(programSequence, canvas, lessonData, mainManager, dropCollection);
+	//refExecutor = mainExecutor;	
 	requestAnimationFrame(renderGlobe);
 	}
 }

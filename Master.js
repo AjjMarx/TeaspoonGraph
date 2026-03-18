@@ -65,36 +65,55 @@ window.addEventListener("mouseup", (event) => {
 const FPSticker =  document.createElement("div");
 document.body.appendChild(FPSticker);
 
-FPSticker.style.position = "absolute";
-FPSticker.style.right = "5px";
-FPSticker.style.bottom = "5px";
-FPSticker.style.width = "170px";
-FPSticker.style.height = "25px";
-FPSticker.textContent = timeDelta;
+//FPSticker.style.position = "absolute";
+//FPSticker.style.right = "5px";
+//FPSticker.style.bottom = "5px";
+//FPSticker.style.width = "170px";
+//FPSticker.style.height = "25px";
+//FPSticker.className = "bento";
+//FPSticker.textContent = timeDelta;
 //const sidebar = document.createElement("div");
 //document.body.appendChild(sidebar);
-
+/*
 const AttributionSection = document.createElement("div");
 
 AttributionSection.style.position = "absolute";
+AttributionSection.className = "bentoIn";
 AttributionSection.style.top = "2em";
 AttributionSection.style.height = "1em";
 AttributionSection.style.left = "25%";
 AttributionSection.style.width = "50%";
 AttributionSection.innerHTML = `<center>Created by Alexandra Marx, <a target="_blank" rel="noopener noreferrer" href="mailto:ajjmarx@umich.edu">ajjmarx@umich.edu</a>, <a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
 document.body.appendChild(AttributionSection);
+*/
 
 const titleSection = document.createElement("div");
 
 titleSection.style.position = "absolute";
+titleSection.className = "bento";
+titleSection.style.left = "10px";
 titleSection.style.top = "10px";
-titleSection.style.height = "1em";
-titleSection.style.width = "100%";
+titleSection.style.height = "48px";
+titleSection.style.width = "600px";
+titleSection.style.padding = "2px";
 titleSection.innerHTML = "<center>Untitled Lesson</center>"
 document.body.appendChild(titleSection);
 
+const description = document.createElement("div");
+
+description.style.position = "absolute";
+description.className = "bento";
+description.style.right = "10px";
+description.style.top = "10px";
+description.style.height = "48px";
+description.style.left = "632px";
+description.style.padding = "2px 10px";
+description.style.overflowY = "auto";
+description.innerHTML = "This section is empty. Something may have gone wrong."
+document.body.appendChild(description);
+/*
 const credit = document.createElement("div");
-document.body.appendChild(credit);
+//document.body.appendChild(credit);
 
 credit.style.position = "absolute";
 credit.style.bottom = "calc(50vh - 300px)";
@@ -102,7 +121,7 @@ credit.style.width = "600px";
 credit.style.right = "30px";
 credit.style.height = "2em";
 credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
-credit.style.userSelect = 'none';
+credit.style.userSelect = 'none';*/
 /*
 sidebar.style.width = "300px";
 sidebar.style.height = "300px";
