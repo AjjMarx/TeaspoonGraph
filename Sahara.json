@@ -2,7 +2,7 @@
  	"Title": "Lesson: A Medieval Saharan Trade Network",
 	"Subtitle" : "Created by Alexandra Marx <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"mailto:ajjmarx@umich.edu\">ajjmarx@umich.edu</a>",
 	"Description" : "From the 13th-16th centuries many empires dominated west Africa, including Mali, Songhai, and Marinid. In this lesson, you take on the role of a caravan trader, planning out routes based on local resources.",
-	"Envrionment" : "Globe",
+	"Environment" : "Globe",
 	"Interaction_Type" : "Agentic",
 	"Start" : 0,
 	"Vertex_Weights" : ["Gold", "Salt", "Ivory", "Ceramics", "Food"],

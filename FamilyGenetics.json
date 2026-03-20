@@ -1,0 +1,264 @@
+{
+ 	"Title": "Lesson: Genetic Inheritance in Families",
+	"Subtitle" : "Created by Alexandra Marx <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"mailto:ajjmarx@umich.edu\">ajjmarx@umich.edu</a>",
+	"Description" : "When two organisms sexually reproduce, there is a mixture of predetermined and probabilistic factors that determine which genotypes are passed down, and how they are expressed as phenotypes. In this lesson, you will implement an algorithmic approach to determining what alleles and phenotypes members of this XY-sex determined species' family tree are most likely to appear as given the ancestor's gene pool.",
+	"Environment" : "Tree",
+	"Interaction_Type" : "Cellular",
+	"Vertex_Weights" : {"Male": ["Null", "AA", "Aa", "aa"], "Female": ["Null", "AA", "Aa", "aa"]},
+	"Edge_Weights" : ["Father", "Mother"],
+
+  "Vertices": [{
+	"layer": 0,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 0,
+	"Weight" : "Female/AA"
+  },{
+	"layer": 1,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 1,
+	"Weight" : "Female/AA"
+  },{
+	"layer": 1,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 2,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 2,
+	"Weight" : "Female/AA"
+  },{
+	"layer": 2,
+	"Weight" : "Female/AA"
+  },{
+	"layer": 2,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 2,
+	"Weight" : "Male/AA"
+  },{
+	"layer": 3,
+	"Weight" : "Female/AA"
+  },{
+	"layer": 3,
+	"Weight" : "Male/AA"
+  }], 
+
+  "Edges": [
+	
+  ],
+
+  "Code": {
+	"Types" : [
+		{
+			"Name" : "Header_Male",
+			"Color" : "Blue",
+			"Size" : "Bracket",
+			"EdgeShapes" : ["Straight", "Cap", "Straight", "Straight"]
+		},
+		{
+			"Name" : "Header_Female",
+			"Color" : "Pink",
+			"Size" : "Bracket",
+			"EdgeShapes" : ["Straight", "Cap", "Straight", "Straight"]
+		},
+		{
+			"Name" : "Flow",
+			"Color" : "Yellow",
+			"Size" : "Bracket",
+			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]
+		},
+		{
+			"Name" : "Code",
+			"Color" : "Green",
+			"Size" : "Normal",
+			"EdgeShapes" : ["Straight", "Puzzle", "Straight", "Puzzle"]	
+		},
+		{
+			"Name" : "Boolean",
+			"Color" : "Orange",
+			"Size" : "Small",
+			"EdgeShapes" : ["Straight", "Straight", "Angle", "Straight"]
+		},
+		{
+			"Name" : "Allele",
+			"Color" : "Red",
+			"Size" : "Small",
+			"EdgeShapes" : ["Straight", "Straight", "Round", "Straight"]
+		},
+		{	
+			"Name" : "Phenotype",
+			"Color" : "Pink",
+			"Size" : "Small",
+			"EdgeShapes" : ["Angle", "Straight", "Straight", "Straight"]
+		},
+		{
+			"Name" : "Relationship",
+			"Color" : "Purple",
+			"Size" : "Small",
+			"EdgeShapes" : ["Round", "Straight", "Round", "Straight"]
+		}
+	], 
+	
+	"Functions" :{
+	"Male_Activate" : {
+		"type" : "Header_Male",
+		"text" : "When I Activate (XY):",
+		"inputs" : null,
+		"code" : "console.log(\"'On Start 1' activated\"); this.executeBlockChildren(refExecutor);"
+	},
+	"Female_Activate" : {
+		"type" : "Header_Female",
+		"text" : "When I Activate (XX):",
+		"inputs" : null,
+		"code" : "console.log(\"'On Start 2' activated\"); this.executeBlockChildren(refExecutor);"
+	},	
+	"If" : {
+		"type" : "Flow",
+		"text" : "If $1 then:",
+		"inputs" : ["Boolean"],
+		"code" : "if (p[0] == true) { this.executeBlockChildren(refExecutor); }"
+	},	
+	"Activate" : {
+		"type" : "Code",
+		"text" : "Activate $1.",
+		"inputs" : ["Relationship"],
+		"Code" : ""
+	},
+	"SetG" : {
+		"type" : "Code",
+		"text" : "Set my genotype to $1$2.",
+		"inputs" : ["Allele", "Allele"],
+		"Code" : ""
+	},
+	"SetP" : {
+		"type" : "Code",
+		"text" : "Set my phenotype to $1",
+		"inputs" : ["Phenotype"],
+		"code": ""
+	},
+	"Has_Gene" : {
+		"type" : "Boolean",
+		"text" : "$1 has allele $2",
+		"inputs" : ["Relationship", "Allele"],
+		"code" : ""
+	},
+	"Is_Male" : {
+		"type" : "Boolean",
+		"text" : "$1 is male",
+		"inputs" : ["Relationship"],
+		"code" : ""
+	},
+	"Is_Female" : {
+		"type" : "Boolean",
+		"text" : "$1 is female",
+		"inputs" : ["Relationship"],
+		"code" : ""
+	},
+	"And" : {
+		"type" : "Boolean",
+		"text" : "$1 and $2",
+		"inputs" : ["Boolean", "Boolean"],
+		"code" : ""
+	},
+	"Or" : {
+		"type" : "Boolean",
+		"text" : "$1 or $2",
+		"inputs" : ["Boolean", "Boolean"],
+		"code" : ""
+	},
+	"not" : {
+		"type" : "Boolean",
+		"text" : "not $1",
+		"inputs" : ["Boolean"],
+		"code" : ""
+	},
+	"True" : {
+		"type" : "Boolean",
+		"text" : "true",
+		"inputs" : null,
+		"code" : ""
+	},
+	"False" : {
+		"type" : "Boolean",
+		"text" : "false",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Fifty" : {
+		"type" : "Boolean",
+		"text" : "50% chance",
+		"inputs" : null,
+		"code" : ""
+	},
+	"A" : {
+		"type" : "Allele",
+		"text" : "A",
+		"inputs" : null,
+		"code" : ""
+	},
+	"a" : {
+		"type" : "Allele",
+		"text" : "a",
+		"inputs" : null,
+		"code" : ""
+	},
+	"PhenoBig" : {
+		"type" : "Phenotype",
+		"text" : "A",
+		"inputs" : null,
+		"code" : ""
+	},
+	"PhenoLittle" : {
+		"type" : "Phenotype",
+		"text" : "a",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Me" : {
+		"type" : "Relationship",
+		"text" : "me",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Father" : {
+		"type" : "Relationship",
+		"text" : "father",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Mother" : {
+		"type" : "Relationship",
+		"text" : "mother",
+		"inputs" : null,
+		"code" : ""
+	},
+	"First" : {
+		"type" : "Relationship",
+		"text" : "1st child",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Second" : {
+		"type" : "Relationship",
+		"text" : "2nd child",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Third" : {
+		"type" : "Relationship",
+		"text" : "3rd child",
+		"inputs" : null,
+		"code" : ""
+	},
+	"Fourth" : {
+		"type" : "Relationship",
+		"text" : "4th child",
+		"inputs" : null,
+		"code" : ""
+	}
+
+
+  }}
+}
