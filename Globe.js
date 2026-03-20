@@ -7,7 +7,7 @@ if (!ext) {
 
 window.resolution = 600*2;
 window.scalingFactor = window.resolution / canvas.getBoundingClientRect().width;
-console.log("Canvas scaling factor: " + window.scalingFactor);
+//console.log("Canvas scaling factor: " + window.scalingFactor);
 
 canvas.width = window.resolution;
 canvas.height = window.resolution;
@@ -469,8 +469,6 @@ function renderGlobe(t) {
 	gl.drawArrays(gl.TRIANGLES, 0, 3);
 
 	gl.finish();
-	timeDelta = performance.now() - startTime;
-	FPSticker.textContent = String(Math.min(60, Math.floor(1000/timeDelta))) + " FPS (Virtual)";
 	requestAnimationFrame(renderGlobe);
 }
 

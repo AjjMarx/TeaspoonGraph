@@ -403,7 +403,7 @@ class typeManager {
 
 class programBlock {
 	constructor(iDefault, iType, iText, iInputTypes, iCode, iLeft, iTop, iTypeManager, iContainer) {
-		console.log(iTop);
+		//console.log(iTop);
 		this.defaultName = iDefault
 		this.type = iType;
 		this.text = iText;

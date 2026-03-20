@@ -9,14 +9,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-<canvas id="glcanvas"></canvas>
-<script defer src="Blocks.js"></script>
-<script defer src="Execution.js"></script>
-<script defer src="Globe.js"></script>
-<script defer src="Lesson.js"></script>
-<script defer src="Master.js"></script>
+	<div id="titleSection" class=titleSection> Untitled Lesson </div>
+	<div id="helpButton" class=helpButton>?</div>
+	<div id="stats" class=stats> Empty </div>
+	<div id="toolBox" class=toolBox></div>
+	<div id="toolBoxTitle" class=toolBoxTitle>TOOLBOX</div>
+	<div id="playground" class=playground></div>
+	<div id="playgroundTitle" class=playgroundTitle>PLAYGROUND</div>
+	<div id="fieldTitle" class=fieldTitle>FIELD</div>
+	<div id="FieldWrapper" class=field>
+		<canvas id="glcanvas"></canvas>
+		<div id="fieldContent"></div>
+	</div>
+	<div class=descriptionFade id="descriptionFade"></div>
+	<div class=description id="description"></div>
+	<div class=descriptionButton id="descriptionButton">X</div>
+	<script defer src="Blocks.js"></script>
+	<script defer src="Execution.js"></script>
+	<script defer src="Globe.js"></script>
+	<script defer src="Lesson.js"></script>
+	<script defer src="Master.js"></script>
 </body>
 </html>
 

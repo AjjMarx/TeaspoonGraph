@@ -61,135 +61,36 @@ window.addEventListener("mouseup", (event) => {
 	mouseDown = false;
 });
 
+const titleSection = document.getElementById("titleSection");
+const stats = document.getElementById("stats");
+const toolBox = document.getElementById("toolBox");
+const playground = document.getElementById("playground");
+//const field = document.getElementById("FieldWrapper");
+const description = document.getElementById("description"); 
+const descriptionFade = document.getElementById("descriptionFade"); 
+const descriptionButton = document.getElementById("descriptionButton"); 
+const helpButton = document.getElementById("helpButton"); 
+playground.clipboard = null;
 
-const FPSticker =  document.createElement("div");
-document.body.appendChild(FPSticker);
-
-//FPSticker.style.position = "absolute";
-//FPSticker.style.right = "5px";
-//FPSticker.style.bottom = "5px";
-//FPSticker.style.width = "170px";
-//FPSticker.style.height = "25px";
-//FPSticker.className = "bento";
-//FPSticker.textContent = timeDelta;
-//const sidebar = document.createElement("div");
-//document.body.appendChild(sidebar);
-/*
-const AttributionSection = document.createElement("div");
-
-AttributionSection.style.position = "absolute";
-AttributionSection.className = "bentoIn";
-AttributionSection.style.top = "2em";
-AttributionSection.style.height = "1em";
-AttributionSection.style.left = "25%";
-AttributionSection.style.width = "50%";
-AttributionSection.innerHTML = `<center>Created by Alexandra Marx, <a target="_blank" rel="noopener noreferrer" href="mailto:ajjmarx@umich.edu">ajjmarx@umich.edu</a>, <a target="_blank" rel="noopener noreferrer" href="https://github.com/AjjMarx/TeaspoonGraph">github.com/AjjMarx/TeaspoonGraph</a></center>`;
-document.body.appendChild(AttributionSection);
-*/
-
-const titleSection = document.createElement("div");
-
-titleSection.style.position = "absolute";
-titleSection.className = "bento";
-titleSection.style.left = "10px";
-titleSection.style.top = "10px";
-titleSection.style.height = "48px";
-titleSection.style.width = "600px";
-titleSection.style.padding = "2px";
-titleSection.innerHTML = "<center>Untitled Lesson</center>"
-document.body.appendChild(titleSection);
-
-const description = document.createElement("div");
-
-description.style.position = "absolute";
-description.className = "bento";
-description.style.right = "10px";
-description.style.top = "10px";
-description.style.height = "48px";
-description.style.left = "632px";
-description.style.padding = "2px 10px";
-description.style.overflowY = "auto";
-description.innerHTML = "This section is empty. Something may have gone wrong."
-document.body.appendChild(description);
-/*
-const credit = document.createElement("div");
-//document.body.appendChild(credit);
-
-credit.style.position = "absolute";
-credit.style.bottom = "calc(50vh - 300px)";
-credit.style.width = "600px";
-credit.style.right = "30px";
-credit.style.height = "2em";
-credit.innerHTML = `<center><a target="_blank" rel="noopener noreferrer" href="https://visibleearth.nasa.gov/images/76487/june-blue-marble-next-generation/76492l">NASA 2004</a></center>`;
-credit.style.userSelect = 'none';*/
-/*
-sidebar.style.width = "300px";
-sidebar.style.height = "300px";
-sidebar.style.borderRadius = '15px';
-sidebar.style.outline = "3px solid black";
-sidebar.style.padding = "10px";
-
-
-sliders = [];
-sliders["dist"] = document.createElement("input");
-sliders["dist"].type = "range";
-sliders["dist"].min = minimumDistance;
-sliders["dist"].max = maximumDistance;
-sliders["dist"].value = cameraDistance;
-sliders["dist"].step = "0.001";
-
-sliders["dist"].addEventListener("input", () => {
-	cameraDistance = Number(sliders["dist"].value);
+descriptionButton.addEventListener('click', (event) => {
+	description.style.display = descriptionFade.style.display = descriptionButton.style.display = "none";
 });
 
-sliders["rote"] = document.createElement("input");
-sliders["rote"].type = "range";
-sliders["rote"].min = "-3.14159";
-sliders["rote"].max = "3.14159";
-sliders["rote"].value = centerAxis;
-sliders["rote"].step = "0.001";
-
-sliders["rote"].addEventListener("input", () => {
-	centerAxis = Number(sliders["rote"].value);
+helpButton.addEventListener('click', (event) => {
+	description.style.display = descriptionFade.style.display = descriptionButton.style.display = "block";
 });
 
-sliders["divide"] = document.createElement("input");
-sliders["divide"].type = "range";
-sliders["divide"].min = "0";
-sliders["divide"].max = "128";
-sliders["divide"].value = divisions;
-sliders["divide"].step = "2";
-
-sliders["divide"].addEventListener("input", () => {
-	divisions = Number(sliders["divide"].value);
-});
-
-
-const distLabel = document.createElement("label");
-distLabel.textContent = "Camera Distance:";
-sidebar.appendChild(distLabel);
-sidebar.appendChild(sliders["dist"]);
-const roteLabel = document.createElement("label");
-roteLabel.textContent = "Center rotate:";
-sidebar.appendChild(roteLabel);
-sidebar.appendChild(sliders["rote"]);
-const divLabel = document.createElement("label");
-divLabel.textContent = "Divisions:";
-sidebar.appendChild(divLabel);
-sidebar.appendChild(sliders["divide"]);
-*/
 window.addEventListener('wheel', (event) => {
 	if (canvas.matches(":hover")) {
 		cameraDistance += event.deltaY/100;
 		cameraDistance = Math.min(maximumDistance, Math.max(minimumDistance, cameraDistance));
 	}
-//	sliders["dist"].value = cameraDistance;
 });
 
-document.addEventListener('dragstart', e => {
-	if (e.target.tagName.toLowerCase() === 'text') {
-		e.preventDefault();
-		e.stopPropagation();
+document.addEventListener('dragstart', (event) => {
+	if (event.target.tagName.toLowerCase() === 'text') {
+		event.preventDefault();
+		event.stopPropagation();
 	}
 }, true);
 
